@@ -1,14 +1,14 @@
 {
   "keys": {
     "search": 199,
-    "dump_loaded_references": 70
+    "dump_loaded_references": -1
   },
   "teleport_range": 100.0,
   "max_result_count": 10,
   "sort_results": true,
-  "debug": true,
+  "debug": false,
   "experimental": {
-    "sort_before_search": true,
-    "pattern_matching": true
+    "sort_before_search": false,
+    "pattern_matching": false
   }
 }
