@@ -1,0 +1,7 @@
+{
+  "triggerTaskOnSave.tasks": {
+    "pyro: Compile Project (WhereAreYou.ppj)": [
+      "*.psc",
+    ],
+  }
+}

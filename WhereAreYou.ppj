@@ -1,0 +1,57 @@
+<?xml version='1.0'?>
+<PapyrusProject xmlns="PapyrusProject.xsd" 
+    Flags="TESV_Papyrus_Flags.flg" 
+    Game="sse"
+    Anonymize="true" 
+    Output="Scripts" 
+    Optimize="true" 
+    Release="true" 
+    Zip="true"
+    Package="true"
+    Final="true">
+    <Variables>
+        <Variable Name="ModName"       Value="WhereAreYou" />
+        <Variable Name="GameRoot"      Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\Game Root" />
+        <Variable Name="ImportsFolder" Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\mods" />
+        <!-- <Variable Name="RepoBaseURL"   Value="https://api.github.com/repos/fireundubh"/> -->
+    </Variables>
+    <Imports>
+        <Import>@ImportsFolder\SKSE\Scripts\Source</Import>
+        <Import>@ImportsFolder\powerofthree's Papyrus Extender\Source\scripts</Import>
+        <Import>@ImportsFolder\PapyrusUtil SE - Modders Scripting Utility Functions\Source\Scripts</Import>
+        <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
+        <Import>@ImportsFolder\JContainers SE\scripts\source</Import>
+        <Import>@ImportsFolder\ConsoleUtilSSE\scripts\source</Import>
+        <!-- <Import>@RepoBaseURL/LibFire/contents/Scripts/Source?ref=master</Import> -->
+        <Import>@GameRoot\Data\Scripts\Source</Import>
+    </Imports>
+    <Folders>
+        <!-- Relative path to folder containing .psc Papyrus source code files for this project -->
+        <Folder>./Scripts/Source</Folder>
+    </Folders>
+    <!-- The following section is for .bsa archives. You can enable it by setting Package="true" in the PapyrusProject -->
+    <Packages Output=".">
+        <Package Name="kx@ModName" RootDir=".">
+            <Match In="Scripts">*.pex</Match>
+            <Match In="Scripts/Source">*.psc</Match>
+            <!-- <Match In="interface\translations">*.txt</Match> -->
+        </Package>
+        <!-- If you have any texture files, uncomment the following to create a Textures .bsa archive with texture files -->
+        <!-- <Package Name="@ModName - Textures" RootDir=".">
+            <Include>*.dds</Include>
+        </Package> -->
+    </Packages>
+    <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
+    <ZipFiles Output="Build">
+        <ZipFile Name="kx@ModName" RootDir="." Compression="deflate">
+            <Include>kx@ModName.esp</Include>
+            <Include NoRecurse="true">*.bsa</Include>
+            <Include>*.ini</Include>
+            <Include>*.json</Include>
+        </ZipFile>
+    </ZipFiles>
+    <!-- This will remove any *.bsa files in this directory *after* the build, if there are any. Set UseInBuild="false" to disable. -->
+    <PostBuildEvent Description="Post-Build Remove BSA Files" UseInBuild="true">
+        <Command>del /s /q /f *.bsa</Command>
+    </PostBuildEvent>
+</PapyrusProject>

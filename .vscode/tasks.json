@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "pyro",
+            "projectFile": "WhereAreYou.ppj",
+            "gamePath": "D:\\Modding\\Skyrim\\Wabbajack\\Modlists\\ADT\\Game Root\\",
+            "problemMatcher": [
+                "$PapyrusCompiler"
+            ],
+            "label": "pyro: Compile Project (WhereAreYou.ppj)",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
