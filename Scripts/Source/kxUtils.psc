@@ -1,13 +1,7 @@
 Scriptname kxUtils hidden
 
-; Krauss wildcard-matching algorithm
-; Check if a string match against a pattern. A pattern can use a wildcard 
-; Ex:
-;   Text    = "baaabab",
-;   Pattern = "*****ba*****ab" => output: true
-;   Pattern = "baaa?ab"        => output: true
-;   Pattern = "ba*a?"          => output: true
-;   Pattern = "a*ab"           => output: false 
+; If string does not have wildcards, use substring matching,
+; otherwise use Krauss wildcard-matching algorithm
 bool function StringMatch(string text, string pattern) global
   if StringUtil.Find(pattern, "*") > -1 || StringUtil.Find(pattern, "?") > -1
     return StringMatchPattern(text, pattern)
@@ -19,15 +13,17 @@ endFunction
 string function StringOptimizePattern(string pattern) global
   string newPattern = ""
   bool first = true
+  int n = StringUtil.GetLength(pattern)
   int i = 0
-  while i < StringUtil.GetLength(pattern)
-    if StringUtil.GetNthChar(pattern, i) == "*"
+  while i < n
+    string ch = StringUtil.GetNthChar(pattern, i)
+    if ch == "*"
       if first
         newPattern += "*"
         first = false
       endIf
     else
-      newPattern += StringUtil.GetNthChar(pattern, i)
+      newPattern += ch
       first = true
     endIf
     i += 1
@@ -35,6 +31,14 @@ string function StringOptimizePattern(string pattern) global
   return newPattern
 endFunction
 
+; Krauss wildcard-matching algorithm
+; Check if a string match against a pattern. A pattern can use wildcards * and ?
+; Ex:
+;   Text    = "baaabab",
+;   Pattern = "*****ba*****ab" => output: true
+;   Pattern = "baaa?ab"        => output: true
+;   Pattern = "ba*a?"          => output: true
+;   Pattern = "a*ab"           => output: false 
 bool function StringMatchPattern(string str, string pattern) global
   int n = StringUtil.GetLength(str)
   int m = StringUtil.GetLength(pattern)
@@ -46,32 +50,21 @@ bool function StringMatchPattern(string str, string pattern) global
   int map = JMap.object()
   JValue.retain(map)
 
-  ; Initialization
-  int i = 0
-  int j = 0
-  while i <= n
-    while j <= m
-      SetJMapBoolValueAtXandY(map, i, j, false)
-      j += 1
-    endWhile
-    j = 0
-    i += 1
-  endWhile
-
-  SetJMapBoolValueAtXandY(map, 0, 0, true)
+  SetJMapBoolValueAtPosition(map, 0, 0, true)
 
   if (m > 0) && StringUtil.GetNthChar(pattern, 0) == "*"
-    SetJMapBoolValueAtXandY(map, 0, 1, true)
+    SetJMapBoolValueAtPosition(map, 0, 1, true)
   endIf
 
-  i = 1
-  j = 1
+  int i = 1
+  int j = 1
   while i <= n
     while j <= m
-      if StringUtil.GetNthChar(pattern, j - 1) == "?" || (StringUtil.GetNthChar(pattern, j - 1) == StringUtil.GetNthChar(str, i - 1))
-        SetJMapBoolValueAtXandY(map, i, j, GetJMapBoolValueAtXandY(map, i - 1, j - 1))
-      elseIf StringUtil.GetNthChar(pattern, j - 1) == "*" 
-        SetJMapBoolValueAtXandY(map, i, j, GetJMapBoolValueAtXandY(map, i - 1, j) || GetJMapBoolValueAtXandY(map, i, j - 1))
+      string ch = StringUtil.GetNthChar(pattern, j - 1)
+      if ch == "?" || (ch == StringUtil.GetNthChar(str, i - 1))
+        SetJMapBoolValueAtPosition(map, i, j, GetJMapBoolValueAtPosition(map, i - 1, j - 1))
+      elseIf ch == "*" 
+        SetJMapBoolValueAtPosition(map, i, j, GetJMapBoolValueAtPosition(map, i - 1, j) || GetJMapBoolValueAtPosition(map, i, j - 1))
       endIf
       j += 1
     endWhile
@@ -80,20 +73,20 @@ bool function StringMatchPattern(string str, string pattern) global
   endWhile
 
   ; TODO: Remove
-  ; MiscUtil.PrintConsole("Matched " + str + " against " + pattern)
+  ; MiscUtil.PrintConsole("Matching " + str + " against " + pattern)
   ; DumpJMapBool(map, n, m)
 
-  bool result = GetJMapBoolValueAtXandY(map, n, m)
+  bool result = GetJMapBoolValueAtPosition(map, n, m)
   JValue.release(map)
   return result
 endFunction
 
-function SetJMapBoolValueAtXandY(int map, int i, int j, bool value) global
-  JMap.setInt(map, "["+i+"]"+"["+j+"]", (value as int))
+function SetJMapBoolValueAtPosition(int map, int i, int j, bool value) global
+  JMap.setInt(map, i + "," + j, (value as int))
 endFunction
 
-bool function GetJMapBoolValueAtXandY(int map, int i, int j) global
-  return JMap.getInt(map, "["+i+"]"+"["+j+"]") as bool
+bool function GetJMapBoolValueAtPosition(int map, int i, int j) global
+  return JMap.getInt(map, i + "," + j) as bool
 endFunction
 
 function DumpJMapBool(int map, int n, int m) global
@@ -103,7 +96,7 @@ function DumpJMapBool(int map, int n, int m) global
   while i <= n
     while j <= m
       string text
-      if GetJMapBoolValueAtXandY(map, i, j)
+      if GetJMapBoolValueAtPosition(map, i, j)
         text = "T"
       else
         text = "F"
