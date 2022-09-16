@@ -37,10 +37,6 @@ int function GetLoadedReferencesFromDB() global
   return JDB.solveObj(GetPropertyPath(".loaded_references"))
 endFunction
 
-function UpdateLoadedReferences(int newLoadedReferences) global
-  JDB.solveObjSetter(GetPropertyPath(".loaded_references"), newLoadedReferences, createMissingKeys = true)
-endFunction
-
 string function GetPropertyPath(string propertyPath) global
   return "." + GetDbKey() + propertyPath
 endFunction
@@ -62,6 +58,5 @@ function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
 	int index = JArray.FindForm(loadedReferences, npc)
 	if index == -1
   	JArray.AddForm(loadedReferences, npc)
-    ; UpdateLoadedReferences(loadedReferences)
 	endIf
 endFunction

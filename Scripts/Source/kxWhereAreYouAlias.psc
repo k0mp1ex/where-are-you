@@ -113,7 +113,6 @@ Actor function FindNpcByName(String pattern)
     loadedReferences = JArray.sort(loadedReferences)
     Log("Sorting references...")
   endIf
-  ;JValue.retain(loadedReferences, GetDbKey())
 
   int jmFoundNpcs = JMap.object()
   JValue.retain(jmFoundNpcs, GetDbKey())
@@ -136,7 +135,6 @@ Actor function FindNpcByName(String pattern)
     npc = ChooseNpcFromList(jmFoundNpcs)
   endIf
   JValue.release(jmFoundNpcs)
-  ;JValue.release(loadedReferences)
   return npc
 endFunction
 
