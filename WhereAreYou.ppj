@@ -37,20 +37,20 @@
     <ZipFiles Output="Build">
         <ZipFile Name="@ModName" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
-            <Include>@ModName.json</Include>
+            <Include>@ModName/settings.json</Include>
             <Include>*.ini</Include>
             <Include NoRecurse="true">*.bsa</Include>
         </ZipFile>
     </ZipFiles>
     <!-- This will copy the default settings before packing -->
-    <PreBuildEvent Description='Pre-Build: Overriding "kxWhereAreYou.json" with default settings'>
+    <!-- <PreBuildEvent Description='Pre-Build: Overriding "kxWhereAreYou.json" with default settings'>
         <Command>copy "kxWhereAreYou.json" /Y "kxWhereAreYou_wip.json"</Command>
         <Command>copy "kxWhereAreYou_default.json" /Y "kxWhereAreYou.json"</Command>
-    </PreBuildEvent>
+    </PreBuildEvent> -->
     <!-- This will revert defaul settings in the current working directory and 
          remove any *.bsa files in this directory *after* the build, if there are any. Set UseInBuild="false" to disable. -->
     <PostBuildEvent Description="Post-Build: Restore custom settings and remove .bsa from local directory" UseInBuild="true">
-        <Command>move "kxWhereAreYou_wip.json" "kxWhereAreYou.json"</Command>
+        <!-- <Command>move "kxWhereAreYou_wip.json" "kxWhereAreYou.json"</Command> -->
         <Command>del /s /q /f *.bsa</Command>
     </PostBuildEvent>
 </PapyrusProject>

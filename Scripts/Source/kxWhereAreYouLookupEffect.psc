@@ -1,11 +1,9 @@
 Scriptname kxWhereAreYouLookupEffect extends ActiveMagicEffect  
 
+import kxWhereAreYouLogging
+import kxWhereAreYouRepository
+
 event OnEffectStart(Actor akTarget, Actor akCaster)
-	string DB_KEY = "kxWhereAreYou"
-	int loadedReferences = JDB.solveObj("." + DB_KEY + ".loaded_references")
-	int index = JArray.FindForm(loadedReferences, akTarget)
-	if index == -1
-  	JArray.AddForm(loadedReferences, akTarget)
-		MiscUtil.PrintConsole("[WhereAreYou] Adding NPC " + akTarget.GetDisplayName() + " to the list")
-	endIf
+	Log("Trying to add NPC " + akTarget.GetDisplayName())
+	AddNpcAsLoadedReferenceIfNotExists(akTarget)
 endEvent
