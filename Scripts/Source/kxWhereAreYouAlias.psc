@@ -41,17 +41,16 @@ float property TELEPORT_RANGE hidden
   endFunction
 endProperty
 
-; Check performance hit before enabling
-bool property CAN_SORT_BEFORE_SEARCH hidden
+bool property I_AM_LUCKY hidden
   bool function get()
-    return ReadSettingsFromDbAsBool(".experimental.sort_before_search")
+    return ReadSettingsFromDbAsBool(".experimental.i_am_lucky")
   endFunction
 endProperty
 
 ; Check performance hit before enabling
-bool property CAN_SEARCH_BY_PATTERN_MATCHING hidden
+bool property CAN_SORT_BEFORE_SEARCH hidden
   bool function get()
-    return ReadSettingsFromDbAsBool(".experimental.pattern_matching")
+    return ReadSettingsFromDbAsBool(".experimental.sort_before_search")
   endFunction
 endProperty
 
@@ -70,13 +69,20 @@ endEvent
 
 event OnKeyDown(int keyCode)
   if !IsInMenus()
+    GoToState("Busy")
     if keyCode == KEY_SEARCH
       SearchNPC()
     elseIf keyCode == KEY_DUMP_LOADED_REFERENCES
-      ListNPCs()
+      DumpNpcList()
     endIf
+    GoToState("")
   endIf
 endEvent
+
+state Busy
+  event OnKeyDown(int keyCode)
+  endEvent
+endState
 
 function Setup()
   LoadSettingsAndSaveToDB()
@@ -84,7 +90,7 @@ function Setup()
   RegisterForKey(KEY_DUMP_LOADED_REFERENCES)
 endFunction
 
-function ListNPCs()
+function DumpNpcList()
   int loadedReferences = GetLoadedReferencesFromDB()
   int i = 0
   while i < JArray.Count(loadedReferences)
@@ -107,7 +113,9 @@ function SearchNPC()
   endIf
 endFunction
 
-Actor function FindNpcByName(String pattern)
+Actor function FindNpcByName(String text)
+  string pattern = StringOptimizePattern(text)
+
   int loadedReferences = GetLoadedReferencesFromDB()
   if CAN_SORT_BEFORE_SEARCH
     loadedReferences = JArray.sort(loadedReferences)
@@ -118,9 +126,14 @@ Actor function FindNpcByName(String pattern)
   JValue.retain(jmFoundNpcs, GetDbKey())
   int i = 0
 
-  while (i < JArray.Count(loadedReferences)) && (JMap.Count(jmFoundNpcs) < MAX_RESULT_COUNT)
+  bool exit = false
+  while !exit && (i < JArray.Count(loadedReferences)) && (JMap.Count(jmFoundNpcs) < MAX_RESULT_COUNT)
     Actor currentNpc = JArray.getForm(loadedReferences, i) as Actor
-    if StringMatch(currentNpc.GetDisplayName(), pattern, CAN_SEARCH_BY_PATTERN_MATCHING)
+    if StringMatch(currentNpc.GetDisplayName(), pattern)
+      if I_AM_LUCKY
+        Log("Exiting early because I_AM_LUCKY is enabled")
+        exit = true
+      endIf
       JMap.setForm(jmFoundNpcs, currentNpc.GetDisplayName(), currentNpc)
     endIf
     i += 1
@@ -140,12 +153,14 @@ endFunction
 
 Actor function ChooseNpcFromList(int jmFoundNpcs)
   int jaAllNpcNames = JMap.allKeys(jmFoundNpcs)
+  JValue.retain(jaAllNpcNames)
   if SORT_RESULTS
     Log("Sorting results...")
     jaAllNpcNames = JArray.Sort(jaAllNpcNames)
   endIf
 
   string name = CreateNpcListUI(jaAllNpcNames)
+  JValue.release(jaAllNpcNames)
   if name != ""
     return JMap.GetForm(jmFoundNpcs, name) as Actor
   endIf

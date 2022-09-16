@@ -43,10 +43,10 @@
             <Include NoRecurse="true">*.bsa</Include>
         </ZipFile>
     </ZipFiles>
-    <PreBuildEvent Description="PreBuildEvent: Rename settings file" UseInBuild="true">
+    <PostCompileEvent Description="PostCompileEvent: Rename settings file" UseInBuild="true">
         <Command>move @ModName\settings.json @ModName\settings_wip.json</Command>
         <Command>move @ModName\settings_default.json @ModName\settings.json</Command>
-    </PreBuildEvent>
+    </PostCompileEvent>
     <PostBuildEvent Description="PostBuildEvent: Restore custom settings and remove .bsa from local directory" UseInBuild="true">
         <Command>move @ModName\settings.json @ModName\settings_default.json</Command>
         <Command>move @ModName\settings_wip.json @ModName\settings.json</Command>

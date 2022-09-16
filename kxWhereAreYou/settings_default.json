@@ -8,7 +8,7 @@
   "sort_results": true,
   "debug": false,
   "experimental": {
-    "sort_before_search": false,
-    "pattern_matching": false
+    "i_am_lucky": false,
+    "sort_before_search": false
   }
 }
