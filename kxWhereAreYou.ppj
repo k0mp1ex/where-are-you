@@ -11,6 +11,8 @@
     Final="true">
     <Variables>
         <Variable Name="ModName"       Value="kxWhereAreYou" />
+        <Variable Name="ModVersion"    Value="1.0.0" />
+        <Variable Name="Output"        Value="dist" />
         <Variable Name="GameRoot"      Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\Game Root" />
         <Variable Name="ImportsFolder" Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\mods" />
     </Variables>
@@ -20,7 +22,6 @@
         <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
         <Import>@ImportsFolder\JContainers SE\scripts\source</Import>
         <Import>@GameRoot\Data\Scripts\Source</Import>
-        <!-- <Import>@ImportsFolder\powerofthree's Papyrus Extender\Source\scripts</Import> -->
     </Imports>
     <Folders>
         <!-- Relative path to folder containing .psc Papyrus source code files for this project -->
@@ -34,23 +35,21 @@
         </Package>
     </Packages>
     <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
-    <ZipFiles Output="Build">
-        <ZipFile Name="@ModName" RootDir="." Compression="deflate">
+    <ZipFiles Output="@Output">
+        <ZipFile Name="@ModName-v@ModVersion" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
             <Include>@ModName/settings.json</Include>
             <Include>*.ini</Include>
             <Include NoRecurse="true">*.bsa</Include>
         </ZipFile>
     </ZipFiles>
-    <!-- This will copy the default settings before packing -->
-    <!-- <PreBuildEvent Description='Pre-Build: Overriding "kxWhereAreYou.json" with default settings'>
-        <Command>copy "kxWhereAreYou.json" /Y "kxWhereAreYou_wip.json"</Command>
-        <Command>copy "kxWhereAreYou_default.json" /Y "kxWhereAreYou.json"</Command>
-    </PreBuildEvent> -->
-    <!-- This will revert defaul settings in the current working directory and 
-         remove any *.bsa files in this directory *after* the build, if there are any. Set UseInBuild="false" to disable. -->
-    <PostBuildEvent Description="Post-Build: Restore custom settings and remove .bsa from local directory" UseInBuild="true">
-        <!-- <Command>move "kxWhereAreYou_wip.json" "kxWhereAreYou.json"</Command> -->
+    <PreBuildEvent Description="PreBuildEvent: Rename settings file" UseInBuild="true">
+        <Command>move @ModName\settings.json @ModName\settings_wip.json</Command>
+        <Command>move @ModName\settings_default.json @ModName\settings.json</Command>
+    </PreBuildEvent>
+    <PostBuildEvent Description="PostBuildEvent: Restore custom settings and remove .bsa from local directory" UseInBuild="true">
+        <Command>move @ModName\settings.json @ModName\settings_default.json</Command>
+        <Command>move @ModName\settings_wip.json @ModName\settings.json</Command>
         <Command>del /s /q /f *.bsa</Command>
     </PostBuildEvent>
 </PapyrusProject>

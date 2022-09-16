@@ -33,7 +33,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, 0xc8197ec)
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, 0xc8197ec); blue
 endFunction
 
 function ShowNpcStatusUI(Actor npc) global
