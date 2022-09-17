@@ -62,7 +62,7 @@ event OnInit()
   Setup()
 endEvent
 
-event OnPlayerGameLoad()
+event OnPlayerLoadGame()
   UnregisterForAllKeys()
   Setup()
 endEvent
