@@ -5,15 +5,34 @@ import kxWhereAreYouLogging
 import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
-int property KEY_SEARCH hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".keys.search")
+GlobalVariable property kxWhereAreYouInitialized auto
+Actor player
+
+bool property IS_INITIALIZED hidden
+  bool function get()
+    return kxWhereAreYouInitialized.GetValueInt() as bool
+  endFunction
+
+  function set(bool initialized)
+    kxWhereAreYouInitialized.SetValueInt(initialized as int)
   endFunction
 endProperty
 
-int property KEY_DUMP_LOADED_REFERENCES hidden
+bool property IS_ENABLED hidden
+  bool function get()
+    return ReadSettingsFromDbAsBool(".enabled")
+  endFunction
+endProperty
+
+bool property KEEP_MENU_OPENED hidden
+  bool function get()
+    return ReadSettingsFromDbAsBool(".keep_menu_opened")
+  endFunction
+endProperty
+
+int property KEY_SEARCH hidden
   int function get()
-    return ReadSettingsFromDbAsInt(".keys.dump_loaded_references")
+    return ReadSettingsFromDbAsInt(".keys.search")
   endFunction
 endProperty
 
@@ -29,15 +48,21 @@ bool property SORT_RESULTS hidden
   endFunction
 endProperty
 
-bool property IS_DEBUG_ENABLED hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".debug")
-  endFunction
-endProperty
-
 float property TELEPORT_RANGE hidden
   float function get()
     return ReadSettingsFromDbAsFloat(".teleport_range")
+  endFunction
+endProperty
+
+bool property IS_DEBUG_ENABLED hidden
+  bool function get()
+    return ReadSettingsFromDbAsBool(".debug.enabled")
+  endFunction
+endProperty
+
+int property DEBUG_KEY_DATA_DUMP hidden
+  int function get()
+    return ReadSettingsFromDbAsInt(".debug.keys.data_dump")
   endFunction
 endProperty
 
@@ -54,12 +79,11 @@ bool property CAN_SORT_BEFORE_SEARCH hidden
   endFunction
 endProperty
 
-Actor player
-
 event OnInit()
   player = Game.GetPlayer()
   InitializeDB()
   Setup()
+  IS_INITIALIZED = true
 endEvent
 
 event OnPlayerLoadGame()
@@ -72,8 +96,9 @@ event OnKeyDown(int keyCode)
     GoToState("Busy")
     if keyCode == KEY_SEARCH
       SearchNPC()
-    elseIf keyCode == KEY_DUMP_LOADED_REFERENCES
+    elseIf keyCode == DEBUG_KEY_DATA_DUMP && IS_DEBUG_ENABLED
       DumpNpcList()
+      DumpDbToFile()
     endIf
     GoToState("")
   endIf
@@ -86,8 +111,13 @@ endState
 
 function Setup()
   LoadSettingsAndSaveToDB()
-  RegisterForKey(KEY_SEARCH)
-  RegisterForKey(KEY_DUMP_LOADED_REFERENCES)
+  if IS_ENABLED
+    RegisterForKey(KEY_SEARCH)
+    RegisterForKey(DEBUG_KEY_DATA_DUMP)
+  else
+    Log("Uninstalling mod...")
+    ResetDB()
+  endIf
 endFunction
 
 function DumpNpcList()
@@ -98,9 +128,6 @@ function DumpNpcList()
     LogNpcSlot(npc.GetDisplayName(), i, JArray.Count(loadedReferences))
     i += 1
   endWhile
-  if IS_DEBUG_ENABLED
-    DumpDbToFile()
-  endIf
 endFunction
 
 function SearchNPC()  
@@ -131,7 +158,7 @@ Actor function FindNpcByName(String text)
     Actor currentNpc = JArray.getForm(loadedReferences, i) as Actor
     if StringMatch(currentNpc.GetDisplayName(), pattern)
       if I_AM_LUCKY
-        Log("Exiting early because I_AM_LUCKY is enabled")
+        Log("Exiting early because 'i_am_lucky' flag is enabled")
         exit = true
       endIf
       JMap.setForm(jmFoundNpcs, currentNpc.GetDisplayName(), currentNpc)
@@ -168,13 +195,30 @@ endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)
   string command = CreateNpcCommandUI(npc)
-  if command == "teleport_to_player"
-    npc.MoveTo(player, TELEPORT_RANGE)
-  elseIf command == "move_to_npc"
-    player.MoveTo(npc, TELEPORT_RANGE)
-  elseIf command == "clone_npc"
-    player.PlaceAtMe(npc.GetActorBase())
-  elseIf command == "show_npc_stats"
-    ShowNpcStatusUI(npc)
+  if command
+    if command == "teleport_to_player"
+      npc.MoveTo(player, TELEPORT_RANGE)
+    elseIf command == "move_to_npc"
+      player.MoveTo(npc, TELEPORT_RANGE)
+    elseIf command == "clone_npc"
+      string name = CreateNpcNameUI("Choose the name of " + npc.GetDisplayName() + "'s clone")
+      if name
+        Actor clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
+        clone.SetDisplayName(name)
+      endIf
+    elseIf command == "show_npc_stats"
+      ShowNpcStatusUI(npc)
+    elseIf command == "open_npc_inventory"
+      npc.OpenInventory(abForceOpen = true)
+    elseIf command == "delete_npc"
+      RemoveNpcAsLoadedReferenceIfExists(npc)
+      npc.Disable()
+      npc.Delete()
+    endIf
+  
+    if KEEP_MENU_OPENED
+      WaitForMenus()
+      ChooseCommandToApplyToNPC(npc)
+    endIf
   endIf
 endFunction

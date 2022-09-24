@@ -1,5 +1,6 @@
 Scriptname kxWhereAreYouUI hidden
 
+import kxUtils
 import kxWhereAreYouLogging
 
 string function CreateSearchBoxUI() global
@@ -11,20 +12,26 @@ endFunction
 
 string function CreateNpcCommandUI(Actor npc) global
   UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
+  AddOptionToWheel(wheelMenu, 0, "Stats", "default_book_read")
   AddOptionToWheel(wheelMenu, 1, "Teleport to me", "book_map")
-  AddOptionToWheel(wheelMenu, 2, "Go there", "armor_feet")
-  AddOptionToWheel(wheelMenu, 5, "Clone", "mag_powers")
-  AddOptionToWheel(wheelMenu, 6, "Stats", "default_book_read")
+  AddOptionToWheel(wheelMenu, 2, "Visit", "armor_feet")
+  AddOptionToWheel(wheelMenu, 4, "Delete", "misc_remains")
+  AddOptionToWheel(wheelMenu, 5, "Inventory", "inv_all")
+  AddOptionToWheel(wheelMenu, 6, "Clone", "mag_powers")
   
   int result = wheelMenu.OpenMenu(npc)
-  if result == 1
+  if result == 0
+    return "show_npc_stats"
+  elseIf result == 1
     return "teleport_to_player"
   elseIf result == 2
     return "move_to_npc"
+  elseIf result == 4
+    return "delete_npc"
   elseIf result == 5
-    return "clone_npc"
+    return "open_npc_inventory"
   elseIf result == 6
-    return "show_npc_stats"
+    return "clone_npc"
   endIf
 endFunction
 
@@ -34,6 +41,14 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
   wheelMenu.SetPropertyIndexInt("optionIconColor", i, 0xc8197ec); blue
+endFunction
+
+string function CreateNpcNameUI(string msg = "") global
+  if msg
+    Debug.MessageBox(msg)
+  endIf
+  WaitForMenus()
+  return CreateSearchBoxUI()
 endFunction
 
 function ShowNpcStatusUI(Actor npc) global

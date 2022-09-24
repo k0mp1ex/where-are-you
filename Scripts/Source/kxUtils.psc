@@ -72,7 +72,7 @@ bool function StringMatchPattern(string str, string pattern) global
     i += 1
   endWhile
 
-  ; TODO: Remove
+  ; Only for Debug:
   ; MiscUtil.PrintConsole("Matching " + str + " against " + pattern)
   ; DumpJMapBool(map, n, m)
 
@@ -127,4 +127,10 @@ bool function IsInMenus() global
          UI.IsMenuOpen("Crafting Menu") || \
          UI.IsMenuOpen("RaceSex Menu") || \
          UI.IsMenuOpen("CustomMenu")
+endFunction
+
+function WaitForMenus() global
+  while IsInMenus()
+    Utility.Wait(0.5)
+  endWhile
 endFunction

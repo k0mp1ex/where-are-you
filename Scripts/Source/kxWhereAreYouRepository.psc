@@ -16,10 +16,16 @@ string function GetDumpDbFileName() global
 endFunction
 
 function InitializeDB() global
+  Log("Initializing the database...")
   int db = JMap.object()
   JMap.setObj(db, "loaded_references", JArray.object())
   JMap.setObj(db, "settings", JMap.object())
   JDB.setObj(GetDbKey(), db)
+endFunction
+
+function ResetDB() global
+  Log("Cleaning the database...")
+  JDB.setObj(GetDbKey(), 0)
 endFunction
 
 function DumpDbToFile() global
@@ -34,7 +40,11 @@ function LoadSettingsAndSaveToDB() global
 endFunction
 
 int function GetLoadedReferencesFromDB() global
-  return JDB.solveObj(GetPropertyPath(".loaded_references"))
+  int ref = JDB.solveObj(GetPropertyPath(".loaded_references"), 0)
+  if ref == 0
+    Log("[Warning] Trying to use .loaded_references before initialization. If the mod has been disabled, ignore this warning.")
+  endIf
+  return ref
 endFunction
 
 string function GetPropertyPath(string propertyPath) global
@@ -53,10 +63,24 @@ float function ReadSettingsFromDbAsFloat(string propertyPath) global
   return JDB.solveFlt(GetPropertyPath(".settings" + propertyPath))
 endFunction
 
+function RemoveNpcAsLoadedReferenceIfExists(Actor npc) global
+	int loadedReferences = GetLoadedReferencesFromDB()
+  if loadedReferences
+    int index = JArray.FindForm(loadedReferences, npc)
+    if index != -1
+      JArray.eraseForm(loadedReferences, npc)
+      Log(npc.GetDisplayName() + " removed.")
+    endIf
+  endIf
+endFunction
+
 function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
 	int loadedReferences = GetLoadedReferencesFromDB()
-	int index = JArray.FindForm(loadedReferences, npc)
-	if index == -1
-  	JArray.AddForm(loadedReferences, npc)
-	endIf
+  if loadedReferences
+    int index = JArray.FindForm(loadedReferences, npc)
+    if index == -1
+      JArray.AddForm(loadedReferences, npc)
+      Log(npc.GetDisplayName() + " added.")
+    endIf
+  endIf
 endFunction

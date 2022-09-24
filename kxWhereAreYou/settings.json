@@ -1,14 +1,20 @@
 {
+  "enabled": true,
   "keys": {
-    "search": 199,
-    "dump_loaded_references": 70
+    "search": 61
   },
+  "keep_menu_opened": true,
   "teleport_range": 100.0,
   "max_result_count": 10,
   "sort_results": true,
-  "debug": true,
   "experimental": {
     "i_am_lucky": false,
     "sort_before_search": true
+  },
+  "debug": {
+    "enabled": true,
+    "keys": {
+      "data_dump": 62
+    }
   }
 }
