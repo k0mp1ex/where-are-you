@@ -23,6 +23,7 @@ Don't worry, we'll find them for you!
   - Clone the NPC. It's meant only for testing, taking screenshots and related temporary stuff. Cloning a unique NPC is in general not recommended because only one instance of them is supposed to exist and some AI behaviour won't work properly in the cloned version.
   - Choose the name of the cloned NPC. Remember to pick an unique name so it doesn't conflict with an already registered NPC.
   - Track the NPCs cloned by this mod
+  - **ESPFE**
 - Planned:
   - SKSE (script free) version to improve search performance.
   - Find NPCs still not discovered/spawned in game.
