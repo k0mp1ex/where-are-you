@@ -60,6 +60,7 @@ No incompatibilities found yet.
 - [PapyrusUtil SE - Modders Scripting Utility Functions](https://www.nexusmods.com/skyrimspecialedition/mods/13048)
 - [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
 - [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
+- [Spell Perk Item Distributor (SPID)](https://www.nexusmods.com/skyrimspecialedition/mods/36869)
 
 ## Supported versions
 
@@ -154,6 +155,7 @@ No incompatibilities found yet.
 - [exiledviper](https://www.nexusmods.com/skyrimspecialedition/users/85199) for [PapyrusUtil SE - Modders Scripting Utility Functions](https://www.nexusmods.com/skyrimspecialedition/mods/13048)
 - [expired6978](https://www.nexusmods.com/skyrimspecialedition/users/2950481) for [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
 - [silvericed](https://www.nexusmods.com/skyrim/users/5355170) and [ryobg](https://www.nexusmods.com/skyrimspecialedition/users/35506715) for [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
+- [powerofthree](https://www.nexusmods.com/skyrimspecialedition/users/2148728) for [Spell Perk Item Distributor (SPID)](https://www.nexusmods.com/skyrimspecialedition/mods/36869)
 - [wSkeever](https://www.nexusmods.com/skyrimspecialedition/users/7064860) for the nice way to track NPCs in [Quick Mass Follower Commands Hotkey](https://www.nexusmods.com/skyrimspecialedition/mods/51362)
 - [mrowrpurr](https://www.nexusmods.com/skyrimspecialedition/users/121646123) for the fantastic [Skyrim Scripting YouTube channel](https://www.youtube.com/c/SkyrimScripting)
 - [Animonculory team](https://github.com/The-Animonculory/ADT#the-animonculory-team) for creating the Wabbajack modlist [ADT](https://github.com/The-Animonculory/ADT), used in all my tests.
