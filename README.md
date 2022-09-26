@@ -8,6 +8,8 @@ So, you've been wandering the lands, found a few NPCs but you're not sure where 
 Maybe you don't remember exactly what their names were?
 Don't worry, we'll find them for you!
 
+![alt text](docs/gifs/simple-search-multiple-results.gif)
+
 ## Features
 
 - Implemented:
@@ -30,6 +32,7 @@ Don't worry, we'll find them for you!
   - Add support to track pets
   - Show more NPC info (like FormID, EditorID, BaseActorID, what mod is from, etc.).
   - MCM: I didn't feel like people will be tweaking the available options that much. You can still edit the `settings.json` file. If you want this, let me know.
+  - Translations
   - Extend the search functionality with some patterns, similar to the SPID format.
 - Unplanned:
   - Tracking markers: I don't really like or use them in game. I might change my mind about it.
@@ -159,7 +162,7 @@ No incompatibilities found yet.
 - [wSkeever](https://www.nexusmods.com/skyrimspecialedition/users/7064860) for the nice way to track NPCs in [Quick Mass Follower Commands Hotkey](https://www.nexusmods.com/skyrimspecialedition/mods/51362)
 - [mrowrpurr](https://www.nexusmods.com/skyrimspecialedition/users/121646123) for the fantastic [Skyrim Scripting YouTube channel](https://www.youtube.com/c/SkyrimScripting)
 - [Animonculory team](https://github.com/The-Animonculory/ADT#the-animonculory-team) for creating the Wabbajack modlist [ADT](https://github.com/The-Animonculory/ADT), used in all my tests.
-- [cacophony](https://www.nexusmods.com/skyrimspecialedition/users/1040660) for creating the Wabbajack modlist [Licentia](https://www.nexusmods.com/skyrimspecialedition/mods/68983)
+- [cacophony](https://www.nexusmods.com/skyrimspecialedition/users/1040660) for creating the Wabbajack modlist [Licentia](https://www.nexusmods.com/skyrimspecialedition/mods/68983), used in all my screenshots.
 - [coldsun1187](https://www.nexusmods.com/skyrimspecialedition/users/9762372) and [VNDKTR](https://www.nexusmods.com/skyrimspecialedition/users/37717855) for the amazing followers in the screenshots.
 
 This is my first mod, so 🐻 with me.
