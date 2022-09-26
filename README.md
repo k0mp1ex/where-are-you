@@ -28,14 +28,13 @@ Don't worry, we'll find them for you!
   - **ESPFE**
 - Planned:
   - SKSE (script free) version to improve search performance.
+  - Tracking markers
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
   - Show more NPC info (like FormID, EditorID, BaseActorID, what mod is from, etc.).
   - MCM: I didn't feel like people will be tweaking the available options that much. You can still edit the `settings.json` file. If you want this, let me know.
   - Translations
   - Extend the search functionality with some patterns, similar to the SPID format.
-- Unplanned:
-  - Tracking markers: I don't really like or use them in game. I might change my mind about it.
 
 ## Settings
 
