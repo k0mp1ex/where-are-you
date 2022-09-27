@@ -10,7 +10,7 @@ string function CreateSearchBoxUI() global
   return UIExtensions.GetMenuResultString(menu)
 endFunction
 
-string function CreateNpcCommandUI(Actor npc) global
+string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker = false) global
   UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
   AddOptionToWheel(wheelMenu, 0, "Stats", "default_book_read")
   AddOptionToWheel(wheelMenu, 1, "Teleport to me", "book_map")
@@ -18,7 +18,12 @@ string function CreateNpcCommandUI(Actor npc) global
   AddOptionToWheel(wheelMenu, 4, "Delete", "misc_remains")
   AddOptionToWheel(wheelMenu, 5, "Inventory", "inv_all")
   AddOptionToWheel(wheelMenu, 6, "Clone", "mag_powers")
-  
+  string trackMessage = "Track"
+  if hasTrackingMarker
+    trackMessage = "Untrack"
+  endIf
+  AddOptionToWheel(wheelMenu, 7, trackMessage, "magic_shock")
+
   int result = wheelMenu.OpenMenu(npc)
   if result == 0
     return "show_npc_stats"
@@ -32,6 +37,8 @@ string function CreateNpcCommandUI(Actor npc) global
     return "open_npc_inventory"
   elseIf result == 6
     return "clone_npc"
+  elseIf result == 7
+    return "toggle_tracking_marker"
   endIf
 endFunction
 

@@ -5,5 +5,5 @@ string function GetModName() global
 endFunction
 
 int function GetModVersion() global
-  return 10001
+  return 10100
 endFunction

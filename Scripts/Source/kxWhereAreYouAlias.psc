@@ -7,6 +7,7 @@ import kxWhereAreYouUI
 
 GlobalVariable property kxWhereAreYouInitialized auto
 Actor player
+Quest currentQuest
 
 bool property IS_INITIALIZED hidden
   bool function get()
@@ -80,7 +81,6 @@ bool property CAN_SORT_BEFORE_SEARCH hidden
 endProperty
 
 event OnInit()
-  player = Game.GetPlayer()
   InitializeDB()
   Setup()
   IS_INITIALIZED = true
@@ -110,6 +110,9 @@ state Busy
 endState
 
 function Setup()
+  player = Game.GetPlayer()
+  currentQuest = GetOwningQuest()
+
   LoadSettingsAndSaveToDB()
   if IS_ENABLED
     RegisterForKey(KEY_SEARCH)
@@ -194,7 +197,11 @@ Actor function ChooseNpcFromList(int jmFoundNpcs)
 endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)
-  string command = CreateNpcCommandUI(npc)
+  int slot = GetNpcTrackingMarkerQuestAlias(npc)
+  bool hasTrackingMarker = slot != -1
+  Actor clone
+
+  string command = CreateNpcCommandUI(npc, hasTrackingMarker)
   if command
     if command == "teleport_to_player"
       npc.MoveTo(player, TELEPORT_RANGE)
@@ -203,7 +210,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
     elseIf command == "clone_npc"
       string name = CreateNpcNameUI("Choose the name of " + npc.GetDisplayName() + "'s clone")
       if name
-        Actor clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
+        clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
         clone.SetDisplayName(name)
       endIf
     elseIf command == "show_npc_stats"
@@ -214,11 +221,64 @@ function ChooseCommandToApplyToNPC(Actor npc)
       RemoveNpcAsLoadedReferenceIfExists(npc)
       npc.Disable()
       npc.Delete()
+    elseIf command == "toggle_tracking_marker"
+      if hasTrackingMarker
+        RemoveTrackingMarker(npc, slot)
+        Debug.Notification("Untracking " + npc.GetDisplayName())
+      elseIf AddTrackingMarker(npc)     
+        Debug.Notification("Tracking " + npc.GetDisplayName())        
+      endIf
     endIf
-  
+
     if KEEP_MENU_OPENED
       WaitForMenus()
-      ChooseCommandToApplyToNPC(npc)
+      if clone
+        ChooseCommandToApplyToNPC(clone)
+      else
+        ChooseCommandToApplyToNPC(npc)
+      endIf
     endIf
   endIf
+endFunction
+
+int function GetNpcTrackingMarkerQuestAlias(Actor npc)
+  int i = 1; skip the player quest alias
+  while i < currentQuest.GetNumAliases()
+    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
+    if nthAlias.GetActorReference() == npc
+      return i
+    endIf
+    i += 1
+  endWhile
+  return -1
+endFunction
+
+int function GetNextAvailableQuestAliasIndex()
+  int i = 1; skip the player quest alias
+  while i < currentQuest.GetNumAliases()
+    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
+    if !nthAlias.GetActorReference()
+      return i;
+    endIf
+    i += 1
+  endWhile
+  return -1
+endFunction
+
+bool function AddTrackingMarker(Actor npc)
+  int slot = GetNextAvailableQuestAliasIndex()
+  if slot == -1
+    Debug.MessageBox("Cannot add more tracking markers.")
+  else
+    ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
+    currentAlias.ForceRefTo(npc)
+    currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = true, abForce = true)
+  endIf
+  return slot != -1
+endFunction
+
+function RemoveTrackingMarker(Actor npc, int slot)
+  ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
+  currentAlias.Clear()
+  currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
 endFunction
