@@ -66,9 +66,9 @@ endFunction
 function RemoveNpcAsLoadedReferenceIfExists(Actor npc) global
 	int loadedReferences = GetLoadedReferencesFromDB()
   if loadedReferences
-    int index = JArray.FindForm(loadedReferences, npc)
+    int index = FindNpcAsLoadedReference(npc, loadedReferences)
     if index != -1
-      JArray.eraseForm(loadedReferences, npc)
+      JArray.EraseForm(loadedReferences, npc)
       Log(npc.GetDisplayName() + " removed.")
     endIf
   endIf
@@ -77,10 +77,14 @@ endFunction
 function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
 	int loadedReferences = GetLoadedReferencesFromDB()
   if loadedReferences
-    int index = JArray.FindForm(loadedReferences, npc)
+    int index = FindNpcAsLoadedReference(npc, loadedReferences)
     if index == -1
       JArray.AddForm(loadedReferences, npc)
       Log(npc.GetDisplayName() + " added.")
     endIf
   endIf
+endFunction
+
+int function FindNpcAsLoadedReference(Actor npc, int loadedReferences) global
+  return JArray.FindForm(loadedReferences, npc)
 endFunction

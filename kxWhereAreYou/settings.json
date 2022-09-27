@@ -1,7 +1,8 @@
 {
   "enabled": true,
   "keys": {
-    "search": 61
+    "search": 61,
+    "command": 62
   },
   "keep_menu_opened": true,
   "teleport_range": 100.0,
@@ -14,7 +15,7 @@
   "debug": {
     "enabled": true,
     "keys": {
-      "data_dump": 62
+      "data_dump": 68
     }
   }
 }

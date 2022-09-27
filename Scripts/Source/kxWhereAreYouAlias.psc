@@ -37,6 +37,12 @@ int property KEY_SEARCH hidden
   endFunction
 endProperty
 
+int property KEY_COMMAND hidden
+  int function get()
+    return ReadSettingsFromDbAsInt(".keys.command")
+  endFunction
+endProperty
+
 int property MAX_RESULT_COUNT hidden
   int function get()
     return ReadSettingsFromDbAsInt(".max_result_count")
@@ -95,7 +101,9 @@ event OnKeyDown(int keyCode)
   if !IsInMenus()
     GoToState("Busy")
     if keyCode == KEY_SEARCH
-      SearchNPC()
+      SearchNpc()
+    elseIf keyCode == KEY_COMMAND
+      ExecuteCommandForNpcAtCrosshair()
     elseIf keyCode == DEBUG_KEY_DATA_DUMP && IS_DEBUG_ENABLED
       DumpNpcList()
       DumpDbToFile()
@@ -116,6 +124,7 @@ function Setup()
   LoadSettingsAndSaveToDB()
   if IS_ENABLED
     RegisterForKey(KEY_SEARCH)
+    RegisterForKey(KEY_COMMAND)
     RegisterForKey(DEBUG_KEY_DATA_DUMP)
   else
     Log("Uninstalling mod...")
@@ -133,11 +142,23 @@ function DumpNpcList()
   endWhile
 endFunction
 
-function SearchNPC()  
+function SearchNpc()  
   string pattern = CreateSearchBoxUI()
   if pattern != ""
     Actor npc = FindNpcByName(pattern)
     if npc
+      ChooseCommandToApplyToNPC(npc)
+    endIf
+  endIf
+endFunction
+
+function ExecuteCommandForNpcAtCrosshair()
+  Actor npc = Game.GetCurrentCrosshairRef() as Actor
+  if npc
+    int loadedReferences = GetLoadedReferencesFromDB()
+    if FindNpcAsLoadedReference(npc, loadedReferences) == -1
+      Debug.MessageBox("Cannot execute commands for " + npc.GetDisplayName())
+    else
       ChooseCommandToApplyToNPC(npc)
     endIf
   endIf
@@ -171,7 +192,7 @@ Actor function FindNpcByName(String text)
   
   Actor npc
   if JMap.Count(jmFoundNpcs) == 0
-    Debug.MessageBox(pattern + " not found")
+    Debug.MessageBox("'" + pattern + "' not found")
   elseIf JMap.Count(jmFoundNpcs) == 1
     npc = JMap.getForm(jmFoundNpcs, JMap.nextKey(jmFoundNpcs)) as Actor
   else

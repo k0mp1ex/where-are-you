@@ -42,6 +42,7 @@ For now there are a few settings that you can control using the `settings.json` 
 
 - `enabled`: Enable/Disable the mod. When disabled all the mod's stored data will be erased (useful when uninstalling).
 - `keys.search`: The key used to show the search box. If you want to change it check the [DXScanCodes](https://www.creationkit.com/index.php?title=Input_Script). Default key is F3.
+- `keys.command`: The key used to show the command wheel for a NPC at the crosshair (if the NPC is unique). If you want to change it check the [DXScanCodes](https://www.creationkit.com/index.php?title=Input_Script). Default key is F4.
 - `keep_menu_open`: Enable/Disable the option to keep the NPC command menu opened after executing a command. It keeps open until you hit tab to close it. Disabled by default.
 - `teleport_range`: Control how close/far the teleport will be from the player/NPC.
 - `max_result_count`: How many NPCs will be shown in the result search list.
@@ -77,7 +78,8 @@ No incompatibilities found yet.
 {
   "enabled": true,
   "keys": {
-    "search": 61
+    "search": 61,
+    "command": 62
   },
   "keep_menu_opened": false,
   "teleport_range": 100.0,
@@ -99,6 +101,7 @@ No incompatibilities found yet.
 ## Alternatives
 
 - If you're still on Skyrim 1.5.97 you can use [NPC Lookup](https://www.nexusmods.com/skyrimspecialedition/mods/43097) or [AreYouThere SE - Actor NPC Follower](https://www.nexusmods.com/skyrimspecialedition/mods/27758) mods. They're SKSE plugins, so they're faster and also have a lot more features. I don't know any other similar alternatives for Skyrim 1.6.xxx, that's why I made this mod.
+- If you prefer typing console commands you can use [Skyrim Search SE](https://www.nexusmods.com/skyrimspecialedition/mods/45689). It covers more than NPCs and it's an incredible useful tool.
 - If you're only interested in find your current followers you can use [Quick Mass Follower Commands Hotkey](https://www.nexusmods.com/skyrimspecialedition/mods/51362) or the newest [Swiftly Order Squad - Follower Commands UI](https://www.nexusmods.com/skyrimspecialedition/mods/63259) mods. [Nether's Follower Framework](https://www.nexusmods.com/skyrimspecialedition/mods/55653) keeps track of your folllowers history (max 100 followers), so it also might suit your needs.
 
 ## FAQ

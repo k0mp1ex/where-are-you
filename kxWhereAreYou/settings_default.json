@@ -1,7 +1,8 @@
 {
   "enabled": true,
   "keys": {
-    "search": 61
+    "search": 61,
+    "command": 62
   },
   "keep_menu_opened": false,
   "teleport_range": 100.0,
