@@ -15,6 +15,7 @@ Don't worry, we'll find them for you!
 - Implemented:
   - Search all unique NPCs you discovered by their names
   - Search with support for wildcards * and ?
+  - *NEW* Tracking markers up to 100 NPCs
   - Teleport the NPC to you
   - Teleport you to where the NPC is
   - Check NPC stats
@@ -28,7 +29,6 @@ Don't worry, we'll find them for you!
   - **ESPFE**
 - Planned:
   - SKSE (script free) version to improve search performance.
-  - Tracking markers
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
   - Show more NPC info (like FormID, EditorID, BaseActorID, what mod is from, etc.).
