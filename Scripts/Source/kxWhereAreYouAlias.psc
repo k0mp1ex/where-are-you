@@ -31,6 +31,12 @@ bool property KEEP_MENU_OPENED hidden
   endFunction
 endProperty
 
+int property KEY_TRACK hidden
+  int function get()
+    return ReadSettingsFromDbAsInt(".keys.track")
+  endFunction
+endProperty
+
 int property KEY_SEARCH hidden
   int function get()
     return ReadSettingsFromDbAsInt(".keys.search")
@@ -100,7 +106,9 @@ endEvent
 event OnKeyDown(int keyCode)
   if !IsInMenus()
     GoToState("Busy")
-    if keyCode == KEY_SEARCH
+    if keyCode == KEY_TRACK
+      TrackNpcAtCrosshair()
+    elseIf keyCode == KEY_SEARCH
       SearchNpc()
     elseIf keyCode == KEY_COMMAND
       ExecuteCommandForNpcAtCrosshair()
@@ -123,6 +131,7 @@ function Setup()
 
   LoadSettingsAndSaveToDB()
   if IS_ENABLED
+    RegisterForKey(KEY_TRACK)
     RegisterForKey(KEY_SEARCH)
     RegisterForKey(KEY_COMMAND)
     RegisterForKey(DEBUG_KEY_DATA_DUMP)
@@ -142,6 +151,22 @@ function DumpNpcList()
   endWhile
 endFunction
 
+function TrackNpcAtCrosshair()
+  Actor npc = GetActorAtCrosshair()
+  if npc
+    TrackNpc(npc, GetNpcTrackingMarkerQuestAlias(npc))
+  endIf
+endFunction
+
+function TrackNpc(Actor npc, int slot)
+  if slot != -1
+    RemoveTrackingMarker(npc, slot)
+    Debug.Notification("Untracking " + npc.GetDisplayName())
+  elseIf AddTrackingMarker(npc)     
+    Debug.Notification("Tracking " + npc.GetDisplayName())
+  endIf
+endFunction
+
 function SearchNpc()  
   string pattern = CreateSearchBoxUI()
   if pattern != ""
@@ -153,7 +178,7 @@ function SearchNpc()
 endFunction
 
 function ExecuteCommandForNpcAtCrosshair()
-  Actor npc = Game.GetCurrentCrosshairRef() as Actor
+  Actor npc = GetActorAtCrosshair()
   if npc
     int loadedReferences = GetLoadedReferencesFromDB()
     if FindNpcAsLoadedReference(npc, loadedReferences) == -1
@@ -218,11 +243,9 @@ Actor function ChooseNpcFromList(int jmFoundNpcs)
 endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)
-  int slot = GetNpcTrackingMarkerQuestAlias(npc)
-  bool hasTrackingMarker = slot != -1
   Actor clone
-
-  string command = CreateNpcCommandUI(npc, hasTrackingMarker)
+  int slot = GetNpcTrackingMarkerQuestAlias(npc)
+  string command = CreateNpcCommandUI(npc, slot != -1)
   if command
     if command == "teleport_to_player"
       npc.MoveTo(player, TELEPORT_RANGE)
@@ -243,12 +266,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
       npc.Disable()
       npc.Delete()
     elseIf command == "toggle_tracking_marker"
-      if hasTrackingMarker
-        RemoveTrackingMarker(npc, slot)
-        Debug.Notification("Untracking " + npc.GetDisplayName())
-      elseIf AddTrackingMarker(npc)     
-        Debug.Notification("Tracking " + npc.GetDisplayName())        
-      endIf
+      TrackNpc(npc, slot)
     endIf
 
     if KEEP_MENU_OPENED

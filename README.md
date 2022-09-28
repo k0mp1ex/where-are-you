@@ -78,6 +78,7 @@ No incompatibilities found yet.
 {
   "enabled": true,
   "keys": {
+    "track": 60,
     "search": 61,
     "command": 62
   },

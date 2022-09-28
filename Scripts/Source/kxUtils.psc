@@ -134,3 +134,7 @@ function WaitForMenus() global
     Utility.Wait(0.5)
   endWhile
 endFunction
+
+Actor function GetActorAtCrosshair() global
+  return Game.GetCurrentCrosshairRef() as Actor
+endFunction
