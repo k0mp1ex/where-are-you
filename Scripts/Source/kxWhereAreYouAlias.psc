@@ -64,7 +64,7 @@ bool function CanRun()
 endFunction
 
 bool function IsCompatibleVersion()
-  return modVersionInstalled <= 10200
+  return modVersionInstalled <= 10300
 endFunction
 
 function RegisterForAllKeys()

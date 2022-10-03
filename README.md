@@ -1,6 +1,6 @@
 # Where Are You?
 
-A mod to lookup discovered NPCs in game.
+Lookup discovered NPCs in game. Search by their names, check stats, open inventory, teleport, clone, delete, ask for favors and add tracking markers. MCM available. SE and AE compatible.
 
 ## Description
 
@@ -21,9 +21,8 @@ Don't worry, we'll find them for you!
   - **[NEW]** Customizable hotkey for make NPC at crosshair do a favor
   - **[NEW]** Support for modifiers (Ctrl, Shift and Alt) in all hotkeys
   - **[NEW]** Added option to only delete cloned NPCs
-  - **[NEW]** Added option to only allow followers do favors
+  - **[NEW]** Added option to only allow followers to do favors
   - **[NEW]** Customizable UI (icons and color)
-  - **[NEW]** Removed experimental flags
   - Search supporting wildcards * and ?
   - Tracking markers up to 100 NPCs
   - Teleport the NPC to you
@@ -37,11 +36,11 @@ Don't worry, we'll find them for you!
   - Track the NPCs cloned by this mod
   - **ESPFE**
 - Planned:
-  - SKSE (script free) version to improve search performance.
+  - A SKSE version to improve search performance or a [Skyrim Search SE](https://www.nexusmods.com/skyrimspecialedition/mods/45689) integration.
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
-  - Show more NPC info (like FormID, EditorID, BaseActorID, what mod is from, etc.).
-  - Translations
+  - Show more NPC info (like FormID, EditorID, what mod is from, etc.).
+  - Translations (official support for English and pt-BR)
   - Profiles
   - Extend the search functionality with some patterns, similar to the SPID format.
   - Add dialog option in quests to help find the target NPC (where it lives, works, sleeps, etc). Optionally also add a quest marker to help track it. Thanks [dann1](https://www.nexusmods.com/Users/25568544) for the suggestion!
@@ -85,7 +84,7 @@ No incompatibilities found yet.
 ---
 
 - Can I uninstall it mid playthrough?
-- It's not recomended, but you can. What I recommend is reset stored data (Mod's MCM > System > Reset data), disable the mod (Mod's MCM > System > Mod enabled), load the game, make a new save, clean the new save on Resaver and load the cleaned save on game.
+- It's not recomended, but you can. What I recommend is reset stored data (Mod's MCM > System > Reset data), disable the mod (Mod's MCM > System > Mod enabled), disable "Keep tracking in the background" too (to avoid store data in background), make a new save, clean the new save on Resaver and load the cleaned save on game.
 
 ---
 
@@ -100,7 +99,7 @@ No incompatibilities found yet.
 ---
 
 - I can't find my NPC, what should I do?
-- This mod only tracks the NPCs spawned in your location. Did you find the NPC in game after installing this mod? Are you sure he/she wasn't inside an inn or a place you haven't visit before (or visit before you installed the mod)? If you're looking at the NPC, searching using the full name and still doesn't work, try to save and reload to force the script to scan the nearby NPCs again.
+- This mod only tracks the NPCs spawned in your location. Did you find the NPC in game after installing this mod? Are you sure he/she wasn't inside an inn or a place you haven't visit before (or visited before you installed the mod)? If you're looking at the NPC, searching using the full name and still doesn't work, try to save and reload to force the script to scan the nearby NPCs again.
 
 ---
 
@@ -115,16 +114,16 @@ No incompatibilities found yet.
 ---
 
 - What about the previous "I'm feeling lucky" flag?
-- It was in experimental phase and it's not needed. Now you can just set the max result count to 1 and you'll have the same behavior.
+- It was in experimental phase and it's not needed anymore. Now you can just set the max result count to 1 and you'll have the same behavior.
 
 ---
 
 - What happens if I disable the mod via "Mod enabled" toggle?
-- All the keys associated with this mod will be unregistered. The mod will still be storing NPCs on the background in case you reenable the mod again.
+- All the keys associated with this mod will be unregistered. The mod will still be storing NPCs on the background in case you reenable the mod again if the option "Keep tracking in the background" is enabled.
 
 ---
 
-- What "clear data" does?
+- What "reset data" does?
 - It removes all data stored by this mod from memory, so when you save your game no additional data from this mod will be baked into your save file. Your configuration settings will be untouched.
 
 ---
@@ -151,5 +150,8 @@ No incompatibilities found yet.
 - [Animonculory team](https://github.com/The-Animonculory/ADT#the-animonculory-team) for creating the Wabbajack modlist [ADT](https://github.com/The-Animonculory/ADT), used in all my tests.
 - [cacophony](https://www.nexusmods.com/skyrimspecialedition/users/1040660) for creating the Wabbajack modlist [Licentia](https://www.nexusmods.com/skyrimspecialedition/mods/68983), used in all my screenshots.
 - [coldsun1187](https://www.nexusmods.com/skyrimspecialedition/users/9762372) and [VNDKTR](https://www.nexusmods.com/skyrimspecialedition/users/37717855) for the amazing followers in the screenshots.
+  - [Lyris Titanborn - Part Giant Follower - Patreon Only (free) - 3BA/BHUNP/CBBE](https://www.patreon.com/posts/lyris-titanborn-70789859)
+  - [Anaka Winter-Mane - The Nord Warrior Priestess (Healer) - 3BA - BHUNP - CBBE](https://www.nexusmods.com/skyrimspecialedition/mods/66384)
+  - [YoRHa 2B - HP Deluxe Follower - 3BA-BHUNP-TBD-Bodyslide - ESPFE](https://www.nexusmods.com/skyrimspecialedition/mods/66836)
 
 This is my first mod, so 🐻 with me.
