@@ -2,6 +2,7 @@ Scriptname kxWhereAreYouUI hidden
 
 import kxUtils
 import kxWhereAreYouLogging
+import kxWhereAreYouProperties
 
 string function CreateSearchBoxUI() global
   string menu = "UITextEntryMenu"
@@ -10,36 +11,159 @@ string function CreateSearchBoxUI() global
   return UIExtensions.GetMenuResultString(menu)
 endFunction
 
-string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker = false) global
-  UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
-  AddOptionToWheel(wheelMenu, 0, "Stats", "default_book_read")
-  AddOptionToWheel(wheelMenu, 1, "Teleport to me", "book_map")
-  AddOptionToWheel(wheelMenu, 2, "Visit", "armor_feet")
-  AddOptionToWheel(wheelMenu, 4, "Delete", "misc_remains")
-  AddOptionToWheel(wheelMenu, 5, "Inventory", "inv_all")
-  AddOptionToWheel(wheelMenu, 6, "Clone", "mag_powers")
+string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker, bool isClone) global
+  int jaCommands = GetCommandWheelOptions(npc, hasTrackingMarker, isClone)
+
+  if JArray.Count(jaCommands) > 0
+    UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
+
+    int i = 0
+    while i < JArray.Count(jaCommands)
+      int jmCommand = JArray.GetObj(jaCommands, i)
+      AddOptionToWheel(wheelMenu, JMap.GetInt(jmCommand, "slot"), JMap.GetStr(jmCommand, "description"), JMap.GetStr(jmCommand, "icon"))  
+      i += 1
+    endwhile
+
+    int resultIndex = wheelMenu.OpenMenu(npc)
+    i = 0
+    bool exit = false
+    string command
+    while !exit && i < JArray.Count(jaCommands)
+      int jmCommand = JArray.GetObj(jaCommands, i)
+      if resultIndex == JMap.GetInt(jmCommand, "slot")
+        command = JMap.GetStr(jmCommand, "command")
+        exit = true
+      endIf
+      i += 1
+    endwhile
+
+    JValue.release(jaCommands)
+    return command
+  endIf
+endFunction
+
+int function GetCommandWheelOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
+  int jmStats = JMap.object()
+  JMap.SetStr(jmStats, "command",         "show_npc_stats")
+  JMap.SetStr(jmStats, "description",     "Stats")
+  JMap.SetStr(jmStats, "icon",            STATS_ICON_NAME())
+
+  int jmTeleport = JMap.object()
+  JMap.SetStr(jmTeleport, "command",      "teleport_to_player")
+  JMap.SetStr(jmTeleport, "description",  "Teleport")
+  JMap.SetStr(jmTeleport, "icon",         TELEPORT_ICON_NAME())
+
+  int jmVisit = JMap.object()
+  JMap.SetStr(jmVisit, "command",         "move_to_npc")
+  JMap.SetStr(jmVisit, "description",     "Visit")
+  JMap.SetStr(jmVisit, "icon",            VISIT_ICON_NAME())
+
+  int jmDoFavor = JMap.object()
+  JMap.SetStr(jmDoFavor, "command",       "do_favor")
+  JMap.SetStr(jmDoFavor, "description",   "Do Favor")
+  JMap.SetStr(jmDoFavor, "icon",          DO_FAVOR_ICON_NAME())
+
+  int jmDelete = JMap.object()
+  JMap.SetStr(jmDelete, "command",        "delete_npc")
+  JMap.SetStr(jmDelete, "description",    "Delete")
+  JMap.SetStr(jmDelete, "icon",           DELETE_ICON_NAME())
+
+  int jmInventory = JMap.object()
+  JMap.SetStr(jmInventory, "command",     "open_npc_inventory")
+  JMap.SetStr(jmInventory, "description", "Inventory")
+  JMap.SetStr(jmInventory, "icon",        INVENTORY_ICON_NAME())
+
+  int jmClone = JMap.object()
+  JMap.SetStr(jmClone, "command",         "clone_npc")
+  JMap.SetStr(jmClone, "description",     "Clone")
+  JMap.SetStr(jmClone, "icon",            CLONE_ICON_NAME())
+
+  int jmTrack = JMap.object()
+  JMap.SetStr(jmTrack, "command",         "toggle_track_npc")
   string trackMessage = "Track"
   if hasTrackingMarker
     trackMessage = "Untrack"
   endIf
-  AddOptionToWheel(wheelMenu, 7, trackMessage, "magic_shock")
+  JMap.SetStr(jmTrack, "description",     trackMessage)
+  JMap.SetStr(jmTrack, "icon",            TRACK_ICON_NAME())
 
-  int result = wheelMenu.OpenMenu(npc)
-  if result == 0
-    return "show_npc_stats"
-  elseIf result == 1
-    return "teleport_to_player"
-  elseIf result == 2
-    return "move_to_npc"
-  elseIf result == 4
-    return "delete_npc"
-  elseIf result == 5
-    return "open_npc_inventory"
-  elseIf result == 6
-    return "clone_npc"
-  elseIf result == 7
-    return "toggle_tracking_marker"
+  int jaCommands = JArray.object()
+  JValue.retain(jaCommands)
+
+  if SHOW_STATS_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmStats)
   endIf
+  if SHOW_TELEPORT_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmTeleport)
+  endIf
+  if SHOW_VISIT_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmVisit)
+  endIf
+  if SHOW_DELETE_COMMAND_WHEEL() && (!CAN_ONLY_DELETE_CLONES() || isClone)
+    JArray.AddObj(jaCommands, jmDelete)
+  endIf
+  if SHOW_INVENTORY_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmInventory)
+  endIf
+  if SHOW_CLONE_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmClone)
+  endIf
+  if SHOW_TRACK_COMMAND_WHEEL()
+    JArray.AddObj(jaCommands, jmTrack)
+  endIf
+  if SHOW_DO_FAVOR_COMMAND_WHEEL() && (!ONLY_FOLLOWERS_DO_FAVOR() || npc.IsPlayerTeammate())
+    JArray.AddObj(jaCommands, jmDoFavor)
+  endIf;
+
+  int size = JArray.Count(jaCommands)
+
+  if size == 1
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 1)
+  elseIf size == 2
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 5)
+  elseIf size == 3
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 5)
+  elseIf size == 4
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 5)
+    JMap.SetInt(JArray.GetObj(jaCommands, 3), "slot", 6)
+  elseIf size == 5
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 0)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 3), "slot", 5)
+    JMap.SetInt(JArray.GetObj(jaCommands, 4), "slot", 6)
+  elseIf size == 6
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 0)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 3), "slot", 4)
+    JMap.SetInt(JArray.GetObj(jaCommands, 4), "slot", 5)
+    JMap.SetInt(JArray.GetObj(jaCommands, 5), "slot", 6)
+  elseIf size == 7
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 0)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 3), "slot", 3)
+    JMap.SetInt(JArray.GetObj(jaCommands, 4), "slot", 4)
+    JMap.SetInt(JArray.GetObj(jaCommands, 5), "slot", 5)
+    JMap.SetInt(JArray.GetObj(jaCommands, 6), "slot", 6)
+  elseIf size == 8
+    JMap.SetInt(JArray.GetObj(jaCommands, 0), "slot", 0)
+    JMap.SetInt(JArray.GetObj(jaCommands, 1), "slot", 1)
+    JMap.SetInt(JArray.GetObj(jaCommands, 2), "slot", 2)
+    JMap.SetInt(JArray.GetObj(jaCommands, 3), "slot", 3)
+    JMap.SetInt(JArray.GetObj(jaCommands, 4), "slot", 4)
+    JMap.SetInt(JArray.GetObj(jaCommands, 5), "slot", 5)
+    JMap.SetInt(JArray.GetObj(jaCommands, 6), "slot", 6)
+    JMap.SetInt(JArray.GetObj(jaCommands, 7), "slot", 7)
+  endIf
+
+  return jaCommands
 endFunction
 
 function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string iconName) global
@@ -47,7 +171,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, 0xc8197ec); blue
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, DEFAULT_COLOR())
 endFunction
 
 string function CreateNpcNameUI(string msg = "") global
@@ -67,7 +191,7 @@ string function CreateNpcListUI(int jaAllNpcNames) global
   UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
   int i = 0
   while i < JArray.Count(jaAllNpcNames)
-    string npcName = JArray.getStr(jaAllNpcNames, i)
+    string npcName = JArray.GetStr(jaAllNpcNames, i)
     listMenu.AddEntryItem(npcName)
     LogNpcSlot(npcName + " added to search list", i, JArray.Count(jaAllNpcNames))
     i += 1

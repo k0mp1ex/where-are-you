@@ -21,6 +21,7 @@
         <Import>@ImportsFolder\PapyrusUtil SE - Modders Scripting Utility Functions\Source\Scripts</Import>
         <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
         <Import>@ImportsFolder\JContainers SE\scripts\source</Import>
+        <Import>@ImportsFolder\MCM Helper SDK\source\scripts</Import>
         <Import>@GameRoot\Data\Scripts\Source</Import>
     </Imports>
     <Folders>
@@ -32,24 +33,20 @@
         <Package Name="@ModName" RootDir=".">
             <Match In="Scripts">*.pex</Match>
             <Match In="Scripts/Source">*.psc</Match>
+            <Include>Interface/@ModName</Include>
         </Package>
     </Packages>
     <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
     <ZipFiles Output="@Output">
         <ZipFile Name="@ModName-v@ModVersion" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
-            <Include>@ModName/settings.json</Include>
-            <Include>*.ini</Include>
+            <Include>*_DISTR.ini</Include>
+            <Include>MCM/Config/@ModName/settings.ini</Include>
+            <Include>MCM/Config/@ModName/config.json</Include>
             <Include NoRecurse="true">*.bsa</Include>
         </ZipFile>
     </ZipFiles>
-    <PostCompileEvent Description="PostCompileEvent: Rename settings file" UseInBuild="true">
-        <Command>move @ModName\settings.json @ModName\settings_wip.json</Command>
-        <Command>move @ModName\settings_default.json @ModName\settings.json</Command>
-    </PostCompileEvent>
     <PostBuildEvent Description="PostBuildEvent: Restore custom settings and remove .bsa from local directory" UseInBuild="true">
-        <Command>move @ModName\settings.json @ModName\settings_default.json</Command>
-        <Command>move @ModName\settings_wip.json @ModName\settings.json</Command>
         <Command>del /s /q /f *.bsa</Command>
     </PostBuildEvent>
 </PapyrusProject>

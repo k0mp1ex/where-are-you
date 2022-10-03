@@ -7,25 +7,22 @@ string function GetDbKey() global
   return GetModName()
 endFunction
 
-string function GetSettingsFileName() global
-  return "Data/" + GetModName() + "/settings.json"
-endFunction
-
 string function GetDumpDbFileName() global
-  return "Data/" + GetModName() + "/.debug/dump.json"
+  return "Data/" + GetModName() + "/Debug/dump.json"
 endFunction
 
 function InitializeDB() global
   Log("Initializing the database...")
   int db = JMap.object()
   JMap.setObj(db, "loaded_references", JArray.object())
-  JMap.setObj(db, "settings", JMap.object())
+  JMap.setObj(db, "cloned_references", JArray.object())
   JDB.setObj(GetDbKey(), db)
 endFunction
 
 function ResetDB() global
   Log("Cleaning the database...")
-  JDB.setObj(GetDbKey(), 0)
+  JDB.solveObjSetter(GetPropertyPath(".loaded_references"), JArray.object())
+  JDB.solveObjSetter(GetPropertyPath(".cloned_references"), JArray.object())
 endFunction
 
 function DumpDbToFile() global
@@ -33,58 +30,77 @@ function DumpDbToFile() global
   JValue.writeToFile(JDB.solveObj(GetPropertyPath("")), filename)
 endFunction
 
-function LoadSettingsAndSaveToDB() global
-  string fileName = GetSettingsFileName()
-  int config = JValue.readFromFile(fileName)
-  JDB.solveObjSetter(GetPropertyPath(".settings"), config, createMissingKeys = true)
-endFunction
-
-int function GetLoadedReferencesFromDB() global
-  int ref = JDB.solveObj(GetPropertyPath(".loaded_references"), 0)
-  if ref == 0
-    Log("[Warning] Trying to use .loaded_references before initialization. If the mod has been disabled, ignore this warning.")
-  endIf
-  return ref
-endFunction
-
 string function GetPropertyPath(string propertyPath) global
   return "." + GetDbKey() + propertyPath
 endFunction
 
-bool function ReadSettingsFromDbAsBool(string propertyPath) global
-  return JDB.solveInt(GetPropertyPath(".settings" + propertyPath)) as bool
+int function GetReferencesFromDB(string propertyPath) global
+  return JDB.solveObj(GetPropertyPath(propertyPath), 0)
 endFunction
 
-int function ReadSettingsFromDbAsInt(string propertyPath) global
-  return JDB.solveInt(GetPropertyPath(".settings" + propertyPath))
+int function GetLoadedReferencesFromDB() global
+  return GetReferencesFromDB(".loaded_references")
 endFunction
 
-float function ReadSettingsFromDbAsFloat(string propertyPath) global
-  return JDB.solveFlt(GetPropertyPath(".settings" + propertyPath))
+int function GetClonedReferencesFromDB() global
+  return GetReferencesFromDB(".cloned_references")
 endFunction
 
-function RemoveNpcAsLoadedReferenceIfExists(Actor npc) global
-	int loadedReferences = GetLoadedReferencesFromDB()
-  if loadedReferences
-    int index = FindNpcAsLoadedReference(npc, loadedReferences)
-    if index != -1
-      JArray.EraseForm(loadedReferences, npc)
-      Log(npc.GetDisplayName() + " removed.")
-    endIf
-  endIf
-endFunction
-
-function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
-	int loadedReferences = GetLoadedReferencesFromDB()
-  if loadedReferences
-    int index = FindNpcAsLoadedReference(npc, loadedReferences)
+function AddNpcAsReference(Actor npc, int references) global
+  if references
+    int index = FindNpcAsReference(npc, references)
     if index == -1
-      JArray.AddForm(loadedReferences, npc)
+      JArray.AddForm(references, npc)
       Log(npc.GetDisplayName() + " added.")
     endIf
   endIf
 endFunction
 
-int function FindNpcAsLoadedReference(Actor npc, int loadedReferences) global
-  return JArray.FindForm(loadedReferences, npc)
+function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
+  AddNpcAsReference(npc, GetLoadedReferencesFromDB())
+endFunction
+
+function AddNpcAsClonedReferenceIfNotExists(Actor npc) global
+  AddNpcAsReference(npc, GetClonedReferencesFromDB())
+endFunction
+
+function RemoveNpcAsReferenceIfExists(Actor npc, int references) global
+  if references
+    int index = FindNpcAsReference(npc, references)
+    if index != -1
+      JArray.EraseForm(references, npc)
+      Log(npc.GetDisplayName() + " removed.")
+    endIf
+  endIf
+endFunction
+
+function RemoveNpcAsLoadedReferenceIfExists(Actor npc) global
+  RemoveNpcAsReferenceIfExists(npc, GetLoadedReferencesFromDB())
+endFunction
+
+function RemoveNpcAsClonedReferenceIfExists(Actor npc) global
+  RemoveNpcAsReferenceIfExists(npc, GetClonedReferencesFromDB())
+endFunction
+
+function RemoveAllClonedNpcs() global
+  int cloned_references = GetClonedReferencesFromDB()
+  int i = 0
+  while i < JArray.Count(cloned_references)
+    Actor npc = JArray.getForm(cloned_references, i) as Actor
+    if npc
+      Log("Removing " + npc.GetDisplayName())
+      npc.Disable()
+      npc.Delete()
+    endIf
+    i += 1
+  endWhile
+endFunction
+
+bool function IsClonedNpc(Actor npc) global
+	int clonedReferences = GetClonedReferencesFromDB()
+  return clonedReferences && FindNpcAsReference(npc, clonedReferences) != -1
+endFunction
+
+int function FindNpcAsReference(Actor npc, int references) global
+  return JArray.FindForm(references, npc)
 endFunction

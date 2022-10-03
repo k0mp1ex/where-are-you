@@ -2,7 +2,7 @@ Scriptname kxWhereAreYouLogging hidden
 
 import kxUtils
 import kxWhereAreYouCommon
-import kxWhereAreYouRepository
+import kxWhereAreYouProperties
 
 function LogNpcSlot(string name, int index, int size) global
   Log((index + 1) + "/" + size + ": " + name)
@@ -10,9 +10,8 @@ endFunction
 
 function Log(string msg) global
   string fullMessage = "[" + GetModName() + "@v" + GetModVersionAsString(GetModVersion()) + "] " + msg
-  bool isDebugEnabled = ReadSettingsFromDbAsBool(".debug")
   Debug.Trace(fullMessage)
-  if isDebugEnabled
+  if IS_DEBUG_ENABLED()
     MiscUtil.PrintConsole(fullMessage)
   endIf
 endFunction

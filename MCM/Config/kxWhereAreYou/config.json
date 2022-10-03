@@ -1,0 +1,587 @@
+{
+  "modName": "kxWhereAreYou",
+  "displayName": "Where Are You?",
+  "minMcmVersion": 9,
+  "cursorFillMode": "topToBottom",
+  "pluginRequirements": [
+    "SkyUI_SE.esp",
+    "MCMHelper.esp",
+    "UIExtensions.esp",
+    "kxWhereAreYou.esp"
+  ],
+  "pages": [
+    {
+      "pageDisplayName": "General",
+      "cursorFillMode": "topToBottom",
+      "content": [
+        {
+          "type": "header",
+          "text": "Search"
+        },
+        {
+          "id": "uMaxResultCount:Search",
+          "type": "slider",
+          "text": "Max result count",
+          "help": "The max number of NPCs that can appear in the result list",
+          "valueOptions": {
+            "min": 1,
+            "max": 50,
+            "step": 1,
+            "formatString": "{0} NPC(s)",
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bSortResults:Search",
+          "type": "toggle",
+          "text": "Sort results",
+          "help": "Sort the result search list shown when your search returns multiple matches",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Command Wheel"
+        },
+        {
+          "id": "bKeepOpened:CommandWheel",
+          "type": "toggle",
+          "text": "Keep opened",
+          "help": "Keep the NPC command menu opened after executing a command. It keeps open until you hit [Tab] to close it.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Teleport"
+        },
+        {
+          "id": "fRange:Teleport",
+          "type": "slider",
+          "text": "Range",
+          "help": "Control how close/far the teleport will be from the player/NPC",
+          "valueOptions": {
+            "min": 0,
+            "max": 1000,
+            "step": 10,
+            "formatString": "{0} units",
+            "sourceType": "ModSettingFloat"
+          }
+        },
+        {
+          "type": "header",
+          "text": "Delete",
+          "position": 1
+        },
+        {
+          "id": "bOnlyClones:Delete",
+          "type": "toggle",
+          "text": "Only clones",
+          "help": "Only show delete option to cloned NPCs",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Do favor"
+        },
+        {
+          "id": "bOnlyFollowers:DoFavor",
+          "type": "toggle",
+          "text": "Only followers",
+          "help": "Only followers can do favors",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        }
+      ]
+    },
+    {
+      "pageDisplayName": "Hotkeys",
+      "cursorFillMode": "topToBottom",
+      "content": [
+        {
+          "type": "header",
+          "text": "Search"
+        },
+        {
+          "id": "uSearchKey:Hotkeys",
+          "type": "keymap",
+          "text": "Hotkey",
+          "help": "Hotkey to open input box to search for the NPC",
+          "valueOptions": {
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bSearchCtrlKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Ctrl]",
+          "help": "Use [Ctrl] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bSearchShiftKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Shift]",
+          "help": "Use [Shift] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bSearchAltKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Alt]",
+          "help": "Use [Alt] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Command Wheel"
+        },
+        {
+          "id": "uCommandWheelKey:Hotkeys",
+          "type": "keymap",
+          "text": "Hotkey",
+          "help": "Hotkey to show command wheel for the NPC at crosshair",
+          "valueOptions": {
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bCommandWheelCtrlKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Ctrl]",
+          "help": "Use [Ctrl] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bCommandWheelShiftKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Shift]",
+          "help": "Use [Shift] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bCommandWheelAltKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Alt]",
+          "help": "Use [Alt] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "header",
+          "text": "Track/Untrack",
+          "position": 1
+        },
+        {
+          "id": "uTrackKey:Hotkeys",
+          "type": "keymap",
+          "text": "Hotkey",
+          "help": "Hotkey to add/remove tracking marker for the NPC at crosshair",
+          "valueOptions": {
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bTrackCtrlKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Ctrl]",
+          "help": "Use [Ctrl] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bTrackShiftKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Shift]",
+          "help": "Use [Shift] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bTrackAltKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Alt]",
+          "help": "Use [Alt] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Do favor"
+        },
+        {
+          "id": "uDoFavorKey:Hotkeys",
+          "type": "keymap",
+          "text": "Hotkey",
+          "help": "Hotkey to ask the NPC at crosshair to do a favor",
+          "valueOptions": {
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bDoFavorCtrlKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Ctrl]",
+          "help": "Use [Ctrl] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bDoFavorShiftKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Shift]",
+          "help": "Use [Shift] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bDoFavorAltKey:Hotkeys",
+          "type": "toggle",
+          "text": "[Alt]",
+          "help": "Use [Alt] key",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        }
+      ]
+    },
+    {
+      "pageDisplayName": "UI",
+      "cursorFillMode": "topToBottom",
+      "content": [
+        {
+          "type": "header",
+          "text": "Colors"
+        },
+        {
+          "id": "rDefaultColor:Colors",
+          "type": "color",
+          "text": "Default",
+          "valueOptions": {
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Icons"
+        },
+        {
+          "id": "sStatsIcon:Icons",
+          "type": "input",
+          "text": "Stats",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sTeleportIcon:Icons",
+          "type": "input",
+          "text": "Teleport",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sVisitIcon:Icons",
+          "type": "input",
+          "text": "Visit",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sDeleteIcon:Icons",
+          "type": "input",
+          "text": "Delete",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sInventoryIcon:Icons",
+          "type": "input",
+          "text": "Inventory",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sCloneIcon:Icons",
+          "type": "input",
+          "text": "Clone",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sTrackIcon:Icons",
+          "type": "input",
+          "text": "Track/Untrack",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sDoFavorIcon:Icons",
+          "type": "input",
+          "text": "Do favor",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "type": "header",
+          "text": "Command Wheel",
+          "position": 1
+        },
+        {
+          "id": "bShowStats:CommandWheel",
+          "type": "toggle",
+          "text": "Show Stats",
+          "help": "Show Stats option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowTeleport:CommandWheel",
+          "type": "toggle",
+          "text": "Show Teleport",
+          "help": "Show Teleport option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowVisit:CommandWheel",
+          "type": "toggle",
+          "text": "Show Visit",
+          "help": "Show Visit option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowDelete:CommandWheel",
+          "type": "toggle",
+          "text": "Show Delete",
+          "help": "Show Delete option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowInventory:CommandWheel",
+          "type": "toggle",
+          "text": "Show Inventory",
+          "help": "Show Inventory option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowClone:CommandWheel",
+          "type": "toggle",
+          "text": "Show Clone",
+          "help": "Show Clone option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowTrack:CommandWheel",
+          "type": "toggle",
+          "text": "Show Track/Untrack",
+          "help": "Show Track/Untrack option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowDoFavor:CommandWheel",
+          "type": "toggle",
+          "text": "Show Do Favor",
+          "help": "Show Do Favor option on command wheel.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        }
+      ]
+    },
+    {
+      "pageDisplayName": "System",
+      "cursorFillMode": "topToBottom",
+      "content": [
+        {
+          "type": "header",
+          "text": "Danger Zone"
+        },
+        {
+          "id": "bEnabled:System",
+          "type": "toggle",
+          "text": "Mod enabled",
+          "help": "Toggle to enable and disable mod.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          },
+          "groupControl": 1
+        },
+        {
+          "id": "bKeepTrackingWhenDisabled:System",
+          "type": "toggle",
+          "text": "Keep tracking in the background",
+          "help": "Keep adding NPCs to the list when the mod is disabled.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          },
+          "groupCondition": { "NOT": 1 },
+          "groupBehavior": "disable"
+        },
+        {
+          "type": "text",
+          "text": "Reset data",
+          "help": "Clear all stored data, removing all tracking markers and cloned NPCs.",
+          "valueOptions": {
+            "value": "Click to reset"
+          },
+          "action": {
+            "type": "CallFunction",
+            "form": "kxWhereAreYou.esp|801",
+            "scriptName": "kxWhereAreYouMcm",
+            "function": "ResetData"
+          }
+        },
+        {
+          "type": "header",
+          "text": "Debug",
+          "position": 1
+        },
+        {
+          "id": "bEnabled:Debug",
+          "type": "toggle",
+          "text": "Debug mode",
+          "help": "Enable/disable debug mode",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Export data",
+          "help": "Export all stored data",
+          "valueOptions": {
+            "value": "Click to export"
+          },
+          "action": {
+            "type": "CallFunction",
+            "form": "kxWhereAreYou.esp|801",
+            "scriptName": "kxWhereAreYouMcm",
+            "function": "ExportData"
+          }
+        }
+      ]
+    },
+    {
+      "pageDisplayName": "About",
+      "cursorFillMode": "topToBottom",
+      "content": [
+        {
+          "type": "header",
+          "text": "Info",
+          "position": 1
+        },
+        {
+          "type": "text",
+          "valueOptions": {
+            "value": "Where Are You?"
+          }
+        },
+        {
+          "type": "text",
+          "valueOptions": {
+            "value": "Version 1.2.0"
+          }
+        },
+        {
+          "type": "text",
+          "valueOptions": {
+            "value": "- k0mp1ex -"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Requirements"
+        },
+        {
+          "type": "text",
+          "text": "SKSE64"
+        },
+        {
+          "type": "text",
+          "text": "SkyUI"
+        },
+        {
+          "type": "text",
+          "text": "MCM Helper"
+        },
+        {
+          "type": "text",
+          "text": "PapyrusUtil SE"
+        },
+        {
+          "type": "text",
+          "text": "UIExtensions"
+        },
+        {
+          "type": "text",
+          "text": "JContainers"
+        }
+      ]
+    }
+  ],
+  "customContent": {
+    "source": "kxWhereAreYou/kxWhereAreYou.dds"
+  }
+}

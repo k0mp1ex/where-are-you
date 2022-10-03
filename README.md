@@ -14,15 +14,24 @@ Don't worry, we'll find them for you!
 
 - Implemented:
   - Search all unique NPCs you discovered by their names
-  - Search with support for wildcards * and ?
-  - *NEW* Tracking markers up to 100 NPCs
+  - **[NEW]** MCM
+  - **[NEW]** Customizable hotkey for search NPCs
+  - **[NEW]** Customizable hotkey for tracking NPC at crosshair
+  - **[NEW]** Customizable hotkey for show command wheel for NPC at crosshair
+  - **[NEW]** Customizable hotkey for make NPC at crosshair do a favor
+  - **[NEW]** Support for modifiers (Ctrl, Shift and Alt) in all hotkeys
+  - **[NEW]** Added option to only delete cloned NPCs
+  - **[NEW]** Added option to only allow followers do favors
+  - **[NEW]** Customizable UI (icons and color)
+  - **[NEW]** Removed experimental flags
+  - Search supporting wildcards * and ?
+  - Tracking markers up to 100 NPCs
   - Teleport the NPC to you
   - Teleport you to where the NPC is
   - Check NPC stats
   - Open NPC inventory
   - Delete the NPC
   - Choose the NPC on a list when the search returns multiple results
-  - Flag "I am lucky" to use the first search match instead of showing a result list. This might be faster to search, but you will have to be more specific when searching to match the right NPC.
   - Clone the NPC. It's meant only for testing, taking screenshots and related temporary stuff. Cloning a unique NPC is in general not recommended because only one instance of them is supposed to exist and some AI behaviour won't work properly in the cloned version.
   - Choose the name of the cloned NPC. Remember to pick an unique name so it doesn't conflict with an already registered NPC.
   - Track the NPCs cloned by this mod
@@ -32,26 +41,10 @@ Don't worry, we'll find them for you!
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
   - Show more NPC info (like FormID, EditorID, BaseActorID, what mod is from, etc.).
-  - MCM: I didn't feel like people will be tweaking the available options that much. You can still edit the `settings.json` file. If you want this, let me know.
   - Translations
+  - Profiles
   - Extend the search functionality with some patterns, similar to the SPID format.
-
-## Settings
-
-For now there are a few settings that you can control using the `settings.json` file. Some are still in experimental phase.
-
-- `enabled`: Enable/Disable the mod. When disabled all the mod's stored data will be erased (useful when uninstalling).
-- `keys.search`: The key used to show the search box. If you want to change it check the [DXScanCodes](https://www.creationkit.com/index.php?title=Input_Script). Default key is F3.
-- `keys.command`: The key used to show the command wheel for a NPC at the crosshair (if the NPC is unique). If you want to change it check the [DXScanCodes](https://www.creationkit.com/index.php?title=Input_Script). Default key is F4.
-- `keep_menu_open`: Enable/Disable the option to keep the NPC command menu opened after executing a command. It keeps open until you hit tab to close it. Disabled by default.
-- `teleport_range`: Control how close/far the teleport will be from the player/NPC.
-- `max_result_count`: How many NPCs will be shown in the result search list.
-- `sort_results`: Enable/Disable sorting the result search list.
-ames found in game and tracked by this mod. Used for debug purposes, disabled by default.
-- `experimental.i_am_lucky`: Enable/Disable searching only until first match is found. In experimental phase.
-- `experimental.sort_before_search`: Enable/Disable sorting all the NPCs names before searching. In experimental phase.
-- `debug.enabled`: Enable/Disable debug mode, disabled by default.
-- `debug.keys.data_dump`: The key used to dump NPCs loaded data and settings.
+  - Add dialog option in quests to help find the target NPC (where it lives, works, sleeps, etc). Optionally also add a quest marker to help track it. Thanks [dann1](https://www.nexusmods.com/Users/25568544) for the suggestion!
 
 ## Compatibility
 
@@ -64,6 +57,7 @@ No incompatibilities found yet.
 - [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
 - [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 - [Spell Perk Item Distributor (SPID)](https://www.nexusmods.com/skyrimspecialedition/mods/36869)
+- [MCM Helper](https://www.nexusmods.com/skyrimspecialedition/mods/53000)
 
 ## Supported versions
 
@@ -71,33 +65,6 @@ No incompatibilities found yet.
 - [✔️] SE
 - [❌] LE
 - [❌] VR
-
-## Configuration defaults
-
-```json
-{
-  "enabled": true,
-  "keys": {
-    "track": 60,
-    "search": 61,
-    "command": 62
-  },
-  "keep_menu_opened": false,
-  "teleport_range": 100.0,
-  "max_result_count": 10,
-  "sort_results": true,
-  "experimental": {
-    "i_am_lucky": false,
-    "sort_before_search": false
-  },
-  "debug": {
-    "enabled": false,
-    "keys": {
-      "data_dump": -1
-    }
-  }
-}
-```
 
 ## Alternatives
 
@@ -108,7 +75,7 @@ No incompatibilities found yet.
 ## FAQ
 
 - How to show the search bar?
-- The default key is F3. You can change this in the `settings.json` file.
+- The default key is F3. You can change this via MCM.
 
 ---
 
@@ -118,7 +85,7 @@ No incompatibilities found yet.
 ---
 
 - Can I uninstall it mid playthrough?
-- It's not recomended, but you can. What I recommend is disable the mod first (set the flag "enabled" to false in settings.json), load the game, make a new save, clean the new save on Resaver and load the cleaned save on game.
+- It's not recomended, but you can. What I recommend is reset stored data (Mod's MCM > System > Reset data), disable the mod (Mod's MCM > System > Mod enabled), load the game, make a new save, clean the new save on Resaver and load the cleaned save on game.
 
 ---
 
@@ -138,12 +105,27 @@ No incompatibilities found yet.
 ---
 
 - I have a very specific case where my NPC is not tracked by this mod at all. Can I change any settings or do some troubleshoot on my own?
-- This mod uses SPID to distribute a lookup spell for every unique NPC actor. If this doesn't match what you need you can update the `kxWhereAreYou_DISTR.ini` file and include your own filters. You can `bEnableLogging` and `bEnableTrace` to `1` on your Skyrim.ini file and also set the `debug.enable` property to true on this mod `settings.json`. The logs will appear on your Papyrus.0.log file and also on the game's console. You can bind a [key](https://www.creationkit.com/index.php?title=Input_Script) to dump all data stored by the mod using the `debug.keys.data_dump` property in this mod `settings.json` file too. The output file will be generated at `Data/kxWhereAreYou/.debug/dump.json`.
+- This mod uses SPID to distribute a lookup spell for every unique NPC actor. If this doesn't match what you need you can update the `kxWhereAreYou_DISTR.ini` file and include your own filters. You can `bEnableLogging` and `bEnableTrace` to `1` on your Skyrim.ini file and also enable "Debug mode" on MCM. The logs will appear on your Papyrus.0.log file and also on the game's console. You can also dump all data stored via the MCM (Mod's MCM > System > Export data). The output file will be generated at `Data/kxWhereAreYou/Debug/dump.json`.
 
 ---
 
 - It's not lore-friendly, you can break your quest deleting NPCs or taking something from their inventory. You know this, right?
 - I do. This mod is not intended to be lore friendly, just a quality of life mod. It's up to you to decide what commands you'll use to not break your quests or immersion.
+
+---
+
+- What about the previous "I'm feeling lucky" flag?
+- It was in experimental phase and it's not needed. Now you can just set the max result count to 1 and you'll have the same behavior.
+
+---
+
+- What happens if I disable the mod via "Mod enabled" toggle?
+- All the keys associated with this mod will be unregistered. The mod will still be storing NPCs on the background in case you reenable the mod again.
+
+---
+
+- What "clear data" does?
+- It removes all data stored by this mod from memory, so when you save your game no additional data from this mod will be baked into your save file. Your configuration settings will be untouched.
 
 ---
 
@@ -162,6 +144,8 @@ No incompatibilities found yet.
 - [expired6978](https://www.nexusmods.com/skyrimspecialedition/users/2950481) for [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
 - [silvericed](https://www.nexusmods.com/skyrim/users/5355170) and [ryobg](https://www.nexusmods.com/skyrimspecialedition/users/35506715) for [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 - [powerofthree](https://www.nexusmods.com/skyrimspecialedition/users/2148728) for [Spell Perk Item Distributor (SPID)](https://www.nexusmods.com/skyrimspecialedition/mods/36869)
+- [schlangster](https://www.nexusmods.com/skyrimspecialedition/users/28794) and team for [SkyUI](https://www.nexusmods.com/skyrimspecialedition/mods/12604)
+- [Parapets](https://www.nexusmods.com/skyrimspecialedition/users/39501725) for [MCM Helper](https://www.nexusmods.com/skyrimspecialedition/mods/53000)
 - [wSkeever](https://www.nexusmods.com/skyrimspecialedition/users/7064860) for the nice way to track NPCs in [Quick Mass Follower Commands Hotkey](https://www.nexusmods.com/skyrimspecialedition/mods/51362)
 - [mrowrpurr](https://www.nexusmods.com/skyrimspecialedition/users/121646123) for the fantastic [Skyrim Scripting YouTube channel](https://www.youtube.com/c/SkyrimScripting)
 - [Animonculory team](https://github.com/The-Animonculory/ADT#the-animonculory-team) for creating the Wabbajack modlist [ADT](https://github.com/The-Animonculory/ADT), used in all my tests.

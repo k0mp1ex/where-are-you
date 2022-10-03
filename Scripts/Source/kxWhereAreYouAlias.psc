@@ -1,120 +1,45 @@
 Scriptname kxWhereAreYouAlias extends ReferenceAlias
 
 import kxUtils
+import kxWhereAreYouCommon
 import kxWhereAreYouLogging
+import kxWhereAreYouProperties
 import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
 GlobalVariable property kxWhereAreYouInitialized auto
+
 Actor player
 Quest currentQuest
-
-bool property IS_INITIALIZED hidden
-  bool function get()
-    return kxWhereAreYouInitialized.GetValueInt() as bool
-  endFunction
-
-  function set(bool initialized)
-    kxWhereAreYouInitialized.SetValueInt(initialized as int)
-  endFunction
-endProperty
-
-bool property IS_ENABLED hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".enabled")
-  endFunction
-endProperty
-
-bool property KEEP_MENU_OPENED hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".keep_menu_opened")
-  endFunction
-endProperty
-
-int property KEY_TRACK hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".keys.track")
-  endFunction
-endProperty
-
-int property KEY_SEARCH hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".keys.search")
-  endFunction
-endProperty
-
-int property KEY_COMMAND hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".keys.command")
-  endFunction
-endProperty
-
-int property MAX_RESULT_COUNT hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".max_result_count")
-  endFunction
-endProperty
-
-bool property SORT_RESULTS hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".sort_results")
-  endFunction
-endProperty
-
-float property TELEPORT_RANGE hidden
-  float function get()
-    return ReadSettingsFromDbAsFloat(".teleport_range")
-  endFunction
-endProperty
-
-bool property IS_DEBUG_ENABLED hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".debug.enabled")
-  endFunction
-endProperty
-
-int property DEBUG_KEY_DATA_DUMP hidden
-  int function get()
-    return ReadSettingsFromDbAsInt(".debug.keys.data_dump")
-  endFunction
-endProperty
-
-bool property I_AM_LUCKY hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".experimental.i_am_lucky")
-  endFunction
-endProperty
-
-; Check performance hit before enabling
-bool property CAN_SORT_BEFORE_SEARCH hidden
-  bool function get()
-    return ReadSettingsFromDbAsBool(".experimental.sort_before_search")
-  endFunction
-endProperty
+int modVersionInstalled
 
 event OnInit()
+  player = Game.GetPlayer()
+  currentQuest = GetOwningQuest()
+  modVersionInstalled = GetModVersion()
   InitializeDB()
-  Setup()
-  IS_INITIALIZED = true
+  RegisterForAllKeys()
+  kxWhereAreYouInitialized.SetValueInt(true as int)
 endEvent
 
 event OnPlayerLoadGame()
   UnregisterForAllKeys()
-  Setup()
+  if CanRun()
+    RegisterForAllKeys()
+  endIf
 endEvent
 
 event OnKeyDown(int keyCode)
   if !IsInMenus()
     GoToState("Busy")
-    if keyCode == KEY_TRACK
+    if IsKeyCombinationPressed(keyCode, KEY_TRACK(), KEY_TRACK_CTRL(), KEY_TRACK_SHIFT(), KEY_TRACK_ALT())
       TrackNpcAtCrosshair()
-    elseIf keyCode == KEY_SEARCH
+    elseIf IsKeyCombinationPressed(keyCode, KEY_SEARCH(), KEY_SEARCH_CTRL(), KEY_SEARCH_SHIFT(), KEY_SEARCH_ALT())
       SearchNpc()
-    elseIf keyCode == KEY_COMMAND
+    elseIf IsKeyCombinationPressed(keyCode, KEY_COMMAND_WHEEL(), KEY_COMMAND_WHEEL_CTRL(), KEY_COMMAND_WHEEL_SHIFT(), KEY_COMMAND_WHEEL_ALT())
       ExecuteCommandForNpcAtCrosshair()
-    elseIf keyCode == DEBUG_KEY_DATA_DUMP && IS_DEBUG_ENABLED
-      DumpNpcList()
-      DumpDbToFile()
+    elseIf IsKeyCombinationPressed(keyCode, KEY_DO_FAVOR(), KEY_DO_FAVOR_CTRL(), KEY_DO_FAVOR_SHIFT(), KEY_DO_FAVOR_ALT())
+      MakeNpcAtCrosshairDoFavor()
     endIf
     GoToState("")
   endIf
@@ -125,30 +50,30 @@ state Busy
   endEvent
 endState
 
-function Setup()
-  player = Game.GetPlayer()
-  currentQuest = GetOwningQuest()
-
-  LoadSettingsAndSaveToDB()
-  if IS_ENABLED
-    RegisterForKey(KEY_TRACK)
-    RegisterForKey(KEY_SEARCH)
-    RegisterForKey(KEY_COMMAND)
-    RegisterForKey(DEBUG_KEY_DATA_DUMP)
+bool function CanRun()
+  if modVersionInstalled == 0 || IsCompatibleVersion()
+    if modVersionInstalled != GetModVersion()
+      Log("Updating from " + modVersionInstalled + " to " + GetModVersionAsString(GetModVersion()))
+      modVersionInstalled = GetModVersion()
+    endIf
+    return true
   else
-    Log("Uninstalling mod...")
-    ResetDB()
+    Debug.MessageBox("[" + GetModName() + "] Updating to version " + GetModVersionAsString(GetModVersion()) + " requires a new game.")
+    return false
   endIf
 endFunction
 
-function DumpNpcList()
-  int loadedReferences = GetLoadedReferencesFromDB()
-  int i = 0
-  while i < JArray.Count(loadedReferences)
-    Actor npc = JArray.getForm(loadedReferences, i) as Actor
-    LogNpcSlot(npc.GetDisplayName(), i, JArray.Count(loadedReferences))
-    i += 1
-  endWhile
+bool function IsCompatibleVersion()
+  return modVersionInstalled <= 10200
+endFunction
+
+function RegisterForAllKeys()
+  if IS_ENABLED()
+    RegisterForKey(KEY_TRACK())
+    RegisterForKey(KEY_SEARCH())
+    RegisterForKey(KEY_COMMAND_WHEEL())
+    RegisterForKey(KEY_DO_FAVOR())
+  endIf
 endFunction
 
 function TrackNpcAtCrosshair()
@@ -160,7 +85,7 @@ endFunction
 
 function TrackNpc(Actor npc, int slot)
   if slot != -1
-    RemoveTrackingMarker(npc, slot)
+    RemoveTrackingMarker(slot)
     Debug.Notification("Untracking " + npc.GetDisplayName())
   elseIf AddTrackingMarker(npc)     
     Debug.Notification("Tracking " + npc.GetDisplayName())
@@ -181,7 +106,7 @@ function ExecuteCommandForNpcAtCrosshair()
   Actor npc = GetActorAtCrosshair()
   if npc
     int loadedReferences = GetLoadedReferencesFromDB()
-    if FindNpcAsLoadedReference(npc, loadedReferences) == -1
+    if FindNpcAsReference(npc, loadedReferences) == -1
       Debug.MessageBox("Cannot execute commands for " + npc.GetDisplayName())
     else
       ChooseCommandToApplyToNPC(npc)
@@ -189,27 +114,40 @@ function ExecuteCommandForNpcAtCrosshair()
   endIf
 endFunction
 
+function MakeNpcAtCrosshairDoFavor()
+  Actor npc = GetActorAtCrosshair()
+  if npc
+    if ONLY_FOLLOWERS_DO_FAVOR() && !npc.IsPlayerTeammate()
+      Debug.MessageBox(npc.GetDisplayName() + " is not a follower.\n\nDisable this option on MCM if you want non-followers to able to do favors.")
+      return
+    endIf
+  
+    int loadedReferences = GetLoadedReferencesFromDB()
+    if FindNpcAsReference(npc, loadedReferences) == -1
+      Debug.MessageBox("Cannot make " + npc.GetDisplayName() + " do a favor.")
+    else
+      MakeNpcDoFavor(npc)
+    endIf
+  endIf
+endFunction
+
+function MakeNpcDoFavor(Actor npc)
+  if !npc.IsDoingFavor()
+    npc.SetDoingFavor(true)
+  endIf
+endFunction
+
 Actor function FindNpcByName(String text)
   string pattern = StringOptimizePattern(text)
-
   int loadedReferences = GetLoadedReferencesFromDB()
-  if CAN_SORT_BEFORE_SEARCH
-    loadedReferences = JArray.sort(loadedReferences)
-    Log("Sorting references...")
-  endIf
 
   int jmFoundNpcs = JMap.object()
   JValue.retain(jmFoundNpcs, GetDbKey())
   int i = 0
 
-  bool exit = false
-  while !exit && (i < JArray.Count(loadedReferences)) && (JMap.Count(jmFoundNpcs) < MAX_RESULT_COUNT)
+  while (i < JArray.Count(loadedReferences)) && (JMap.Count(jmFoundNpcs) < MAX_RESULT_COUNT())
     Actor currentNpc = JArray.getForm(loadedReferences, i) as Actor
     if StringMatch(currentNpc.GetDisplayName(), pattern)
-      if I_AM_LUCKY
-        Log("Exiting early because 'i_am_lucky' flag is enabled")
-        exit = true
-      endIf
       JMap.setForm(jmFoundNpcs, currentNpc.GetDisplayName(), currentNpc)
     endIf
     i += 1
@@ -230,7 +168,7 @@ endFunction
 Actor function ChooseNpcFromList(int jmFoundNpcs)
   int jaAllNpcNames = JMap.allKeys(jmFoundNpcs)
   JValue.retain(jaAllNpcNames)
-  if SORT_RESULTS
+  if SORT_RESULTS()
     Log("Sorting results...")
     jaAllNpcNames = JArray.Sort(jaAllNpcNames)
   endIf
@@ -245,17 +183,19 @@ endFunction
 function ChooseCommandToApplyToNPC(Actor npc)
   Actor clone
   int slot = GetNpcTrackingMarkerQuestAlias(npc)
-  string command = CreateNpcCommandUI(npc, slot != -1)
+
+  string command = CreateNpcCommandUI(npc, slot != -1, IsClonedNpc(npc))
   if command
     if command == "teleport_to_player"
-      npc.MoveTo(player, TELEPORT_RANGE)
+      npc.MoveTo(player, TELEPORT_RANGE())
     elseIf command == "move_to_npc"
-      player.MoveTo(npc, TELEPORT_RANGE)
+      player.MoveTo(npc, TELEPORT_RANGE())
     elseIf command == "clone_npc"
       string name = CreateNpcNameUI("Choose the name of " + npc.GetDisplayName() + "'s clone")
       if name
         clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
         clone.SetDisplayName(name)
+        AddNpcAsClonedReferenceIfNotExists(clone)
       endIf
     elseIf command == "show_npc_stats"
       ShowNpcStatusUI(npc)
@@ -263,13 +203,16 @@ function ChooseCommandToApplyToNPC(Actor npc)
       npc.OpenInventory(abForceOpen = true)
     elseIf command == "delete_npc"
       RemoveNpcAsLoadedReferenceIfExists(npc)
+      RemoveNpcAsClonedReferenceIfExists(npc)
       npc.Disable()
       npc.Delete()
-    elseIf command == "toggle_tracking_marker"
+    elseIf command == "toggle_track_npc"
       TrackNpc(npc, slot)
+    elseIf command == "do_favor"
+      MakeNpcDoFavor(npc)
     endIf
 
-    if KEEP_MENU_OPENED
+    if KEEP_MENU_OPENED()
       WaitForMenus()
       if clone
         ChooseCommandToApplyToNPC(clone)
@@ -316,8 +259,16 @@ bool function AddTrackingMarker(Actor npc)
   return slot != -1
 endFunction
 
-function RemoveTrackingMarker(Actor npc, int slot)
+function RemoveTrackingMarker(int slot)
   ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
   currentAlias.Clear()
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
+endFunction
+
+function RemoveAllTrackingMarkers()
+  int i = 1; skip the player quest alias
+  while i < currentQuest.GetNumAliases()
+    RemoveTrackingMarker(i)
+    i += 1
+  endWhile
 endFunction

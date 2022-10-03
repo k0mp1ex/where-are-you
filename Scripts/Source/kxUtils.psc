@@ -43,6 +43,10 @@ bool function StringMatchPattern(string str, string pattern) global
   int n = StringUtil.GetLength(str)
   int m = StringUtil.GetLength(pattern)
 
+  if pattern == "*"
+    return true
+  endIf
+
   if (n == 0) && (m == 0)
     return false
   endIf
@@ -122,11 +126,16 @@ string function GetModVersionAsString(int modVersion) global
   return major + "." + minor + "." + patch
 endFunction
 
+Actor function GetActorAtCrosshair() global
+  return Game.GetCurrentCrosshairRef() as Actor
+endFunction
+
 bool function IsInMenus() global
   return Utility.IsInMenuMode() || \
          UI.IsMenuOpen("Crafting Menu") || \
          UI.IsMenuOpen("RaceSex Menu") || \
-         UI.IsMenuOpen("CustomMenu")
+         UI.IsMenuOpen("CustomMenu") || \
+         UI.IsTextInputEnabled()
 endFunction
 
 function WaitForMenus() global
@@ -135,6 +144,21 @@ function WaitForMenus() global
   endWhile
 endFunction
 
-Actor function GetActorAtCrosshair() global
-  return Game.GetCurrentCrosshairRef() as Actor
+bool function IsCtrlKeyPressed() global
+  return Input.IsKeyPressed(29) || Input.IsKeyPressed(157) ; Left Ctrl || Right Ctrl
+endFunction
+
+bool function IsShiftKeyPressed() global
+  return Input.IsKeyPressed(42) || Input.IsKeyPressed(54) ; Left Shift || Right Shift
+endFunction
+
+bool function IsAltKeyPressed() global
+  return Input.IsKeyPressed(56) || Input.IsKeyPressed(184) ; Left Alt || Right Alt
+endFunction
+
+bool function IsKeyCombinationPressed(int keyCode, int mappedKeyCode, bool hasCtrlKeyCode, bool hasShiftKeyCode, bool hasAltKeyCode) global
+  return (keyCode == mappedKeyCode) && \
+         (IsCtrlKeyPressed() == hasCtrlKeyCode) && \
+         (IsShiftKeyPressed() == hasShiftKeyCode) && \
+         (IsAltKeyPressed() == hasAltKeyCode)
 endFunction
