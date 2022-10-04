@@ -118,7 +118,7 @@ function MakeNpcAtCrosshairDoFavor()
   Actor npc = GetActorAtCrosshair()
   if npc
     if ONLY_FOLLOWERS_DO_FAVOR() && !npc.IsPlayerTeammate()
-      Debug.MessageBox(npc.GetDisplayName() + " is not a follower.\n\nDisable this option on MCM if you want non-followers to able to do favors.")
+      Debug.MessageBox(npc.GetDisplayName() + " is not a follower.\n\nDisable this option on MCM if you want non-followers to be able to do favors.")
       return
     endIf
   
