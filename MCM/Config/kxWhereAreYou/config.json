@@ -78,8 +78,42 @@
         },
         {
           "type": "header",
-          "text": "Delete",
+          "text": "Track/Untrack",
           "position": 1
+        },
+        {
+          "id": "bAlwaysActivateQuest:Track",
+          "type": "toggle",
+          "text": "Always activate quest 'Where Are You?'",
+          "help": "Force the tracking quest 'Where Are You?' to be active when adding or removing tracking markers from NPCs",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bNotifyOnDeath:Track",
+          "type": "toggle",
+          "text": "Notify when tracked NPC dies",
+          "help": "Shows a notification when a tracked NPC dies. If a killer is identified his/her name will be included as well.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bRemoveTrackingOnDeath:Track",
+          "type": "toggle",
+          "text": "Remove marker when tracked NPC dies",
+          "help": "RRemove marker when tracked NPC dies.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Delete"
         },
         {
           "id": "bOnlyClones:Delete",
@@ -290,11 +324,11 @@
           "text": "Colors"
         },
         {
-          "id": "rDefaultColor:Colors",
-          "type": "color",
+          "id": "sDefaultColor:Colors",
+          "type": "input",
           "text": "Default",
           "valueOptions": {
-            "sourceType": "ModSettingInt"
+            "sourceType": "ModSettingString"
           }
         },
         {
@@ -307,7 +341,7 @@
         {
           "id": "sStatsIcon:Icons",
           "type": "input",
-          "text": "Stats",
+          "text": "Info/Stats",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -370,14 +404,30 @@
         },
         {
           "type": "header",
-          "text": "Command Wheel",
+          "text": "Search",
           "position": 1
+        },
+        {
+          "id": "sEntryFormat:Search",
+          "type": "input",
+          "text": "List format",
+          "help": "How every line on the result search list should look like\nAvailable variables: [name], [mod], [race], [gender], [refid], [baseid], [clone] and [tracking]",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Command Wheel"
         },
         {
           "id": "bShowStats:CommandWheel",
           "type": "toggle",
-          "text": "Show Stats",
-          "help": "Show Stats option on command wheel.",
+          "text": "Show Info/Stats",
+          "help": "Show Info/Stats option on command wheel.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -477,7 +527,7 @@
           "groupBehavior": "disable"
         },
         {
-          "type": "text",
+          "type": "hiddenToggle",
           "text": "Reset data",
           "help": "Clear all stored data, removing all tracking markers and cloned NPCs.",
           "valueOptions": {

@@ -124,9 +124,26 @@ bool function SORT_RESULTS() global
   return MCM.GetModSettingBool(GetModName(), "bSortResults:Search")
 endFunction
 
+string  function ENTRY_FORMAT() global
+  return MCM.GetModSettingString(GetModName(), "sEntryFormat:Search")
+endFunction
+
 
 float function TELEPORT_RANGE() global
   return MCM.GetModSettingFloat(GetModName(), "fRange:Teleport")
+endFunction
+
+
+bool function ACTIVATE_QUEST_ON_TRACKING() global
+  return MCM.GetModSettingBool(GetModName(), "bAlwaysActivateQuest:Track")
+endFunction
+
+bool function NOTIFY_ON_DEATH() global
+  return MCM.GetModSettingBool(GetModName(), "bNotifyOnDeath:Track")
+endFunction
+
+bool function REMOVE_TRACKING_ON_DEATH() global
+  return MCM.GetModSettingBool(GetModName(), "bRemoveTrackingOnDeath:Track")
 endFunction
 
 
@@ -145,12 +162,8 @@ bool function ONLY_FOLLOWERS_DO_FAVOR() global
 endFunction
 
 
-int function DEFAULT_COLOR() global
-  int colorValue = MCM.GetModSettingInt(GetModName(), "rDefaultColor:Colors")
-  int rChannel = ColorComponent.GetRed(colorValue)
-  int gChannel = ColorComponent.GetGreen(colorValue)
-  int bChannel = ColorComponent.GetBlue(colorValue)
-  return (rChannel * 65536) + (gChannel * 256) + bChannel
+string function DEFAULT_COLOR() global
+  return MCM.GetModSettingString(GetModName(), "sDefaultColor:Colors")
 endFunction
 
 

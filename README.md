@@ -84,7 +84,15 @@ No incompatibilities found yet.
 ---
 
 - Can I uninstall it mid playthrough?
-- It's not recomended, but you can. What I recommend is reset stored data (Mod's MCM > System > Reset data), disable the mod (Mod's MCM > System > Mod enabled), disable "Keep tracking in the background" too (to avoid store data in background), make a new save, clean the new save on Resaver and load the cleaned save on game.
+- It's not recomended, but you can. If you wish to proceed what I would do:
+  - 1) Reset stored data (MCM > Where Are You? > System > Reset data).
+  - 2) Disable the mod (MCM > Where Are You? > System > Mod enabled)
+  - 3) Disable "Keep tracking in the background" too (to avoid store data in background)
+  - 4) Make a new save
+  - 5) Disable the kxWhereAreYou.esp
+  - 6) Make a new save
+  - 7) Clean the new save on [Resaver](https://www.nexusmods.com/skyrimspecialedition/mods/5031)
+  - 8) Load the cleaned save
 
 ---
 

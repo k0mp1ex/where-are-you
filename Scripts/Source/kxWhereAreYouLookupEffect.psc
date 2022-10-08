@@ -5,8 +5,8 @@ import kxWhereAreYouProperties
 import kxWhereAreYouRepository
 
 event OnEffectStart(Actor akTarget, Actor akCaster)
-	if IS_ENABLED() || KEEP_TRACKING_WHEN_DISABLED()
+	if (IS_ENABLED() || KEEP_TRACKING_WHEN_DISABLED()) && !HasNpc(akTarget)
 		Log("Trying to add " + akTarget.GetDisplayName())
-		AddNpcAsLoadedReferenceIfNotExists(akTarget)
+		AddNpc(akTarget)
 	endIf
 endEvent

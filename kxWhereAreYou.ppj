@@ -34,15 +34,16 @@
             <Match In="Scripts">*.pex</Match>
             <Match In="Scripts/Source">*.psc</Match>
             <Include>Interface/@ModName</Include>
-            <Include>MCM/Config/@ModName/settings.ini</Include>
-            <Include>MCM/Config/@ModName/config.json</Include>
         </Package>
     </Packages>
     <!-- The following section is for .zip archive. You can enable it by setting Zip="true" in the PapyrusProject -->
     <ZipFiles Output="@Output">
         <ZipFile Name="@ModName-v@ModVersion" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
+            <Include>SKSE/Plugins/JCData/Lua/@ModName/init.lua</Include>
             <Include>*_DISTR.ini</Include>
+            <Include>MCM/Config/@ModName/settings.ini</Include>
+            <Include>MCM/Config/@ModName/config.json</Include>
             <Include NoRecurse="true">*.bsa</Include>
         </ZipFile>
     </ZipFiles>

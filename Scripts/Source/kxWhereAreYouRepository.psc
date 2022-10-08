@@ -1,7 +1,9 @@
 Scriptname kxWhereAreYouRepository hidden
 
+import kxUtils
 import kxWhereAreYouCommon
 import kxWhereAreYouLogging
+import kxWhereAreYouProperties
 
 string function GetDbKey() global
   return GetModName()
@@ -11,26 +13,30 @@ string function GetDumpDbFileName() global
   return "Data/" + GetModName() + "/Debug/dump.json"
 endFunction
 
+string function GetLuaLogFileName() global
+  return "Data\\" + GetModName() + "\\Debug\\lua.log"
+endFunction
+
 function InitializeDB() global
   Log("Initializing the database...")
   int db = JMap.object()
-  JMap.setObj(db, "loaded_references", JArray.object())
-  JMap.setObj(db, "cloned_references", JArray.object())
+  JMap.setObj(db, "npcs", JArray.object())
+  JMap.setObj(db, "settings", JMap.object())
   JDB.setObj(GetDbKey(), db)
 endFunction
 
 function ResetDB() global
-  Log("Cleaning the database...")
-  JDB.solveObjSetter(GetPropertyPath(".loaded_references"), JArray.object())
-  JDB.solveObjSetter(GetPropertyPath(".cloned_references"), JArray.object())
+  JDB.solveObjSetter(GetPropertyPath(".npcs"), 0)
+  JDB.solveObjSetter(GetPropertyPath(".settings"), 0)
+  JDB.solveObjSetter(GetPropertyPath(), 0)
 endFunction
 
 function DumpDbToFile() global
   string filename = GetDumpDbFileName()
-  JValue.writeToFile(JDB.solveObj(GetPropertyPath("")), filename)
+  JValue.writeToFile(JDB.solveObj(GetPropertyPath()), filename)
 endFunction
 
-string function GetPropertyPath(string propertyPath) global
+string function GetPropertyPath(string propertyPath = "") global
   return "." + GetDbKey() + propertyPath
 endFunction
 
@@ -38,69 +44,82 @@ int function GetReferencesFromDB(string propertyPath) global
   return JDB.solveObj(GetPropertyPath(propertyPath), 0)
 endFunction
 
-int function GetLoadedReferencesFromDB() global
-  return GetReferencesFromDB(".loaded_references")
+function AddNpc(Actor npc) global
+  int references = GetReferencesFromDB(".npcs")
+  int jmNpc = JMap.object()
+  JMap.SetInt(jmNpc, "ref_id", npc.GetFormId())
+  JMap.SetInt(jmNpc, "base_id", npc.GetActorBase().GetFormID())
+  JMap.SetForm(jmNpc, "form", npc)
+  JMap.SetStr(jmNpc, "name", npc.GetDisplayName())
+  JMap.SetStr(jmNpc, "mod", GetModNameFromForm(npc))
+  JMap.SetStr(jmNpc, "race", npc.GetRace().GetName())
+  JMap.SetInt(jmNpc, "gender", npc.GetActorBase().GetSex())
+  JMap.SetInt(jmNpc, "clone", IsDynamicObjectReference(npc) as int)
+  JMap.SetInt(jmNpc, "tracking_slot", -1)
+  JArray.addObj(references, jmNpc)
+  Log(npc.GetDisplayName() + " added.")
 endFunction
 
-int function GetClonedReferencesFromDB() global
-  return GetReferencesFromDB(".cloned_references")
-endFunction
-
-function AddNpcAsReference(Actor npc, int references) global
-  if references
-    int index = FindNpcAsReference(npc, references)
-    if index == -1
-      JArray.AddForm(references, npc)
-      Log(npc.GetDisplayName() + " added.")
-    endIf
+function RemoveNpc(Actor npc) global
+  int references = GetReferencesFromDB(".npcs")
+  int index = GetNpcIndex(npc)
+  if index != -1
+    JArray.EraseIndex(references, index)
+    Log(npc.GetDisplayName() + " removed.")
   endIf
-endFunction
-
-function AddNpcAsLoadedReferenceIfNotExists(Actor npc) global
-  AddNpcAsReference(npc, GetLoadedReferencesFromDB())
-endFunction
-
-function AddNpcAsClonedReferenceIfNotExists(Actor npc) global
-  AddNpcAsReference(npc, GetClonedReferencesFromDB())
-endFunction
-
-function RemoveNpcAsReferenceIfExists(Actor npc, int references) global
-  if references
-    int index = FindNpcAsReference(npc, references)
-    if index != -1
-      JArray.EraseForm(references, npc)
-      Log(npc.GetDisplayName() + " removed.")
-    endIf
-  endIf
-endFunction
-
-function RemoveNpcAsLoadedReferenceIfExists(Actor npc) global
-  RemoveNpcAsReferenceIfExists(npc, GetLoadedReferencesFromDB())
-endFunction
-
-function RemoveNpcAsClonedReferenceIfExists(Actor npc) global
-  RemoveNpcAsReferenceIfExists(npc, GetClonedReferencesFromDB())
 endFunction
 
 function RemoveAllClonedNpcs() global
-  int cloned_references = GetClonedReferencesFromDB()
+  int references = GetReferencesFromDB(".npcs")
   int i = 0
-  while i < JArray.Count(cloned_references)
-    Actor npc = JArray.getForm(cloned_references, i) as Actor
-    if npc
-      Log("Removing " + npc.GetDisplayName())
+  while i < JArray.Count(references)
+    int jmNpc = JArray.GetObj(references, i)
+    if jmNpc != -1 && (JMap.GetInt(jmNpc, "clone") as bool)
+      Log("Removing " + JMap.GetStr(jmNpc, "name"))
+      Actor npc = JMap.GetForm(jmNpc, "form") as Actor
       npc.Disable()
       npc.Delete()
-    endIf
+    endIf    
     i += 1
   endWhile
 endFunction
 
 bool function IsClonedNpc(Actor npc) global
-	int clonedReferences = GetClonedReferencesFromDB()
-  return clonedReferences && FindNpcAsReference(npc, clonedReferences) != -1
+  return IsDynamicObjectReference(npc)
 endFunction
 
-int function FindNpcAsReference(Actor npc, int references) global
-  return JArray.FindForm(references, npc)
+function PrepareLuaContext() global
+  int settings = JDB.solveObj(GetPropertyPath(".settings"), 0)
+  JMap.setStr(settings, "log_file_path", GetLuaLogFileName())
+  JMap.setStr(settings, "mod_name", GetModName())
+  JMap.setStr(settings, "mod_version", GetModVersionAsString(GetModVersion()))
+  JMap.setInt(settings, "debug_enabled", IS_DEBUG_ENABLED() as int)
+endFunction
+
+int function GetNpcTrackingMarkerSlot(Actor npc) global
+  return kxWhereAreYouLua.GetTrackingSlotForNpc(npc.GetFormId())
+endFunction
+
+int function GetNpcIndex(Actor npc) global
+  return kxWhereAreYouLua.GetNpcIndex(npc.GetFormId())
+endFunction
+
+bool function HasNpc(Actor npc) global
+  return GetNpcIndex(npc) != -1
+endFunction
+
+bool function IsTrackingNpc(Actor npc) global
+  return kxWhereAreYouLua.IsTrackingNpc(npc.GetFormId()) as bool
+endFunction
+
+function UpdateNpcTracking(Actor npc, int trackingSlot) global
+  kxWhereAreYouLua.UpdateNpcTracking(npc.GetFormId(), trackingSlot)
+endFunction
+
+string function GetStatsTextForNpc(Actor npc) global
+  return kxWhereAreYouLua.GetStatsTextForNpc(npc.GetFormId()) + "\n" + GetDynamicStatsTextForNpc(npc)
+endFunction
+
+string function GetDynamicStatsTextForNpc(Actor npc) global
+  return "Location: " + npc.GetCurrentLocation().GetName()
 endFunction

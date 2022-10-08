@@ -45,7 +45,7 @@ endFunction
 int function GetCommandWheelOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
   int jmStats = JMap.object()
   JMap.SetStr(jmStats, "command",         "show_npc_stats")
-  JMap.SetStr(jmStats, "description",     "Stats")
+  JMap.SetStr(jmStats, "description",     "Info/Stats")
   JMap.SetStr(jmStats, "icon",            STATS_ICON_NAME())
 
   int jmTeleport = JMap.object()
@@ -171,31 +171,48 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, DEFAULT_COLOR())
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouLua.StringToInt(DEFAULT_COLOR()))
 endFunction
 
 string function CreateNpcNameUI(string msg = "") global
   if msg
-    Debug.MessageBox(msg)
+    ShowMessage(msg)
   endIf
   WaitForMenus()
   return CreateSearchBoxUI()
 endFunction
 
-function ShowNpcStatusUI(Actor npc) global
+function ShowNpcStatusUI(Actor npc, string statsText) global
   UIStatsMenu statsMenu = UIExtensions.GetMenu("UIStatsMenu") as UIStatsMenu
+  ShowMessage(statsText)
+  WaitForMenus()
   statsMenu.OpenMenu(npc)
 endFunction
 
-string function CreateNpcListUI(int jaAllNpcNames) global
+int function CreateNpcListUI(int jaAllNpcs) global
   UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
   int i = 0
-  while i < JArray.Count(jaAllNpcNames)
-    string npcName = JArray.GetStr(jaAllNpcNames, i)
-    listMenu.AddEntryItem(npcName)
-    LogNpcSlot(npcName + " added to search list", i, JArray.Count(jaAllNpcNames))
+  while i < JArray.Count(jaAllNpcs)
+    int jmNpc = JArray.GetObj(jaAllNpcs, i)
+    string npcName = JMap.GetStr(jmNpc, "name")
+    string entry = kxWhereAreYouLua.GetFormattedEntryForNpc(JMap.GetInt(jmNpc, "ref_id"), ENTRY_FORMAT())
+    listMenu.AddEntryItem(entry)
+    LogNpcSlot(npcName + " added to search list", i, JArray.Count(jaAllNpcs))
     i += 1
   endWhile
   listMenu.OpenMenu()
-  return listMenu.GetResultString()
+  int id = listMenu.GetResultInt()
+  if id == -1
+    return 0
+  else
+    return JArray.GetObj(jaAllNpcs, id)
+  endIf
+endFunction
+
+function ShowMessage(string msg) global
+  Debug.MessageBox(msg)
+endFunction
+
+function ShowNotification(string msg) global
+  Debug.Notification(msg)
 endFunction

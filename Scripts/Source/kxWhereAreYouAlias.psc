@@ -53,18 +53,18 @@ endState
 bool function CanRun()
   if modVersionInstalled == 0 || IsCompatibleVersion()
     if modVersionInstalled != GetModVersion()
-      Log("Updating from " + modVersionInstalled + " to " + GetModVersionAsString(GetModVersion()))
+      Log("Updating from " + GetModVersionAsString(modVersionInstalled) + " to " + GetModVersionAsString(GetModVersion()))
       modVersionInstalled = GetModVersion()
     endIf
     return true
   else
-    Debug.MessageBox("[" + GetModName() + "] Updating to version " + GetModVersionAsString(GetModVersion()) + " requires a new game.")
+    ShowMessage("[" + GetModName() + "]\nCannot update from " + GetModVersionAsString(modVersionInstalled) + " to " + GetModVersionAsString(GetModVersion()) +".\nUninstall the previous mod version before installing this one.")
     return false
   endIf
 endFunction
 
 bool function IsCompatibleVersion()
-  return modVersionInstalled <= 10300
+  return modVersionInstalled == 10300
 endFunction
 
 function RegisterForAllKeys()
@@ -79,23 +79,30 @@ endFunction
 function TrackNpcAtCrosshair()
   Actor npc = GetActorAtCrosshair()
   if npc
-    TrackNpc(npc, GetNpcTrackingMarkerQuestAlias(npc))
+    if HasNpc(npc)
+      TrackNpc(npc, GetNpcTrackingMarkerSlot(npc))
+    else
+      ShowMessage(npc.GetDisplayName() + " cannot be tracked.")
+    endIf
   endIf
 endFunction
 
 function TrackNpc(Actor npc, int slot)
+  if ACTIVATE_QUEST_ON_TRACKING()
+    currentQuest.SetActive(true)
+  endIf
   if slot != -1
     RemoveTrackingMarker(slot)
-    Debug.Notification("Untracking " + npc.GetDisplayName())
+    ShowNotification("Untracking " + npc.GetDisplayName())
   elseIf AddTrackingMarker(npc)     
-    Debug.Notification("Tracking " + npc.GetDisplayName())
+    ShowNotification("Tracking " + npc.GetDisplayName())
   endIf
 endFunction
 
 function SearchNpc()  
   string pattern = CreateSearchBoxUI()
   if pattern != ""
-    Actor npc = FindNpcByName(pattern)
+    Actor npc = FindNpcByNamePattern(pattern)
     if npc
       ChooseCommandToApplyToNPC(npc)
     endIf
@@ -105,11 +112,10 @@ endFunction
 function ExecuteCommandForNpcAtCrosshair()
   Actor npc = GetActorAtCrosshair()
   if npc
-    int loadedReferences = GetLoadedReferencesFromDB()
-    if FindNpcAsReference(npc, loadedReferences) == -1
-      Debug.MessageBox("Cannot execute commands for " + npc.GetDisplayName())
-    else
+    if HasNpc(npc)
       ChooseCommandToApplyToNPC(npc)
+    else
+      ShowMessage("Cannot execute commands for " + npc.GetDisplayName())
     endIf
   endIf
 endFunction
@@ -118,15 +124,14 @@ function MakeNpcAtCrosshairDoFavor()
   Actor npc = GetActorAtCrosshair()
   if npc
     if ONLY_FOLLOWERS_DO_FAVOR() && !npc.IsPlayerTeammate()
-      Debug.MessageBox(npc.GetDisplayName() + " is not a follower.\n\nDisable this option on MCM if you want non-followers to be able to do favors.")
+      ShowMessage(npc.GetDisplayName() + " is not a follower.\n\nDisable this option on MCM if you want non-followers to be able to do favors.")
       return
     endIf
   
-    int loadedReferences = GetLoadedReferencesFromDB()
-    if FindNpcAsReference(npc, loadedReferences) == -1
-      Debug.MessageBox("Cannot make " + npc.GetDisplayName() + " do a favor.")
-    else
+    if HasNpc(npc)
       MakeNpcDoFavor(npc)
+    else
+      ShowMessage("Cannot make " + npc.GetDisplayName() + " do a favor.")
     endIf
   endIf
 endFunction
@@ -137,27 +142,16 @@ function MakeNpcDoFavor(Actor npc)
   endIf
 endFunction
 
-Actor function FindNpcByName(String text)
-  string pattern = StringOptimizePattern(text)
-  int loadedReferences = GetLoadedReferencesFromDB()
-
-  int jmFoundNpcs = JMap.object()
+Actor function FindNpcByNamePattern(string pattern)
+  int jmFoundNpcs = kxWhereAreYouLua.FindMatchingNpcs(pattern, MAX_RESULT_COUNT())
   JValue.retain(jmFoundNpcs, GetDbKey())
-  int i = 0
-
-  while (i < JArray.Count(loadedReferences)) && (JMap.Count(jmFoundNpcs) < MAX_RESULT_COUNT())
-    Actor currentNpc = JArray.getForm(loadedReferences, i) as Actor
-    if StringMatch(currentNpc.GetDisplayName(), pattern)
-      JMap.setForm(jmFoundNpcs, currentNpc.GetDisplayName(), currentNpc)
-    endIf
-    i += 1
-  endWhile
   
   Actor npc
-  if JMap.Count(jmFoundNpcs) == 0
-    Debug.MessageBox("'" + pattern + "' not found")
-  elseIf JMap.Count(jmFoundNpcs) == 1
-    npc = JMap.getForm(jmFoundNpcs, JMap.nextKey(jmFoundNpcs)) as Actor
+  if JArray.Count(jmFoundNpcs) == 0
+    ShowMessage("No matches found")
+  elseIf JArray.Count(jmFoundNpcs) == 1
+    int jmNpc = JArray.GetObj(jmFoundNpcs, 0)
+    npc = JMap.GetForm(jmNpc, "form") as Actor
   else
     npc = ChooseNpcFromList(jmFoundNpcs)
   endIf
@@ -166,48 +160,46 @@ Actor function FindNpcByName(String text)
 endFunction
 
 Actor function ChooseNpcFromList(int jmFoundNpcs)
-  int jaAllNpcNames = JMap.allKeys(jmFoundNpcs)
-  JValue.retain(jaAllNpcNames)
-  if SORT_RESULTS()
-    Log("Sorting results...")
-    jaAllNpcNames = JArray.Sort(jaAllNpcNames)
-  endIf
+  int jaAllNpcs = kxWhereAreYouLua.GetNpcsFromCollection(jmFoundNpcs, SORT_RESULTS())
+  JValue.retain(jaAllNpcs)
 
-  string name = CreateNpcListUI(jaAllNpcNames)
-  JValue.release(jaAllNpcNames)
-  if name != ""
-    return JMap.GetForm(jmFoundNpcs, name) as Actor
+  int jmNpc = CreateNpcListUI(jaAllNpcs)
+  if jmNpc
+    return JMap.GetForm(jmNpc, "form") as Actor
   endIf
+  JValue.release(jaAllNpcs)
 endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)
   Actor clone
-  int slot = GetNpcTrackingMarkerQuestAlias(npc)
 
-  string command = CreateNpcCommandUI(npc, slot != -1, IsClonedNpc(npc))
+  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
   if command
     if command == "teleport_to_player"
-      npc.MoveTo(player, TELEPORT_RANGE())
+      MoveToTarget(npc, player)
     elseIf command == "move_to_npc"
-      player.MoveTo(npc, TELEPORT_RANGE())
+      MoveToTarget(player, npc)
     elseIf command == "clone_npc"
       string name = CreateNpcNameUI("Choose the name of " + npc.GetDisplayName() + "'s clone")
       if name
         clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
         clone.SetDisplayName(name)
-        AddNpcAsClonedReferenceIfNotExists(clone)
       endIf
     elseIf command == "show_npc_stats"
-      ShowNpcStatusUI(npc)
+      string statsText = GetStatsTextForNpc(npc)
+      ShowNpcStatusUI(npc, statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)
     elseIf command == "delete_npc"
-      RemoveNpcAsLoadedReferenceIfExists(npc)
-      RemoveNpcAsClonedReferenceIfExists(npc)
+      int slot = GetNpcTrackingMarkerSlot(npc)
+      if slot != -1
+        RemoveTrackingMarker(slot)
+      endIf
+      RemoveNpc(npc)
       npc.Disable()
       npc.Delete()
     elseIf command == "toggle_track_npc"
-      TrackNpc(npc, slot)
+      TrackNpc(npc, GetNpcTrackingMarkerSlot(npc))
     elseIf command == "do_favor"
       MakeNpcDoFavor(npc)
     endIf
@@ -223,21 +215,14 @@ function ChooseCommandToApplyToNPC(Actor npc)
   endIf
 endFunction
 
-int function GetNpcTrackingMarkerQuestAlias(Actor npc)
-  int i = 1; skip the player quest alias
-  while i < currentQuest.GetNumAliases()
-    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
-    if nthAlias.GetActorReference() == npc
-      return i
-    endIf
-    i += 1
-  endWhile
-  return -1
+function MoveToTarget(Actor akOrigin, Actor akTarget)
+  akOrigin.MoveTo(akTarget, TELEPORT_RANGE(), 0.0, 0.0, false)
 endFunction
 
 int function GetNextAvailableQuestAliasIndex()
   int i = 1; skip the player quest alias
-  while i < currentQuest.GetNumAliases()
+  int aliasesCount = currentQuest.GetNumAliases()
+  while i < aliasesCount
     ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
     if !nthAlias.GetActorReference()
       return i;
@@ -250,19 +235,22 @@ endFunction
 bool function AddTrackingMarker(Actor npc)
   int slot = GetNextAvailableQuestAliasIndex()
   if slot == -1
-    Debug.MessageBox("Cannot add more tracking markers.")
+    ShowMessage("Cannot add more tracking markers.")
   else
     ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
     currentAlias.ForceRefTo(npc)
     currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = true, abForce = true)
+    UpdateNpcTracking(npc, slot)
   endIf
   return slot != -1
 endFunction
 
 function RemoveTrackingMarker(int slot)
   ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
+  Actor npc = currentAlias.GetActorReference() as Actor
   currentAlias.Clear()
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
+  UpdateNpcTracking(npc, -1)
 endFunction
 
 function RemoveAllTrackingMarkers()
