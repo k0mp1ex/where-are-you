@@ -13,16 +13,19 @@ Don't worry, we'll find them for you!
 ## Features
 
 - Implemented:
+  - **[NEW]** Fast search using [Lua pattern matching](https://www.lua.org/manual/5.1/manual.html#5.4.1)
+  - **[NEW]** Customized search result list format
+  - **[NEW]** More NPC info available in the older Stats command wheel option
   - Search all unique NPCs you discovered by their names
-  - **[NEW]** MCM
-  - **[NEW]** Customizable hotkey for search NPCs
-  - **[NEW]** Customizable hotkey for tracking NPC at crosshair
-  - **[NEW]** Customizable hotkey for show command wheel for NPC at crosshair
-  - **[NEW]** Customizable hotkey for make NPC at crosshair do a favor
-  - **[NEW]** Support for modifiers (Ctrl, Shift and Alt) in all hotkeys
-  - **[NEW]** Added option to only delete cloned NPCs
-  - **[NEW]** Added option to only allow followers to do favors
-  - **[NEW]** Customizable UI (icons and color)
+  - MCM
+  - Customizable hotkey for search NPCs
+  - Customizable hotkey for tracking NPC at crosshair
+  - Customizable hotkey for show command wheel for NPC at crosshair
+  - Customizable hotkey for make NPC at crosshair do a favor
+  - Support for modifiers (Ctrl, Shift and Alt) in all hotkeys
+  - Added option to only delete cloned NPCs
+  - Added option to only allow followers to do favors
+  - Customizable UI (icons and color)
   - Search supporting wildcards * and ?
   - Tracking markers up to 100 NPCs
   - Teleport the NPC to you
@@ -39,8 +42,6 @@ Don't worry, we'll find them for you!
   - A SKSE version to improve search performance or a [Skyrim Search SE](https://www.nexusmods.com/skyrimspecialedition/mods/45689) integration.
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
-  - Show more NPC info (like FormID, EditorID, what mod is from, etc.).
-  - Translations (official support for English and pt-BR)
   - Profiles
   - Extend the search functionality with some patterns, similar to the SPID format.
   - Add dialog option in quests to help find the target NPC (where it lives, works, sleeps, etc). Optionally also add a quest marker to help track it. Thanks [dann1](https://www.nexusmods.com/Users/25568544) for the suggestion!
@@ -85,14 +86,13 @@ No incompatibilities found yet.
 
 - Can I uninstall it mid playthrough?
 - It's not recomended, but you can. If you wish to proceed what I would do:
-  - 1) Reset stored data (MCM > Where Are You? > System > Reset data).
-  - 2) Disable the mod (MCM > Where Are You? > System > Mod enabled)
-  - 3) Disable "Keep tracking in the background" too (to avoid store data in background)
-  - 4) Make a new save
-  - 5) Disable the kxWhereAreYou.esp
-  - 6) Make a new save
-  - 7) Clean the new save on [Resaver](https://www.nexusmods.com/skyrimspecialedition/mods/5031)
-  - 8) Load the cleaned save
+  - 1) Disable the mod (MCM > Where Are You? > System > Mod enabled)
+  - 2) Disable "Keep tracking in the background" too (to avoid store data in background)
+  - 3) Make a new save
+  - 4) Disable the kxWhereAreYou.esp
+  - 5) Make a new save
+  - 6) Clean the new save on [Resaver](https://www.nexusmods.com/skyrimspecialedition/mods/5031)
+  - 7) Load the cleaned save
 
 ---
 
@@ -102,7 +102,7 @@ No incompatibilities found yet.
 ---
 
 - It's slow! Any plans to improve the search performance?
-- Yeah, this scripted version has its limitations. In a heavy modded and/or low-end PCs the search time can be pretty high. Try to avoid using wildcards because the searching is way slower with it. I do plan to release a SKSE version to improve the search performance.
+- Yeah, this scripted version has its limitations. I tried my best to shift the searching to Lua scripts and that helped a lot performance wise. I still plan to release a SKSE plugin to improve the search performance and also deal with some other script limitations.
 
 ---
 
@@ -112,7 +112,7 @@ No incompatibilities found yet.
 ---
 
 - I have a very specific case where my NPC is not tracked by this mod at all. Can I change any settings or do some troubleshoot on my own?
-- This mod uses SPID to distribute a lookup spell for every unique NPC actor. If this doesn't match what you need you can update the `kxWhereAreYou_DISTR.ini` file and include your own filters. You can `bEnableLogging` and `bEnableTrace` to `1` on your Skyrim.ini file and also enable "Debug mode" on MCM. The logs will appear on your Papyrus.0.log file and also on the game's console. You can also dump all data stored via the MCM (Mod's MCM > System > Export data). The output file will be generated at `Data/kxWhereAreYou/Debug/dump.json`.
+- This mod uses SPID to distribute a lookup spell for every unique NPC actor. If this doesn't match what you need you can update the `kxWhereAreYou_DISTR.ini` file and include your own filters. You can `bEnableLogging` and `bEnableTrace` to `1` on your Skyrim.ini file and also enable "Debug mode" on MCM. The logs will appear on your Papyrus.0.log file and also on the game's console. Lua logs will be stored in `Data/kxWhereAreYou/Debug/lua.log`. You can also dump all data stored via the MCM (Mod's MCM > System > Export data). The output file will be generated at `Data/kxWhereAreYou/Debug/dump.json`.
 
 ---
 
@@ -128,11 +128,6 @@ No incompatibilities found yet.
 
 - What happens if I disable the mod via "Mod enabled" toggle?
 - All the keys associated with this mod will be unregistered. The mod will still be storing NPCs on the background in case you reenable the mod again if the option "Keep tracking in the background" is enabled.
-
----
-
-- What "reset data" does?
-- It removes all data stored by this mod from memory, so when you save your game no additional data from this mod will be baked into your save file. Your configuration settings will be untouched.
 
 ---
 

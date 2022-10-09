@@ -2,8 +2,8 @@
 
 ## 1.3.0
 
-- Faster and more powerful search using Lua. Search now uses Lua patterns instead of simple wildcards used in previous version
-- Customized result search list format. You can use predefined variables to add only the information you need like `[name]|[refid]~[mod]`
+- Faster and more powerful search using Lua. Search now uses Lua [pattern matching](https://www.lua.org/manual/5.1/manual.html#5.4.1) instead of simple wildcards like in the previous version
+- Customized search result list format. You can use predefined variables to add only the information you need like `[name]|[refid]~[mod]`
 - Added more NPC info on "Stats" option (available in command wheel), like location, race, baseid, refid, etc
 - Added option to be notified when a tracked NPC dies
 - Added option to remove tracking marker when NPC dies
