@@ -66,3 +66,11 @@ bool function IsKeyCombinationPressed(int keyCode, int mappedKeyCode, bool hasCt
          (IsShiftKeyPressed() == hasShiftKeyCode) && \
          (IsAltKeyPressed() == hasAltKeyCode)
 endFunction
+
+string function Coalesce(string string1, string string2) global
+  if string1 != ""
+    return string1
+  else
+    return string2
+  endIf
+endFunction

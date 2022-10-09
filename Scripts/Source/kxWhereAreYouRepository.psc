@@ -121,5 +121,5 @@ string function GetStatsTextForNpc(Actor npc) global
 endFunction
 
 string function GetDynamicStatsTextForNpc(Actor npc) global
-  return "Location: " + npc.GetCurrentLocation().GetName()
+  return "Location: " + Coalesce(npc.GetCurrentLocation().GetName(), "Tamriel")
 endFunction

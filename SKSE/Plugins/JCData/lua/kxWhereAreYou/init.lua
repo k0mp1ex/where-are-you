@@ -17,6 +17,10 @@ local function literalize(str)
   return str:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", function(c) return "%" .. c end)
 end
 
+local function title_case(str)
+  return str:gsub("(%a)([%w_']*)", function (first, rest) return first:upper()..rest:lower() end)
+end
+
 local function gender_to_string(npc)
   if npc.gender == 0 then
     return "Male"
@@ -46,7 +50,7 @@ local function npc_to_text(npc)
     npc_refid_as_string(npc),
     npc_baseid_as_string(npc),
     npc.mod,
-    npc.race,
+    title_case(npc.race),
     gender_to_string(npc),
     npc.tracking_slot ~= -1 and "Yes" or "No",
     npc.clone == 1 and "Yes" or "No"
@@ -54,7 +58,7 @@ local function npc_to_text(npc)
 end
 
 local function log_npc(npc)
-  log("\n" .. npc_to_text(npc))
+  log(npc_to_text(npc) .. "\n")
 end
 
 local function find_npc_by_form_id(form_id)
@@ -77,7 +81,7 @@ function kxWhereAreYou.get_formatted_entry_for_npc_by_form_id(form_id, format)
     result = string.gsub(result, literalize("[name]"),     npc.name)
     result = string.gsub(result, literalize("[mod]"),      npc.mod)
     result = string.gsub(result, literalize("[gender]"),   gender_to_string(npc):sub(1, 1))
-    result = string.gsub(result, literalize("[race]"),     npc.race)
+    result = string.gsub(result, literalize("[race]"),     title_case(npc.race))
     result = string.gsub(result, literalize("[baseid]"),   npc_baseid_as_string(npc))
     result = string.gsub(result, literalize("[refid]"),    npc_refid_as_string(npc))
     result = string.gsub(result, literalize("[tracking]"), npc.tracking_slot ~= -1 and "*" or "")
