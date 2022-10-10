@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1
+
+- Updated SPID file back to use FormID instead of EditorID (I found this problem testing some Wabbajack lists running Skyrim 1.5.97, like Living Skyrim 3 and Aldrnari)
+- Added TitleCase for race (so no more IMPERIAL in uppercase or other string variations)
+- Added "Tamriel" as the default text when no location is found
+- Removed useless logs
+- Safe to update from 1.3.0
+
 ## 1.3.0
 
 - Faster and more powerful search using Lua. Search now uses Lua [pattern matching](https://www.lua.org/manual/5.1/manual.html#5.4.1) instead of simple wildcards like in the previous version
@@ -18,7 +26,7 @@
 - Added hotkeys for tracking NPC, show command wheel and do favor
 - Added support to modifiers (Ctrl, Alt, Shift) for all hotkeys
 - Removed experimental flags
-- Safe to update from 1.1.0
+- **Safe to update from 1.1.0**
 
 ## 1.1.0
 
