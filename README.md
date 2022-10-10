@@ -8,8 +8,6 @@ So, you've been wandering the lands, found a few NPCs but you're not sure where 
 Maybe you don't remember exactly what their names were?
 Don't worry, we'll find them for you!
 
-![alt text](docs/gifs/simple-search-multiple-results.gif)
-
 ## Features
 
 - Implemented:
