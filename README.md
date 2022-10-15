@@ -24,7 +24,6 @@ Don't worry, we'll find them for you!
   - Added option to only delete cloned NPCs
   - Added option to only allow followers to do favors
   - Customizable UI (icons and color)
-  - Search supporting wildcards * and ?
   - Tracking markers up to 100 NPCs
   - Teleport the NPC to you
   - Teleport you to where the NPC is
@@ -37,6 +36,7 @@ Don't worry, we'll find them for you!
   - Track the NPCs cloned by this mod
   - **ESPFE**
 - Planned:
+  - Replace the command wheel for a list menu. With command wheel I can only have 8 options. I can allocate one of them to open another command wheel, but it seems more cluttered and less intuitive than showing a full list menu. Any feedback here is helpful.
   - A SKSE version to improve search performance or a [Skyrim Search SE](https://www.nexusmods.com/skyrimspecialedition/mods/45689) integration.
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets
@@ -84,13 +84,10 @@ No incompatibilities found yet.
 
 - Can I uninstall it mid playthrough?
 - It's not recomended, but you can. If you wish to proceed what I would do:
-  - 1) Disable the mod (MCM > Where Are You? > System > Mod enabled)
-  - 2) Disable "Keep tracking in the background" too (to avoid store data in background)
-  - 3) Make a new save
-  - 4) Disable the kxWhereAreYou.esp
-  - 5) Make a new save
-  - 6) Clean the new save on [Resaver](https://www.nexusmods.com/skyrimspecialedition/mods/5031)
-  - 7) Load the cleaned save
+  - 1) Disable the **kxWhereAreYou.esp**
+  - 2) Make a new save
+  - 3) Clean the new save on [Resaver](https://www.nexusmods.com/skyrimspecialedition/mods/5031)
+  - 4) Load the cleaned save
 
 ---
 
@@ -130,7 +127,7 @@ No incompatibilities found yet.
 ---
 
 - TL;DR
-- ¯\_(ツ)_/¯
+- F3 > Search > Profit ¯\_(ツ)_/¯
 
 ## Source
 

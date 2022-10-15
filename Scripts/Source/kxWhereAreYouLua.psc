@@ -2,6 +2,15 @@ Scriptname kxWhereAreYouLua hidden
 
 import kxWhereAreYouRepository
 
+; [WARNING]
+; About strings:
+;   As described in JContainers docs we can't transfer in/out from Lua integers bigger than 24-bit with exact precision.
+;   That's why in this script all 32-bit integers (like form IDs) are transferred as string
+;   When necessary an explicit cast to int should be made in Papyrus/Lua code
+; About booleans:
+;   JContainers doesn't offer a native API to transfer booleans, so I treat then as int values (0 = false, 1 = true)
+;   When necessary an explicit cast to bool(ean) should be made in Papyrus/Lua code
+
 int function FindMatchingNpcs(string pattern, int maxCount) global
   PrepareLuaContext()
 	int jLuaArgs
@@ -18,53 +27,61 @@ int function GetNpcsFromCollection(int jaCollection, bool shouldSort) global
   return JLua.evalLuaObj("return kxWhereAreYou.get_from_collection(args.collection, args.should_sort)", jLuaArgs)
 endFunction
 
-int function GetNpcIndex(int formId) global
+int function GetNpcIndex(string formId) global
   PrepareLuaContext()
 	int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
-  return JLua.evalLuaInt("return kxWhereAreYou.get_npc_index_by_form_id(args.form_id)", jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
+  return JLua.evalLuaInt("return kxWhereAreYou.get_npc_index(args.form_id)", jLuaArgs)
 endFunction
 
-int function IsTrackingNpc(int formId) global
+int function IsTrackingNpc(string formId) global
   PrepareLuaContext()
 	int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
-  return JLua.evalLuaInt("return kxWhereAreYou.is_tracking_by_form_id(args.form_id)", jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
+  return JLua.evalLuaInt("return kxWhereAreYou.is_tracking(args.form_id)", jLuaArgs)
 endFunction
 
-function UpdateNpcTracking(int formId, int trackingSlot) global
+function UpdateNpcTracking(string formId, int trackingSlot) global
   PrepareLuaContext()
 	int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
   jLuaArgs = JLua.setInt("tracking_slot", trackingSlot, jLuaArgs)
-  JLua.evalLuaObj("return kxWhereAreYou.update_tracking_by_form_id(args.form_id, args.tracking_slot)", jLuaArgs)
+  JLua.evalLuaObj("return kxWhereAreYou.update_tracking(args.form_id, args.tracking_slot)", jLuaArgs)
 endFunction
 
-string function GetFormattedEntryForNpc(int formId, string format) global
+string function GetFormattedEntryForNpc(string formId, string format) global
   PrepareLuaContext()
 	int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
   jLuaArgs = JLua.setStr("format", format, jLuaArgs)
-  return JLua.evalLuaStr("return kxWhereAreYou.get_formatted_entry_for_npc_by_form_id(args.form_id, args.format)", jLuaArgs)
+  return JLua.evalLuaStr("return kxWhereAreYou.get_formatted_entry_for_npc(args.form_id, args.format)", jLuaArgs)
 endFunction
 
-string function GetStatsTextForNpc(int formId) global
+string function GetStatsTextForNpc(string formId, string npcLocation) global
   PrepareLuaContext()
 	int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
-  return JLua.evalLuaStr("return kxWhereAreYou.get_stats_text_for_npc_by_form_id(args.form_id)", jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
+  jLuaArgs = JLua.setStr("location", npcLocation, jLuaArgs)
+  return JLua.evalLuaStr("return kxWhereAreYou.get_stats_text_for_npc(args.form_id, args.location)", jLuaArgs)
 endFunction
 
-int function GetTrackingSlotForNpc(int formId) global
+int function GetTrackingSlotForNpc(string formId) global
   PrepareLuaContext()
   int jLuaArgs
-  jLuaArgs = JLua.setInt("form_id", formId, jLuaArgs)
-  return JLua.evalLuaInt("return kxWhereAreYou.get_tracking_slot_by_form_id(args.form_id)", jLuaArgs)
+  jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
+  return JLua.evalLuaInt("return kxWhereAreYou.get_tracking_slot(args.form_id)", jLuaArgs)
 endFunction
 
-int function StringToInt(string hexString) global
+int function UpdateModList(int jaMods) global
+  PrepareLuaContext()
+  int jLuaArgs
+  jLuaArgs = JLua.setObj("mods", jaMods, jLuaArgs)
+  return JLua.evalLuaObj("return kxWhereAreYou.update_modlist(args.mods)", jLuaArgs)
+endFunction
+
+string function HexStrToDecStr(string hexString) global
   PrepareLuaContext()
   int jLuaArgs
   jLuaArgs = JLua.setStr("hex_string", hexString, jLuaArgs)
-  return JLua.evalLuaInt("return kxWhereAreYou.hex_str_to_int(args.hex_string)", jLuaArgs)
+  return JLua.evalLuaStr("return kxWhereAreYou.hex_str_to_dec_str(args.hex_string)", jLuaArgs)
 endFunction

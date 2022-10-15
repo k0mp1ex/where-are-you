@@ -47,9 +47,8 @@ endFunction
 function AddNpc(Actor npc) global
   int references = GetReferencesFromDB(".npcs")
   int jmNpc = JMap.object()
-  JMap.SetInt(jmNpc, "ref_id", npc.GetFormId())
-  JMap.SetInt(jmNpc, "base_id", npc.GetActorBase().GetFormID())
-  JMap.SetForm(jmNpc, "form", npc)
+  JMap.SetStr(jmNpc, "ref_id", npc.GetFormId() as string)
+  JMap.SetStr(jmNpc, "base_id", npc.GetActorBase().GetFormID() as string)
   JMap.SetStr(jmNpc, "name", npc.GetDisplayName())
   JMap.SetStr(jmNpc, "mod", GetModNameFromForm(npc))
   JMap.SetStr(jmNpc, "race", npc.GetRace().GetName())
@@ -69,23 +68,39 @@ function RemoveNpc(Actor npc) global
   endIf
 endFunction
 
-function RemoveAllClonedNpcs() global
-  int references = GetReferencesFromDB(".npcs")
-  int i = 0
-  while i < JArray.Count(references)
-    int jmNpc = JArray.GetObj(references, i)
-    if jmNpc != -1 && (JMap.GetInt(jmNpc, "clone") as bool)
-      Log("Removing " + JMap.GetStr(jmNpc, "name"))
-      Actor npc = JMap.GetForm(jmNpc, "form") as Actor
-      npc.Disable()
-      npc.Delete()
-    endIf    
-    i += 1
-  endWhile
-endFunction
-
 bool function IsClonedNpc(Actor npc) global
   return IsDynamicObjectReference(npc)
+endFunction
+
+int function UpdateModlist() global
+  int jaMods = JArray.object()
+  JValue.retain(jaMods)
+
+  int i = 0
+  while i < Game.GetModCount()
+    int jmMod = JMap.object()
+    JMap.setStr(jmMod, "name", Game.GetModName(i))
+    JMap.setStr(jmMod, "index", i)
+    JMap.setInt(jmMod, "light", false as int)
+    JArray.addObj(jaMods, jmMod)
+    i += 1
+  endWhile
+
+  i = 0;
+  while i < Game.GetLightModCount()
+    int jmMod = JMap.object()
+    JMap.setStr(jmMod, "name", Game.GetLightModName(i))
+    JMap.setStr(jmMod, "index", i)
+    JMap.setInt(jmMod, "light", true as int)
+    JArray.addObj(jaMods, jmMod)
+    i += 1
+  endWhile
+
+  int jaDeletedTrackedNpcs = kxWhereAreYouLua.UpdateModList(jaMods)
+  JValue.retain(jaDeletedTrackedNpcs)
+  JValue.release(jaMods)
+
+  return jaDeletedTrackedNpcs
 endFunction
 
 function PrepareLuaContext() global
@@ -97,11 +112,11 @@ function PrepareLuaContext() global
 endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc) global
-  return kxWhereAreYouLua.GetTrackingSlotForNpc(npc.GetFormId())
+  return kxWhereAreYouLua.GetTrackingSlotForNpc(npc.GetFormId() as string)
 endFunction
 
 int function GetNpcIndex(Actor npc) global
-  return kxWhereAreYouLua.GetNpcIndex(npc.GetFormId())
+  return kxWhereAreYouLua.GetNpcIndex(npc.GetFormId() as string)
 endFunction
 
 bool function HasNpc(Actor npc) global
@@ -109,17 +124,13 @@ bool function HasNpc(Actor npc) global
 endFunction
 
 bool function IsTrackingNpc(Actor npc) global
-  return kxWhereAreYouLua.IsTrackingNpc(npc.GetFormId()) as bool
+  return kxWhereAreYouLua.IsTrackingNpc(npc.GetFormId() as string) as bool
 endFunction
 
 function UpdateNpcTracking(Actor npc, int trackingSlot) global
-  kxWhereAreYouLua.UpdateNpcTracking(npc.GetFormId(), trackingSlot)
+  kxWhereAreYouLua.UpdateNpcTracking(npc.GetFormId() as string, trackingSlot)
 endFunction
 
 string function GetStatsTextForNpc(Actor npc) global
-  return kxWhereAreYouLua.GetStatsTextForNpc(npc.GetFormId()) + "\n" + GetDynamicStatsTextForNpc(npc)
-endFunction
-
-string function GetDynamicStatsTextForNpc(Actor npc) global
-  return "Location: " + Coalesce(npc.GetCurrentLocation().GetName(), "Tamriel")
+  return kxWhereAreYouLua.GetStatsTextForNpc(npc.GetFormId() as string, npc.GetCurrentLocation().GetName())
 endFunction

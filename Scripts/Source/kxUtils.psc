@@ -74,3 +74,7 @@ string function Coalesce(string string1, string string2) global
     return string2
   endIf
 endFunction
+
+Actor function GetActorFromReferenceId(int refId) global
+  return Game.GetFormEx(refId) as Actor
+endFunction

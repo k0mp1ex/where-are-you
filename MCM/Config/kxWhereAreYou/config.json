@@ -527,20 +527,6 @@
           "groupBehavior": "disable"
         },
         {
-          "type": "hiddenToggle",
-          "text": "Reset data",
-          "help": "Clear all stored data, removing all tracking markers and cloned NPCs.",
-          "valueOptions": {
-            "value": "Click to reset"
-          },
-          "action": {
-            "type": "CallFunction",
-            "form": "kxWhereAreYou.esp|801",
-            "scriptName": "kxWhereAreYouMcm",
-            "function": "ResetData"
-          }
-        },
-        {
           "type": "header",
           "text": "Debug",
           "position": 1

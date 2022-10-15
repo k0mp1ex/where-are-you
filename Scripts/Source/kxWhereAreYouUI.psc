@@ -40,6 +40,7 @@ string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker, bool isClo
     JValue.release(jaCommands)
     return command
   endIf
+  JValue.release(jaCommands)
 endFunction
 
 int function GetCommandWheelOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
@@ -171,7 +172,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouLua.StringToInt(DEFAULT_COLOR()))
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouLua.HexStrToDecStr(DEFAULT_COLOR()) as int)
 endFunction
 
 string function CreateNpcNameUI(string msg = "") global
@@ -195,7 +196,7 @@ int function CreateNpcListUI(int jaAllNpcs) global
   while i < JArray.Count(jaAllNpcs)
     int jmNpc = JArray.GetObj(jaAllNpcs, i)
     string npcName = JMap.GetStr(jmNpc, "name")
-    string entry = kxWhereAreYouLua.GetFormattedEntryForNpc(JMap.GetInt(jmNpc, "ref_id"), ENTRY_FORMAT())
+    string entry = kxWhereAreYouLua.GetFormattedEntryForNpc(JMap.GetStr(jmNpc, "ref_id"), ENTRY_FORMAT())
     listMenu.AddEntryItem(entry)
     LogNpcSlot(npcName + " added to search list", i, JArray.Count(jaAllNpcs))
     i += 1

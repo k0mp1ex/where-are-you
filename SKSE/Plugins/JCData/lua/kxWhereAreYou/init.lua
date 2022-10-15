@@ -2,14 +2,19 @@ local all_npcs = JDB.kxWhereAreYou.npcs
 local settings = JDB.kxWhereAreYou.settings
 local kxWhereAreYou = {}
 
-local function log(msg, mode)
+-- PRIVATE API
+
+local function write_log(msg, mode)
+  local file = io.open(settings.log_file_path, mode)
+  if file then
+    file:write(msg .. "\n")
+    file:close()
+  end
+end
+
+local function log(format, ...)
   if settings.debug_enabled == 1 then
-    local file = io.open(settings.log_file_path, mode or "a+")
-    if file then
-      file:write("\n[" .. settings.mod_name .. "@v" .. settings.mod_version .. "] " .. msg)
-      file:flush()
-      file:close()
-    end
+    write_log(string.format("[%s@v%s] " .. format, settings.mod_name, settings.mod_version, ...), "a+")
   end
 end
 
@@ -19,6 +24,22 @@ end
 
 local function title_case(str)
   return str:gsub("(%a)([%w_']*)", function (first, rest) return first:upper()..rest:lower() end)
+end
+
+local function dec_str_to_int(dec_string)
+  return tonumber(dec_string, 10)
+end
+
+local function int_to_dec_str(id)
+  return tostring(id)
+end
+
+local function dec_str_to_hex_str(dec_string)
+  return "0x" .. string.format("%x", tonumber(dec_string, 10)):upper():sub(-8)
+end
+
+local function hex_str_to_dec_str(hex_string)
+  return tostring(tonumber(hex_string, 16))
 end
 
 local function gender_to_string(npc)
@@ -31,59 +52,68 @@ local function gender_to_string(npc)
   end
 end
 
-local function id_as_string(id)
-  return "0x" .. string.format("%x", id):upper():sub(-8)
+local function ref_id_as_string(npc)
+  return dec_str_to_hex_str(npc.ref_id)
 end
 
-local function npc_refid_as_string(npc)
-  return id_as_string(npc.ref_id)
+local function base_id_as_string(npc)
+  return dec_str_to_hex_str(npc.base_id)
 end
 
-local function npc_baseid_as_string(npc)
-  return id_as_string(npc.base_id)
-end
-
-local function npc_to_text(npc)
+local function npc_to_text(npc, location)
   return string.format(
-    "Name: %s\nRefId: %s\nBaseId: %s\nMod: %s\nRace: %s\nGender: %s\nTracked? %s\nIs a clone? %s",
+    "Name: %s\nRefId: %s\nBaseId: %s\nMod: %s\nRace: %s\nGender: %s\nTracked? %s\nIs a clone? %s\nLocation: %s",
+    -- static
     npc.name,
-    npc_refid_as_string(npc),
-    npc_baseid_as_string(npc),
+    ref_id_as_string(npc),
+    base_id_as_string(npc),
     npc.mod,
     title_case(npc.race),
     gender_to_string(npc),
     npc.tracking_slot ~= -1 and "Yes" or "No",
-    npc.clone == 1 and "Yes" or "No"
+    npc.clone == 1 and "Yes" or "No",
+    -- dynamic (not available by default)
+    location or "Tamriel"
   )
 end
 
 local function log_npc(npc)
-  log(npc_to_text(npc) .. "\n")
+  log(npc_to_text(npc))
 end
 
-local function find_npc_by_form_id(form_id)
-  log("find_npc_by_form_id..." .. id_as_string(form_id))
+local function find_npc(form_id)
+  log("find_npc... %s", dec_str_to_hex_str(form_id))
   for i,npc in pairs(all_npcs) do
     log_npc(npc)
-    if npc.ref_id == form_id then
+    if npc.ref_id == form_id then --string comparison
       npc.index = i - 1 -- Lua arrays start at 1
       return npc
     end
   end
 end
 
-function kxWhereAreYou.get_formatted_entry_for_npc_by_form_id(form_id, format)
-  log("get_formatted_entry_for_npc_by_form_id...")
+local function get_mod_by_mod_name(mods, mod_name)
+  for _,mod in pairs(mods) do
+    if mod.name:lower() == mod_name:lower() then
+      return mod
+    end
+  end
+end
 
-  local npc = find_npc_by_form_id(form_id)
+-- PUBLIC API
+
+function kxWhereAreYou.get_formatted_entry_for_npc(form_id, format)
+  log("get_formatted_entry_for_npc... %s", dec_str_to_hex_str(form_id))
+
+  local npc = find_npc(form_id)
   if npc then
     local result = format
     result = string.gsub(result, literalize("[name]"),     npc.name)
     result = string.gsub(result, literalize("[mod]"),      npc.mod)
     result = string.gsub(result, literalize("[gender]"),   gender_to_string(npc):sub(1, 1))
     result = string.gsub(result, literalize("[race]"),     title_case(npc.race))
-    result = string.gsub(result, literalize("[baseid]"),   npc_baseid_as_string(npc))
-    result = string.gsub(result, literalize("[refid]"),    npc_refid_as_string(npc))
+    result = string.gsub(result, literalize("[baseid]"),   base_id_as_string(npc))
+    result = string.gsub(result, literalize("[refid]"),    ref_id_as_string(npc))
     result = string.gsub(result, literalize("[tracking]"), npc.tracking_slot ~= -1 and "*" or "")
     result = string.gsub(result, literalize("[clone]"),    npc.clone == 1 and "+" or "")
     return result
@@ -93,7 +123,7 @@ end
 
 function kxWhereAreYou.search_by_pattern(pattern, max)
   log("search_by_pattern...")
-  log("size: " .. #all_npcs)
+  log("size: %d", #all_npcs)
 
   local count = 0
   local result = JArray.object()
@@ -109,21 +139,21 @@ function kxWhereAreYou.search_by_pattern(pattern, max)
   return result
 end
 
-function kxWhereAreYou.get_npc_index_by_form_id(form_id)
-  log("search_by_form_id...")
-  local npc = find_npc_by_form_id(form_id)
+function kxWhereAreYou.get_npc_index(form_id)
+  log("search... %s", dec_str_to_hex_str(form_id))
+  local npc = find_npc(form_id)
   return npc ~= nil and npc.index or -1
 end
 
-function kxWhereAreYou.is_tracking_by_form_id(form_id)
-  log("is_tracking_by_form_id...")
-  local npc = find_npc_by_form_id(form_id)
+function kxWhereAreYou.is_tracking(form_id)
+  log("is_tracking... %s", dec_str_to_hex_str(form_id))
+  local npc = find_npc(form_id)
   return npc ~= nil and npc.tracking_slot ~= -1 or 0
 end
 
-function kxWhereAreYou.update_tracking_by_form_id(form_id, tracking_slot)
-  log("update_tracking_by_form_id...") 
-  local npc = find_npc_by_form_id(form_id)
+function kxWhereAreYou.update_tracking(form_id, tracking_slot)
+  log("update_tracking... %s", dec_str_to_hex_str(form_id))
+  local npc = find_npc(form_id)
   if npc then
     npc.tracking_slot = tracking_slot
   end
@@ -155,22 +185,64 @@ function kxWhereAreYou.get_from_collection(collection, should_sort)
   end
 end
 
-function kxWhereAreYou.get_stats_text_for_npc_by_form_id(form_id)
-  log("get_stats_text_for_npc_by_form_id...")
-  local npc = find_npc_by_form_id(form_id)
-  return npc_to_text(npc)
+function kxWhereAreYou.get_stats_text_for_npc(form_id, location)
+  log("get_stats_text_for_npc... %s", dec_str_to_hex_str(form_id))
+  local npc = find_npc(form_id)
+  return npc_to_text(npc, location)
 end
 
-function kxWhereAreYou.get_tracking_slot_by_form_id(form_id)
-  log("get_tracking_slot_by_form_id...")
-  local npc = find_npc_by_form_id(form_id)
+function kxWhereAreYou.get_tracking_slot(form_id)
+  log("get_tracking_slot... %s", dec_str_to_hex_str(form_id))
+  local npc = find_npc(form_id)
   return npc and npc.tracking_slot or -1
 end
 
-function kxWhereAreYou.hex_str_to_int(hex_string)
-  return tonumber(hex_string, 16)
+function kxWhereAreYou.hex_str_to_dec_str(hex_string)
+  return hex_str_to_dec_str(hex_string)
 end
 
-log("Initializing", "w")
+function kxWhereAreYou.update_modlist(mods)
+  log("> update_modlist... size: %d (before)", #all_npcs)
+
+  local deleted_tracked_npcs = JArray.object()
+  local deleted_npcs_indexes = {}
+
+  for i,npc in pairs(all_npcs) do
+    local mod = get_mod_by_mod_name(mods, npc.mod)
+    if mod then
+      if mod.light == 0 then
+        npc.base_id = int_to_dec_str(bit.bor(bit.lshift(mod.index, 6 * 4), bit.band(dec_str_to_int(npc.base_id), 0xFFFFFF)))
+        if npc.clone == 0 then
+          npc.ref_id  = int_to_dec_str(bit.bor(bit.lshift(mod.index, 6 * 4), bit.band(dec_str_to_int(npc.ref_id),  0xFFFFFF)))
+        end
+      else
+        npc.base_id = int_to_dec_str(bit.bor(0xFE000000, bit.lshift(mod.index, 3 * 4), bit.band(dec_str_to_int(npc.base_id), 0xFFF)))
+        if npc.clone == 0 then
+          npc.ref_id  = int_to_dec_str(bit.bor(0xFE000000, bit.lshift(mod.index, 3 * 4), bit.band(dec_str_to_int(npc.ref_id),  0xFFF)))
+        end
+      end
+    else -- mod deleted, remove NPC too
+      log("%s removed because mod %s has been deleted.", npc.name, npc.mod)
+      if npc.tracking_slot ~= -1 then
+        JArray.insert(deleted_tracked_npcs, npc.tracking_slot)
+      end
+      table.insert(deleted_npcs_indexes, i)
+    end
+  end
+
+  --Remove deleted NPCs
+  table.sort(deleted_npcs_indexes, function(a, b) return a <= b end)
+  local i = #deleted_npcs_indexes
+  while i > 0 do
+    JArray.eraseIndex(all_npcs, deleted_npcs_indexes[i])
+    i = i - 1
+  end
+
+  log("> update_modlist... size: %d (after)", #all_npcs)
+
+  return deleted_tracked_npcs
+end
+
+write_log("Initializing", "w")
 
 return kxWhereAreYou

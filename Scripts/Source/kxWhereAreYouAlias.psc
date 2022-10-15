@@ -25,6 +25,7 @@ endEvent
 event OnPlayerLoadGame()
   UnregisterForAllKeys()
   if CanRun()
+    UpdateReferences()
     RegisterForAllKeys()
   endIf
 endEvent
@@ -151,7 +152,7 @@ Actor function FindNpcByNamePattern(string pattern)
     ShowMessage("No matches found")
   elseIf JArray.Count(jmFoundNpcs) == 1
     int jmNpc = JArray.GetObj(jmFoundNpcs, 0)
-    npc = JMap.GetForm(jmNpc, "form") as Actor
+    npc = GetActorFromReferenceId(JMap.GetStr(jmNpc, "ref_id") as int) as Actor
   else
     npc = ChooseNpcFromList(jmFoundNpcs)
   endIf
@@ -165,7 +166,7 @@ Actor function ChooseNpcFromList(int jmFoundNpcs)
 
   int jmNpc = CreateNpcListUI(jaAllNpcs)
   if jmNpc
-    return JMap.GetForm(jmNpc, "form") as Actor
+    return GetActorFromReferenceId(JMap.GetStr(jmNpc, "ref_id") as int) as Actor
   endIf
   JValue.release(jaAllNpcs)
 endFunction
@@ -238,9 +239,9 @@ bool function AddTrackingMarker(Actor npc)
     ShowMessage("Cannot add more tracking markers.")
   else
     ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
+    UpdateNpcTracking(npc, slot)
     currentAlias.ForceRefTo(npc)
     currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = true, abForce = true)
-    UpdateNpcTracking(npc, slot)
   endIf
   return slot != -1
 endFunction
@@ -248,9 +249,11 @@ endFunction
 function RemoveTrackingMarker(int slot)
   ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
   Actor npc = currentAlias.GetActorReference() as Actor
+  if npc
+    UpdateNpcTracking(npc, -1)
+  endIf
   currentAlias.Clear()
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
-  UpdateNpcTracking(npc, -1)
 endFunction
 
 function RemoveAllTrackingMarkers()
@@ -259,4 +262,18 @@ function RemoveAllTrackingMarkers()
     RemoveTrackingMarker(i)
     i += 1
   endWhile
+endFunction
+
+function UpdateReferences()
+  int jaDeletedTrackedNpcs = UpdateModList()
+  if jaDeletedTrackedNpcs
+    int i = 0
+    while i < JArray.Count(jaDeletedTrackedNpcs)
+      int slot = JArray.GetInt(jaDeletedTrackedNpcs, i)
+      Log("Freeing tracking slot " + slot)
+      RemoveTrackingMarker(slot)
+      i += 1
+    endwhile
+  endIf
+  JValue.release(jaDeletedTrackedNpcs)
 endFunction
