@@ -22,6 +22,10 @@ local function literalize(str)
   return str:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", function(c) return "%" .. c end)
 end
 
+local function is_empty(s)
+  return s == nil or s == ''
+end
+
 local function title_case(str)
   return str:gsub("(%a)([%w_']*)", function (first, rest) return first:upper()..rest:lower() end)
 end
@@ -73,7 +77,7 @@ local function npc_to_text(npc, location)
     npc.tracking_slot ~= -1 and "Yes" or "No",
     npc.clone == 1 and "Yes" or "No",
     -- dynamic (not available by default)
-    location or "Tamriel"
+    (not is_empty(location) and location) or "Tamriel"
   )
 end
 
