@@ -227,7 +227,7 @@ function SelectNpcOnConsole(Actor npc)
 endFunction
 
 function MoveToTarget(Actor akOrigin, Actor akTarget)
-  akOrigin.MoveTo(akTarget, TELEPORT_RANGE(), 0.0, 0.0, false)
+  akOrigin.MoveTo(akTarget, TELEPORT_RANGE())
 endFunction
 
 int function GetNextAvailableQuestAliasIndex()
