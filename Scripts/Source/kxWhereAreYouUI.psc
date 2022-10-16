@@ -1,6 +1,7 @@
 Scriptname kxWhereAreYouUI hidden
 
 import kxUtils
+import kxWhereAreYouCommon
 import kxWhereAreYouLogging
 import kxWhereAreYouProperties
 
@@ -55,19 +56,27 @@ endFunction
 string function CreateCommandListUI(Actor npc, int jaCommands) global
   UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
 
+  listMenu.AddEntryItem("[" + npc.GetDisplayName() + "]")
   int i = 0
   while i < JArray.Count(jaCommands)
     int jmCommand = JArray.GetObj(jaCommands, i)
     listMenu.AddEntryItem(JMap.GetStr(jmCommand, "description"))
     i += 1
   endWhile
+
   listMenu.OpenMenu()
-  int id = listMenu.GetResultInt()
   string command
+  int id = listMenu.GetResultInt()
+
   if id != -1
-    int jmCommand = JArray.GetObj(jaCommands, id)
-    command = JMap.GetStr(jmCommand, "command")
+    if id == 0
+      return CreateCommandListUI(npc, jaCommands)
+    else
+      int jmCommand = JArray.GetObj(jaCommands, id - 1)
+      command = JMap.GetStr(jmCommand, "command")
+    endIf
   endIf
+
   return command
 endFunction
 
@@ -252,6 +261,9 @@ function ShowMessage(string msg) global
   Debug.MessageBox(msg)
 endFunction
 
-function ShowNotification(string msg) global
+function ShowNotification(string msg, bool showModName = false) global
+  if showModName
+    msg = "[" + GetModName() + "] " + msg
+  endIf
   Debug.Notification(msg)
 endFunction

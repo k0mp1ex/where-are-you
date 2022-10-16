@@ -10,6 +10,10 @@ bool function KEEP_TRACKING_WHEN_DISABLED() global
   return MCM.GetModSettingBool(GetModName(), "bKeepTrackingWhenDisabled:System")
 endFunction
 
+bool function UPDATE_ON_GAME_LOAD() global
+  return MCM.GetModSettingBool(GetModName(), "bUpdateOnLoad:System")
+endFunction
+
 string function COMMANDS_VISUALIZATION_TYPE() global
   if MCM.GetModSettingInt(GetModName(), "uVisualizationType:Commands") == 0
     return "wheel"

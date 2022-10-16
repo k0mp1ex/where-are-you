@@ -562,7 +562,7 @@
           "id": "bEnabled:System",
           "type": "toggle",
           "text": "Mod enabled",
-          "help": "Toggle to enable and disable mod.",
+          "help": "Enable/disable the mod.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           },
@@ -577,6 +577,39 @@
             "sourceType": "ModSettingBool"
           },
           "groupCondition": { "NOT": 1 },
+          "groupBehavior": "disable"
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Maintenance"
+        },
+        {
+          "id": "bUpdateOnLoad:System",
+          "type": "toggle",
+          "text": "Update on game load",
+          "help": "Apply updates on game load.\nIt will update NPC references with load order changes, remove and untrack NPCs from deleted mods.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          },
+          "groupControl": 2
+        },
+        {
+          "type": "text",
+          "text": "Update data",
+          "help": "Update NPC references with load order changes, remove and untrack NPCs from deleted mods.\nRecommended to run every time you change your load order or delete a mod.",
+          "valueOptions": {
+            "value": "Click to update"
+          },
+          "action": {
+            "type": "CallFunction",
+            "form": "kxWhereAreYou.esp|801",
+            "scriptName": "kxWhereAreYouMcm",
+            "function": "UpdateData"
+          },
+          "groupCondition": { "NOT": 2 },
           "groupBehavior": "disable"
         },
         {
@@ -627,7 +660,7 @@
         {
           "type": "text",
           "valueOptions": {
-            "value": "Version 1.3.1"
+            "value": "Version 1.4.0"
           }
         },
         {
