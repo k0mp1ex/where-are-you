@@ -74,8 +74,13 @@ endFunction
 int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
   int jmStats = JMap.object()
   JMap.SetStr(jmStats, "command",         "show_npc_stats")
-  JMap.SetStr(jmStats, "description",     "Info/Stats")
+  JMap.SetStr(jmStats, "description",     "Stats")
   JMap.SetStr(jmStats, "icon",            STATS_ICON_NAME())
+
+  int jmInfo = JMap.object()
+  JMap.SetStr(jmInfo, "command",         "show_npc_info")
+  JMap.SetStr(jmInfo, "description",     "Info")
+  JMap.SetStr(jmInfo, "icon",            INFO_ICON_NAME())
 
   int jmTeleport = JMap.object()
   JMap.SetStr(jmTeleport, "command",      "teleport_to_player")
@@ -121,6 +126,9 @@ int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) 
 
   if SHOW_STATS_COMMAND()
     JArray.AddObj(jaCommands, jmStats)
+  endIf
+  if SHOW_INFO_COMMAND()
+    JArray.AddObj(jaCommands, jmInfo)
   endIf
   if SHOW_TELEPORT_COMMAND()
     JArray.AddObj(jaCommands, jmTeleport)
@@ -211,11 +219,13 @@ string function CreateNpcNameUI(string msg = "") global
   return CreateSearchBoxUI()
 endFunction
 
-function ShowNpcStatusUI(Actor npc, string statsText) global
+function ShowNpcStatsUI(Actor npc) global
   UIStatsMenu statsMenu = UIExtensions.GetMenu("UIStatsMenu") as UIStatsMenu
-  ShowMessage(statsText)
-  WaitForMenus()
   statsMenu.OpenMenu(npc)
+endFunction
+
+function ShowNpcInfoUI(string statsText) global
+  ShowMessage(statsText)
 endFunction
 
 int function CreateNpcListUI(int jaAllNpcs) global

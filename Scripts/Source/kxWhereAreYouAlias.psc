@@ -189,8 +189,10 @@ function ChooseCommandToApplyToNPC(Actor npc)
         clone.SetDisplayName(name)
       endIf
     elseIf command == "show_npc_stats"
+      ShowNpcStatsUI(npc)
+    elseIf command == "show_npc_info"
       string statsText = GetStatsTextForNpc(npc)
-      ShowNpcStatusUI(npc, statsText)
+      ShowNpcInfoUI(statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)
     elseIf command == "delete_npc"

@@ -26,6 +26,10 @@ bool function SHOW_STATS_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowStats:Commands")
 endFunction
 
+bool function SHOW_INFO_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowInfo:Commands")
+endFunction
+
 bool function SHOW_TELEPORT_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowTeleport:Commands")
 endFunction
@@ -181,6 +185,10 @@ endFunction
 
 string function STATS_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sStatsIcon:Icons")
+endFunction
+
+string function INFO_ICON_NAME() global
+  return MCM.GetModSettingString(GetModName(), "sInfoIcon:Icons")
 endFunction
 
 string function TELEPORT_ICON_NAME() global

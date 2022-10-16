@@ -343,6 +343,7 @@
           "id": "sDefaultColor:Colors",
           "type": "input",
           "text": "Default",
+          "help": "Default icon color.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -357,7 +358,17 @@
         {
           "id": "sStatsIcon:Icons",
           "type": "input",
-          "text": "Info/Stats",
+          "text": "Stats",
+          "help": "Stats icon.\nOnly available for wheel as visualization type.",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sInfoIcon:Icons",
+          "type": "input",
+          "text": "Info",
+          "help": "Info icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -366,6 +377,7 @@
           "id": "sTeleportIcon:Icons",
           "type": "input",
           "text": "Teleport",
+          "help": "Teleport icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -374,6 +386,7 @@
           "id": "sVisitIcon:Icons",
           "type": "input",
           "text": "Visit",
+          "help": "Visit icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -382,6 +395,7 @@
           "id": "sDeleteIcon:Icons",
           "type": "input",
           "text": "Delete",
+          "help": "Delete icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -390,6 +404,7 @@
           "id": "sInventoryIcon:Icons",
           "type": "input",
           "text": "Inventory",
+          "help": "Inventory icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -398,6 +413,7 @@
           "id": "sCloneIcon:Icons",
           "type": "input",
           "text": "Clone",
+          "help": "Clone icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -406,6 +422,7 @@
           "id": "sTrackIcon:Icons",
           "type": "input",
           "text": "Track/Untrack",
+          "help": "Track/Untrack icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -414,6 +431,7 @@
           "id": "sDoFavorIcon:Icons",
           "type": "input",
           "text": "Do favor",
+          "help": "Do favor icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -440,20 +458,19 @@
           "text": "Commands"
         },
         {
-          "id": "uVisualizationType:Commands",
-          "type": "enum",
-          "text": "Visualization",
-          "help": "Visualization type for the commands.",
+          "id": "bShowStats:Commands",
+          "type": "toggle",
+          "text": "Show Stats",
+          "help": "Show Stats option on commands.",
           "valueOptions": {
-            "options": ["Wheel", "List"],
-            "sourceType": "ModSettingInt"
+            "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowStats:Commands",
+          "id": "bShowInfo:Commands",
           "type": "toggle",
-          "text": "Show Info/Stats",
-          "help": "Show Info/Stats option on commands.",
+          "text": "Show Info",
+          "help": "Show Info option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -519,6 +536,16 @@
           "help": "Show Do Favor option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "uVisualizationType:Commands",
+          "type": "enum",
+          "text": "Visualization",
+          "help": "Visualization type for the commands.",
+          "valueOptions": {
+            "options": ["Wheel", "List"],
+            "sourceType": "ModSettingInt"
           }
         }
       ]
