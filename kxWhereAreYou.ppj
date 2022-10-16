@@ -18,10 +18,10 @@
     </Variables>
     <Imports>
         <Import>@ImportsFolder\SKSE\Scripts\Source</Import>
-        <Import>@ImportsFolder\PapyrusUtil SE - Modders Scripting Utility Functions\Source\Scripts</Import>
         <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
         <Import>@ImportsFolder\JContainers SE\scripts\source</Import>
         <Import>@ImportsFolder\MCM Helper SDK\source\scripts</Import>
+        <Import>@ImportsFolder\ConsoleUtilSSE\scripts\source</Import>
         <Import>@GameRoot\Data\Scripts\Source</Import>
     </Imports>
     <Folders>

@@ -129,6 +129,11 @@ string  function ENTRY_FORMAT() global
 endFunction
 
 
+bool function CONSOLE_AUTO_PRID() global
+  return MCM.GetModSettingBool(GetModName(), "bAutoPickByRefId:Console")
+endFunction
+
+
 float function TELEPORT_RANGE() global
   return MCM.GetModSettingFloat(GetModName(), "fRange:Teleport")
 endFunction

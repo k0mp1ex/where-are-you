@@ -12,6 +12,6 @@ function Log(string msg) global
   string fullMessage = "[" + GetModName() + "@v" + GetModVersionAsString(GetModVersion()) + "] " + msg
   Debug.Trace(fullMessage)
   if IS_DEBUG_ENABLED()
-    MiscUtil.PrintConsole(fullMessage)
+    ConsoleUtil.PrintMessage(fullMessage)
   endIf
 endFunction

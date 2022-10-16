@@ -201,6 +201,10 @@ function kxWhereAreYou.hex_str_to_dec_str(hex_string)
   return hex_str_to_dec_str(hex_string)
 end
 
+function kxWhereAreYou.dec_str_to_hex_str(dec_string)
+  return dec_str_to_hex_str(dec_string)
+end
+
 function kxWhereAreYou.update_modlist(mods)
   log("> update_modlist... size: %d (before)", #all_npcs)
 

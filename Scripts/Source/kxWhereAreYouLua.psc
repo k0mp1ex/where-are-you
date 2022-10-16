@@ -85,3 +85,10 @@ string function HexStrToDecStr(string hexString) global
   jLuaArgs = JLua.setStr("hex_string", hexString, jLuaArgs)
   return JLua.evalLuaStr("return kxWhereAreYou.hex_str_to_dec_str(args.hex_string)", jLuaArgs)
 endFunction
+
+string function DecStrToHexStr(string decString) global
+  PrepareLuaContext()
+  int jLuaArgs
+  jLuaArgs = JLua.setStr("dec_string", decString, jLuaArgs)
+  return JLua.evalLuaStr("return kxWhereAreYou.dec_str_to_hex_str(args.dec_string)", jLuaArgs)
+endFunction

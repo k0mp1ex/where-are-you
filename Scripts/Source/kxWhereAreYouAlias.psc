@@ -174,6 +174,8 @@ endFunction
 function ChooseCommandToApplyToNPC(Actor npc)
   Actor clone
 
+  SelectNpcOnConsole(npc)
+
   string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
   if command
     if command == "teleport_to_player"
@@ -213,6 +215,12 @@ function ChooseCommandToApplyToNPC(Actor npc)
         ChooseCommandToApplyToNPC(npc)
       endIf
     endIf
+  endIf
+endFunction
+
+function SelectNpcOnConsole(Actor npc)
+  if CONSOLE_AUTO_PRID()
+    ConsoleUtil.ExecuteCommand("prid " + kxWhereAreYouLua.DecStrToHexStr(npc.GetFormID() as string))
   endIf
 endFunction
 
