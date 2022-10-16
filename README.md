@@ -36,7 +36,6 @@ Don't worry, we'll find them for you!
   - Track the NPCs cloned by this mod
   - **ESPFE**
 - Planned:
-  - Replace the command wheel for a list menu. With command wheel I can only have 8 options. I can allocate one of them to open another command wheel, but it seems more cluttered and less intuitive than showing a full list menu. Any feedback here is helpful.
   - A SKSE version to improve search performance or a [Skyrim Search SE](https://www.nexusmods.com/skyrimspecialedition/mods/45689) integration.
   - Find NPCs still not discovered/spawned in game.
   - Add support to track pets

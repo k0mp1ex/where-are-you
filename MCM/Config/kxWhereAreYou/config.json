@@ -45,10 +45,10 @@
         },
         {
           "type": "header",
-          "text": "Command Wheel"
+          "text": "Commands"
         },
         {
-          "id": "bKeepOpened:CommandWheel",
+          "id": "bKeepOpened:Commands",
           "type": "toggle",
           "text": "Keep opened",
           "help": "Keep the NPC command menu opened after executing a command. It keeps open until you hit [Tab] to close it.",
@@ -207,19 +207,19 @@
         },
         {
           "type": "header",
-          "text": "Command Wheel"
+          "text": "Commands"
         },
         {
-          "id": "uCommandWheelKey:Hotkeys",
+          "id": "uCommandsKey:Hotkeys",
           "type": "keymap",
           "text": "Hotkey",
-          "help": "Hotkey to show command wheel for the NPC at crosshair",
+          "help": "Hotkey to show commands for the NPC at crosshair",
           "valueOptions": {
             "sourceType": "ModSettingInt"
           }
         },
         {
-          "id": "bCommandWheelCtrlKey:Hotkeys",
+          "id": "bCommandsCtrlKey:Hotkeys",
           "type": "toggle",
           "text": "[Ctrl]",
           "help": "Use [Ctrl] key",
@@ -228,7 +228,7 @@
           }
         },
         {
-          "id": "bCommandWheelShiftKey:Hotkeys",
+          "id": "bCommandsShiftKey:Hotkeys",
           "type": "toggle",
           "text": "[Shift]",
           "help": "Use [Shift] key",
@@ -237,7 +237,7 @@
           }
         },
         {
-          "id": "bCommandWheelAltKey:Hotkeys",
+          "id": "bCommandsAltKey:Hotkeys",
           "type": "toggle",
           "text": "[Alt]",
           "help": "Use [Alt] key",
@@ -437,76 +437,86 @@
         },
         {
           "type": "header",
-          "text": "Command Wheel"
+          "text": "Commands"
         },
         {
-          "id": "bShowStats:CommandWheel",
+          "id": "uVisualizationType:Commands",
+          "type": "enum",
+          "text": "Visualization",
+          "help": "Visualization type for the commands.",
+          "valueOptions": {
+            "options": ["Wheel", "List"],
+            "sourceType": "ModSettingInt"
+          }
+        },
+        {
+          "id": "bShowStats:Commands",
           "type": "toggle",
           "text": "Show Info/Stats",
-          "help": "Show Info/Stats option on command wheel.",
+          "help": "Show Info/Stats option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowTeleport:CommandWheel",
+          "id": "bShowTeleport:Commands",
           "type": "toggle",
           "text": "Show Teleport",
-          "help": "Show Teleport option on command wheel.",
+          "help": "Show Teleport option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowVisit:CommandWheel",
+          "id": "bShowVisit:Commands",
           "type": "toggle",
           "text": "Show Visit",
-          "help": "Show Visit option on command wheel.",
+          "help": "Show Visit option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowDelete:CommandWheel",
+          "id": "bShowDelete:Commands",
           "type": "toggle",
           "text": "Show Delete",
-          "help": "Show Delete option on command wheel.",
+          "help": "Show Delete option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowInventory:CommandWheel",
+          "id": "bShowInventory:Commands",
           "type": "toggle",
           "text": "Show Inventory",
-          "help": "Show Inventory option on command wheel.",
+          "help": "Show Inventory option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowClone:CommandWheel",
+          "id": "bShowClone:Commands",
           "type": "toggle",
           "text": "Show Clone",
-          "help": "Show Clone option on command wheel.",
+          "help": "Show Clone option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowTrack:CommandWheel",
+          "id": "bShowTrack:Commands",
           "type": "toggle",
           "text": "Show Track/Untrack",
-          "help": "Show Track/Untrack option on command wheel.",
+          "help": "Show Track/Untrack option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
         },
         {
-          "id": "bShowDoFavor:CommandWheel",
+          "id": "bShowDoFavor:Commands",
           "type": "toggle",
           "text": "Show Do Favor",
-          "help": "Show Do Favor option on command wheel.",
+          "help": "Show Do Favor option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }

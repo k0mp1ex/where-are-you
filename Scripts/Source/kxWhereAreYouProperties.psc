@@ -10,41 +10,48 @@ bool function KEEP_TRACKING_WHEN_DISABLED() global
   return MCM.GetModSettingBool(GetModName(), "bKeepTrackingWhenDisabled:System")
 endFunction
 
+string function COMMANDS_VISUALIZATION_TYPE() global
+  if MCM.GetModSettingInt(GetModName(), "uVisualizationType:Commands") == 0
+    return "wheel"
+  else
+    return "list"
+  endIf
+endFunction
 
 bool function KEEP_MENU_OPENED() global
-  return MCM.GetModSettingBool(GetModName(), "bKeepOpened:CommandWheel")
+  return MCM.GetModSettingBool(GetModName(), "bKeepOpened:Commands")
 endFunction
 
-bool function SHOW_STATS_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowStats:CommandWheel")
+bool function SHOW_STATS_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowStats:Commands")
 endFunction
 
-bool function SHOW_TELEPORT_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowTeleport:CommandWheel")
+bool function SHOW_TELEPORT_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowTeleport:Commands")
 endFunction
 
-bool function SHOW_VISIT_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowVisit:CommandWheel")
+bool function SHOW_VISIT_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowVisit:Commands")
 endFunction
 
-bool function SHOW_DELETE_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowDelete:CommandWheel")
+bool function SHOW_DELETE_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowDelete:Commands")
 endFunction
 
-bool function SHOW_INVENTORY_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowInventory:CommandWheel")
+bool function SHOW_INVENTORY_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowInventory:Commands")
 endFunction
 
-bool function SHOW_CLONE_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowClone:CommandWheel")
+bool function SHOW_CLONE_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowClone:Commands")
 endFunction
 
-bool function SHOW_TRACK_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowTrack:CommandWheel")
+bool function SHOW_TRACK_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowTrack:Commands")
 endFunction
 
-bool function SHOW_DO_FAVOR_COMMAND_WHEEL() global
-  return MCM.GetModSettingBool(GetModName(), "bShowDoFavor:CommandWheel")
+bool function SHOW_DO_FAVOR_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowDoFavor:Commands")
 endFunction
 
 
@@ -82,20 +89,20 @@ bool function KEY_SEARCH_ALT() global
 endFunction
 
 
-int function KEY_COMMAND_WHEEL() global
-  return MCM.GetModSettingInt(GetModName(), "uCommandWheelKey:Hotkeys")
+int function KEY_COMMANDS() global
+  return MCM.GetModSettingInt(GetModName(), "uCommandsKey:Hotkeys")
 endFunction
 
-bool function KEY_COMMAND_WHEEL_CTRL() global
-  return MCM.GetModSettingBool(GetModName(), "bCommandWheelCtrlKey:Hotkeys")
+bool function KEY_COMMANDS_CTRL() global
+  return MCM.GetModSettingBool(GetModName(), "bCommandsCtrlKey:Hotkeys")
 endFunction
 
-bool function KEY_COMMAND_WHEEL_SHIFT() global
-  return MCM.GetModSettingBool(GetModName(), "bCommandWheelShiftKey:Hotkeys")
+bool function KEY_COMMANDS_SHIFT() global
+  return MCM.GetModSettingBool(GetModName(), "bCommandsShiftKey:Hotkeys")
 endFunction
 
-bool function KEY_COMMAND_WHEEL_ALT() global
-  return MCM.GetModSettingBool(GetModName(), "bCommandWheelAltKey:Hotkeys")
+bool function KEY_COMMANDS_ALT() global
+  return MCM.GetModSettingBool(GetModName(), "bCommandsAltKey:Hotkeys")
 endFunction
 
 

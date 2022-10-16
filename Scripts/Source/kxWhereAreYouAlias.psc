@@ -37,7 +37,7 @@ event OnKeyDown(int keyCode)
       TrackNpcAtCrosshair()
     elseIf IsKeyCombinationPressed(keyCode, KEY_SEARCH(), KEY_SEARCH_CTRL(), KEY_SEARCH_SHIFT(), KEY_SEARCH_ALT())
       SearchNpc()
-    elseIf IsKeyCombinationPressed(keyCode, KEY_COMMAND_WHEEL(), KEY_COMMAND_WHEEL_CTRL(), KEY_COMMAND_WHEEL_SHIFT(), KEY_COMMAND_WHEEL_ALT())
+    elseIf IsKeyCombinationPressed(keyCode, KEY_COMMANDS(), KEY_COMMANDS_CTRL(), KEY_COMMANDS_SHIFT(), KEY_COMMANDS_ALT())
       ExecuteCommandForNpcAtCrosshair()
     elseIf IsKeyCombinationPressed(keyCode, KEY_DO_FAVOR(), KEY_DO_FAVOR_CTRL(), KEY_DO_FAVOR_SHIFT(), KEY_DO_FAVOR_ALT())
       MakeNpcAtCrosshairDoFavor()
@@ -72,7 +72,7 @@ function RegisterForAllKeys()
   if IS_ENABLED()
     RegisterForKey(KEY_TRACK())
     RegisterForKey(KEY_SEARCH())
-    RegisterForKey(KEY_COMMAND_WHEEL())
+    RegisterForKey(KEY_COMMANDS())
     RegisterForKey(KEY_DO_FAVOR())
   endIf
 endFunction
@@ -177,7 +177,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
   SelectNpcOnConsole(npc)
 
   string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
-  if command
+  if command && command != ""
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
     elseIf command == "move_to_npc"

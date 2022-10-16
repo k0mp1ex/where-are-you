@@ -12,38 +12,66 @@ string function CreateSearchBoxUI() global
 endFunction
 
 string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker, bool isClone) global
-  int jaCommands = GetCommandWheelOptions(npc, hasTrackingMarker, isClone)
+  int jaCommands = GetCommandOptions(npc, hasTrackingMarker, isClone)
+  string command
 
   if JArray.Count(jaCommands) > 0
-    UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
-
-    int i = 0
-    while i < JArray.Count(jaCommands)
-      int jmCommand = JArray.GetObj(jaCommands, i)
-      AddOptionToWheel(wheelMenu, JMap.GetInt(jmCommand, "slot"), JMap.GetStr(jmCommand, "description"), JMap.GetStr(jmCommand, "icon"))  
-      i += 1
-    endwhile
-
-    int resultIndex = wheelMenu.OpenMenu(npc)
-    i = 0
-    bool exit = false
-    string command
-    while !exit && i < JArray.Count(jaCommands)
-      int jmCommand = JArray.GetObj(jaCommands, i)
-      if resultIndex == JMap.GetInt(jmCommand, "slot")
-        command = JMap.GetStr(jmCommand, "command")
-        exit = true
-      endIf
-      i += 1
-    endwhile
-
-    JValue.release(jaCommands)
-    return command
+    if COMMANDS_VISUALIZATION_TYPE() == "wheel"
+      command = CreateCommandWheelUI(npc, jaCommands)
+    else
+      command = CreateCommandListUI(npc, jaCommands)
+    endIf   
   endIf
   JValue.release(jaCommands)
+  return command
 endFunction
 
-int function GetCommandWheelOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
+string function CreateCommandWheelUI(Actor npc, int jaCommands) global
+  UIWheelMenu wheelMenu = UIExtensions.GetMenu("UIWheelMenu") as UIWheelMenu
+
+  int i = 0
+  while i < JArray.Count(jaCommands)
+    int jmCommand = JArray.GetObj(jaCommands, i)
+    AddOptionToWheel(wheelMenu, JMap.GetInt(jmCommand, "slot"), JMap.GetStr(jmCommand, "description"), JMap.GetStr(jmCommand, "icon"))  
+    i += 1
+  endwhile
+
+  int resultIndex = wheelMenu.OpenMenu(npc)
+  i = 0
+  bool exit = false
+  string command
+  while !exit && i < JArray.Count(jaCommands)
+    int jmCommand = JArray.GetObj(jaCommands, i)
+    if resultIndex == JMap.GetInt(jmCommand, "slot")
+      command = JMap.GetStr(jmCommand, "command")
+      exit = true
+    endIf
+    i += 1
+  endWhile
+
+  return command
+endFunction
+
+string function CreateCommandListUI(Actor npc, int jaCommands) global
+  UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
+
+  int i = 0
+  while i < JArray.Count(jaCommands)
+    int jmCommand = JArray.GetObj(jaCommands, i)
+    listMenu.AddEntryItem(JMap.GetStr(jmCommand, "description"))
+    i += 1
+  endWhile
+  listMenu.OpenMenu()
+  int id = listMenu.GetResultInt()
+  if id == -1
+    return 0
+  else
+    int jmCommand = JArray.GetObj(jaCommands, id)
+    return JMap.GetStr(jmCommand, "command")
+  endIf
+endFunction
+
+int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
   int jmStats = JMap.object()
   JMap.SetStr(jmStats, "command",         "show_npc_stats")
   JMap.SetStr(jmStats, "description",     "Info/Stats")
@@ -91,28 +119,28 @@ int function GetCommandWheelOptions(Actor npc, bool hasTrackingMarker, bool isCl
   int jaCommands = JArray.object()
   JValue.retain(jaCommands)
 
-  if SHOW_STATS_COMMAND_WHEEL()
+  if SHOW_STATS_COMMAND()
     JArray.AddObj(jaCommands, jmStats)
   endIf
-  if SHOW_TELEPORT_COMMAND_WHEEL()
+  if SHOW_TELEPORT_COMMAND()
     JArray.AddObj(jaCommands, jmTeleport)
   endIf
-  if SHOW_VISIT_COMMAND_WHEEL()
+  if SHOW_VISIT_COMMAND()
     JArray.AddObj(jaCommands, jmVisit)
   endIf
-  if SHOW_DELETE_COMMAND_WHEEL() && (!CAN_ONLY_DELETE_CLONES() || isClone)
+  if SHOW_DELETE_COMMAND() && (!CAN_ONLY_DELETE_CLONES() || isClone)
     JArray.AddObj(jaCommands, jmDelete)
   endIf
-  if SHOW_INVENTORY_COMMAND_WHEEL()
+  if SHOW_INVENTORY_COMMAND()
     JArray.AddObj(jaCommands, jmInventory)
   endIf
-  if SHOW_CLONE_COMMAND_WHEEL()
+  if SHOW_CLONE_COMMAND()
     JArray.AddObj(jaCommands, jmClone)
   endIf
-  if SHOW_TRACK_COMMAND_WHEEL()
+  if SHOW_TRACK_COMMAND()
     JArray.AddObj(jaCommands, jmTrack)
   endIf
-  if SHOW_DO_FAVOR_COMMAND_WHEEL() && (!ONLY_FOLLOWERS_DO_FAVOR() || npc.IsPlayerTeammate())
+  if SHOW_DO_FAVOR_COMMAND() && (!ONLY_FOLLOWERS_DO_FAVOR() || npc.IsPlayerTeammate())
     JArray.AddObj(jaCommands, jmDoFavor)
   endIf;
 
