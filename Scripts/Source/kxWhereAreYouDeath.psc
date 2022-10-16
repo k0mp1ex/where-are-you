@@ -22,5 +22,4 @@ event onDeath(Actor akKiller)
   if REMOVE_TRACKING_ON_DEATH()
     playerAlias.RemoveTrackingMarker(GetNpcTrackingMarkerSlot(npc))
   endIf
-  RemoveNpc(npc)
 endEvent
