@@ -51,7 +51,7 @@
           "id": "bKeepOpened:Commands",
           "type": "toggle",
           "text": "Keep opened",
-          "help": "Keep the NPC command menu opened after executing a command. It keeps open until you hit [Tab] to close it.",
+          "help": "Keeps the NPC command menu opened after executing a command. It keeps opened until you hit [Tab] to close it.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }

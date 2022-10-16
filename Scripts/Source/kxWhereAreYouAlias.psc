@@ -177,7 +177,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
   SelectNpcOnConsole(npc)
 
   string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
-  if command && command != ""
+  if command
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
     elseIf command == "move_to_npc"

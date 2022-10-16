@@ -63,12 +63,12 @@ string function CreateCommandListUI(Actor npc, int jaCommands) global
   endWhile
   listMenu.OpenMenu()
   int id = listMenu.GetResultInt()
-  if id == -1
-    return 0
-  else
+  string command
+  if id != -1
     int jmCommand = JArray.GetObj(jaCommands, id)
-    return JMap.GetStr(jmCommand, "command")
+    command = JMap.GetStr(jmCommand, "command")
   endIf
+  return command
 endFunction
 
 int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
