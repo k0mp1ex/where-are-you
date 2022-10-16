@@ -25,7 +25,9 @@ endEvent
 event OnPlayerLoadGame()
   UnregisterForAllKeys()
   if CanRun()
-    UpdateReferences()
+    if UPDATE_ON_GAME_LOAD()
+      UpdateReferences()
+    endIf
     RegisterForAllKeys()
   endIf
 endEvent
@@ -209,7 +211,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
       MakeNpcDoFavor(npc)
     endIf
 
-    if KEEP_MENU_OPENED()
+    if KEEP_MENU_OPENED() && command != "delete_npc"
       WaitForMenus()
       if clone
         ChooseCommandToApplyToNPC(clone)
@@ -275,6 +277,7 @@ function RemoveAllTrackingMarkers()
 endFunction
 
 function UpdateReferences()
+  ShowNotification("Updating...", true)
   int jaDeletedTrackedNpcs = UpdateModList()
   if jaDeletedTrackedNpcs
     int i = 0
@@ -286,4 +289,5 @@ function UpdateReferences()
     endwhile
   endIf
   JValue.release(jaDeletedTrackedNpcs)
+  ShowNotification("Update completed", true)
 endFunction

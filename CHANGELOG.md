@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.4.0
+
+- Added another type of commands visualization: list. You can switch back to wheel via MCM (wheel is still the default option).
+- Added **info** as an independent command, keeping **stats** as it was in the first versions
+- Fixed duplicated records when load order changes
+- Fixed records still showing for deleted plugins
+- Removed tracking marker for NPCs from deleted plugins
+- Added optional ConsoleUtilSSE integration. Now you can enable autoselect the NPC found on console. Disabled by default.
+- Removed tracked NPC deletion after death
+- Removed **PapyrusUtil SE - Modders Scripting Utility Functions** as requirement
+- Safe from update from 1.3.0+. Only issue is if you have cloned NPCs from these versions, they won't be compatible. Try to delete them before updating. If you have issues with hotkeys on startup try to open the "Where Are You?" MCM or save/reload the game.
+
 ## 1.3.1
 
 - Updated SPID file back to use FormID instead of EditorID (I found this problem testing some Wabbajack lists running Skyrim 1.5.97, like Living Skyrim 3 and Aldrnari)

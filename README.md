@@ -8,12 +8,15 @@ So, you've been wandering the lands, found a few NPCs but you're not sure where 
 Maybe you don't remember exactly what their names were?
 Don't worry, we'll find them for you!
 
+[![Where Are You? - Skyrim Mod](https://staticdelivery.nexusmods.com/mods/1704/images/76063/76063-1664130844-180454669.png)](https://www.youtube.com/watch?v=utBMwqck-Cg)
+
 ## Features
 
 - Implemented:
-  - **[NEW]** Fast search using [Lua pattern matching](https://www.lua.org/manual/5.1/manual.html#5.4.1)
-  - **[NEW]** Customized search result list format
-  - **[NEW]** More NPC info available in the older Stats command wheel option
+  - **[NEW]** ConsoleUtilSSE integration to auto select the found NPC in the console (via command PickRefById, aka prid)
+  - **[NEW]** Add list as a new commands visualization option (wheel is still the default option)
+  - Fast search using [Lua pattern matching](https://www.lua.org/manual/5.1/manual.html#5.4.1)
+  - Customized search result list format
   - Search all unique NPCs you discovered by their names
   - MCM
   - Customizable hotkey for search NPCs
@@ -42,6 +45,8 @@ Don't worry, we'll find them for you!
   - Profiles
   - Extend the search functionality with some patterns, similar to the SPID format.
   - Add dialog option in quests to help find the target NPC (where it lives, works, sleeps, etc). Optionally also add a quest marker to help track it. Thanks [dann1](https://www.nexusmods.com/Users/25568544) for the suggestion!
+
+[![Deadpool - Have you seen this man?](https://media.giphy.com/media/Y408tUBCkzetq/giphy.gif)
 
 ## Compatibility
 
