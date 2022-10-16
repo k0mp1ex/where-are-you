@@ -82,7 +82,7 @@ local function npc_to_text(npc, location)
 end
 
 local function log_npc(npc)
-  log(npc_to_text(npc))
+  log("\n" .. npc_to_text(npc))
 end
 
 local function find_npc(form_id)
@@ -228,6 +228,9 @@ function kxWhereAreYou.update_modlist(mods)
         if npc.clone == 0 then
           npc.ref_id  = int_to_dec_str(bit.bor(0xFE000000, bit.lshift(mod.index, 3 * 4), bit.band(dec_str_to_int(npc.ref_id),  0xFFF)))
         end
+      end
+      if npc.clone == 1 then --for compatibility with older versions that were using int instead of strings
+        npc.ref_id = int_to_dec_str(dec_str_to_int(npc.ref_id))
       end
     else -- mod deleted, remove NPC too
       log("%s removed because mod %s has been deleted.", npc.name, npc.mod)
