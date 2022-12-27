@@ -5,4 +5,6 @@
 #include <algorithm>
 #include <Windows.h>
 
+namespace logger = SKSE::log;
+
 using namespace std::literals;
