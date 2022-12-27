@@ -87,7 +87,7 @@
           "id": "bAutoPickByRefId:Console",
           "type": "toggle",
           "text": "Select NPC found on console",
-          "help": "Set the NPC found as the object reference on console window.\nRequires ConsoleUtilSSE when enabled.",
+          "help": "Set the NPC found as the object reference on console window.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -621,7 +621,7 @@
           "id": "bEnabled:Debug",
           "type": "toggle",
           "text": "Debug mode",
-          "help": "Enable/disable debug mode.\nRequires ConsoleUtilSSE when enabled.",
+          "help": "Enable/disable debug mode.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -698,7 +698,7 @@
         },
         {
           "type": "text",
-          "text": "*ConsoleUtilSSE"
+          "text": "Spell Perk Item Distributor (SPID)"
         }
       ]
     }

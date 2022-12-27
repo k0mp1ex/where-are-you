@@ -224,7 +224,7 @@ endFunction
 
 function SelectNpcOnConsole(Actor npc)
   if CONSOLE_AUTO_PRID()
-    ConsoleUtil.ExecuteCommand("prid " + kxWhereAreYouLua.DecStrToHexStr(npc.GetFormID() as string))
+    kxWhereAreYouNative.SetSelectedReference(npc)
   endIf
 endFunction
 

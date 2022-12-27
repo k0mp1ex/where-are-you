@@ -2,7 +2,8 @@
 
 ## 2.0.0
 
-- TBD
+- Add SKSE plugin
+- Remove ConsoleUtil as requirement
 
 ## 1.4.0
 
