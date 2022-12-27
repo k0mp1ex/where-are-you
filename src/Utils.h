@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Utils {
+namespace Utils::String {
     bool IsSubstring(const std::string& strHaystack, const std::string& strNeedle);
     void ConvertToLowerCase(std::string& text);
 }

@@ -243,12 +243,9 @@ Actor function CreateNpcListUI(Actor[] actors) global
   int i = 0
   while i < actors.Length
     Actor currentActor = actors[i]
-    string npcName = currentActor.GetDisplayName()
-    ; TODO: implement GetFormattedEntryForNpc
-    ;string entry = GetFormattedEntryForNpc(JMap.GetStr(jmNpc, "ref_id"), ENTRY_FORMAT())
-    ;listMenu.AddEntryItem(entry)
-    listMenu.AddEntryItem(npcName)
-    LogNpcSlot(npcName + " added to search list", i, actors.Length)
+    string entry = kxWhereAreYouNative.GetStatsTextForNpc(currentActor, ENTRY_FORMAT())
+    listMenu.AddEntryItem(entry)
+    LogNpcSlot(currentActor.GetDisplayName() + " added to search list", i, actors.Length)
     i += 1
   endWhile
   listMenu.OpenMenu()

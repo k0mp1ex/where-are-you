@@ -1,5 +1,4 @@
 #include "Papyrus.h"
-
 #include "Utils.h"
 
 namespace {
@@ -17,7 +16,7 @@ namespace {
                 auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
                 auto name = actor->GetDisplayFullName();
                 if (actorBase && actorBase->IsUnique() &&
-                    ((!useRegex && Utils::IsSubstring(name, pattern)) ||
+                    ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
                      (useRegex && std::regex_match(name, std::regex(pattern, std::regex_constants::icase))))) {
                     actors.push_back(actor);
                     if (actors.size() == maxResultCount) break;
@@ -34,8 +33,8 @@ namespace {
             std::sort(actors.begin(), actors.end(), [](RE::Actor* left, RE::Actor* right) {
                 auto leftStr = std::string(left->GetDisplayFullName());
                 auto rightStr = std::string(right->GetDisplayFullName());
-                Utils::ConvertToLowerCase(leftStr);
-                Utils::ConvertToLowerCase(rightStr);
+                Utils::String::ConvertToLowerCase(leftStr);
+                Utils::String::ConvertToLowerCase(rightStr);
                 return leftStr < rightStr;
             });
         }
@@ -46,6 +45,48 @@ namespace {
         });
 
         return actors;
+    }
+
+    std::string GetStatsTextForNpc(RE::StaticFunctionTag*, RE::Actor* actor, const std::string pattern) {
+        auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
+
+        auto name = actor->GetDisplayFullName();
+        auto refId = std::format("{:#x}", actor->GetFormID());
+        auto baseId = std::format("{:#x}", actorBase->GetFormID());
+        auto mod = std::string(actor->GetFile()->GetFilename());
+        auto race = actorBase->GetRace()->GetName();
+        auto gender = actorBase->IsFemale() ? "Female" : "Male";
+        auto location = actor->GetCurrentLocation()->GetName();
+
+        std::string stats;
+        if (pattern.empty()) {
+            stats = std::format(
+                "Name: {}\n"
+                "RefId: {}\n"
+                "BaseId: {}\n"
+                "Mod: {}\n"
+                "Race: {}\n"
+                "Gender: {}\n"
+                "Location: {}",
+                name,
+                refId,
+                baseId,
+                mod,
+                race,
+                gender,
+                location);
+        } else {
+            stats = pattern;
+            stats = std::regex_replace(stats, std::regex("\\[name\\]"), name);
+            stats = std::regex_replace(stats, std::regex("\\[refid\\]"), refId);
+            stats = std::regex_replace(stats, std::regex("\\[baseid\\]"), baseId);
+            stats = std::regex_replace(stats, std::regex("\\[mod\\]"), mod);
+            stats = std::regex_replace(stats, std::regex("\\[race\\]"), race);
+            stats = std::regex_replace(stats, std::regex("\\[gender\\]"), gender);
+            stats = std::regex_replace(stats, std::regex("\\[location\\]"), location);
+        }
+        logger::info("\n{}", stats);
+        return stats;
     }
 
     void PrintConsole(RE::StaticFunctionTag*, std::string text) {
@@ -87,6 +128,7 @@ namespace Papyrus {
         vm->RegisterFunction("PrintConsole", PapyrusClass, PrintConsole);
         vm->RegisterFunction("SetSelectedReference", PapyrusClass, SetSelectedReference);
         vm->RegisterFunction("SearchNPCsByName", PapyrusClass, SearchNPCsByName);
+        vm->RegisterFunction("GetStatsTextForNpc", PapyrusClass, GetStatsTextForNpc);
         return true;
     }
 

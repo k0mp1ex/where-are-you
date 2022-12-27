@@ -171,7 +171,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
-      string statsText = GetStatsTextForNpc(npc)
+      string statsText = kxWhereAreYouNative.GetStatsTextForNpc(npc)
       ShowNpcInfoUI(statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)

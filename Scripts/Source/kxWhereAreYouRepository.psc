@@ -22,7 +22,3 @@ endFunction
 function UpdateNpcTracking(Actor npc, int trackingSlot) global
   ; TODO: implement
 endFunction
-
-string function GetStatsTextForNpc(Actor npc) global
-  return "<TODO>"
-endFunction
