@@ -136,7 +136,7 @@ function MakeNpcDoFavor(Actor npc)
 endFunction
 
 Actor function FindNpcByNamePattern(string pattern)
-  Actor[] actors = kxWhereAreYouNative.SearchNpcByNamePattern(pattern); TODO: Add MAX_RESULT_COUNT()
+  Actor[] actors = kxWhereAreYouNative.SearchNPCsByName(pattern, USE_REGEX(), SORT_RESULTS(), MAX_RESULT_COUNT());
 
   Actor npc
 
@@ -145,7 +145,6 @@ Actor function FindNpcByNamePattern(string pattern)
   elseIf actors.Length == 1
     npc = actors[0]
   else
-    ; TODO: Add SORT_RESULTS()
     npc = CreateNpcListUI(actors)
   endIf
 
