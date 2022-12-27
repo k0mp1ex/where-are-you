@@ -42,7 +42,6 @@
             <Include>SKSE/Plugins/JCData/Lua/@ModName/init.lua</Include>
             <Include>SKSE/Plugins/@ModName.dll</Include>
             <Include>SKSE/Plugins/@ModName.pdb</Include>
-            <Include>*_DISTR.ini</Include>
             <Include>MCM/Config/@ModName/settings.ini</Include>
             <Include>MCM/Config/@ModName/config.json</Include>
             <Include NoRecurse="true">*.bsa</Include>

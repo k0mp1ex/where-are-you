@@ -7,27 +7,19 @@ import kxWhereAreYouProperties
 import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
-GlobalVariable property kxWhereAreYouInitialized auto
-
-Actor player
 Quest currentQuest
 int modVersionInstalled
 
 event OnInit()
-  player = Game.GetPlayer()
   currentQuest = GetOwningQuest()
   modVersionInstalled = GetModVersion()
   InitializeDB()
   RegisterForAllKeys()
-  kxWhereAreYouInitialized.SetValueInt(true as int)
 endEvent
 
 event OnPlayerLoadGame()
   UnregisterForAllKeys()
   if CanRun()
-    if UPDATE_ON_GAME_LOAD()
-      UpdateReferences()
-    endIf
     RegisterForAllKeys()
   endIf
 endEvent
@@ -67,7 +59,7 @@ bool function CanRun()
 endFunction
 
 bool function IsCompatibleVersion()
-  return modVersionInstalled >= 10300
+  return modVersionInstalled >= 20000
 endFunction
 
 function RegisterForAllKeys()
@@ -167,6 +159,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
 
   SelectNpcOnConsole(npc)
 
+  Actor player = Game.GetPlayer()
   string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
   if command
     if command == "teleport_to_player"
@@ -191,7 +184,6 @@ function ChooseCommandToApplyToNPC(Actor npc)
       if slot != -1
         RemoveTrackingMarker(slot)
       endIf
-      RemoveNpc(npc)
       npc.Disable()
       npc.Delete()
     elseIf command == "toggle_track_npc"
@@ -263,20 +255,4 @@ function RemoveAllTrackingMarkers()
     RemoveTrackingMarker(i)
     i += 1
   endWhile
-endFunction
-
-function UpdateReferences()
-  ShowNotification("Updating...", true)
-  int jaDeletedTrackedNpcs = UpdateModList()
-  if jaDeletedTrackedNpcs
-    int i = 0
-    while i < JArray.Count(jaDeletedTrackedNpcs)
-      int slot = JArray.GetInt(jaDeletedTrackedNpcs, i)
-      Log("Freeing tracking slot " + slot)
-      RemoveTrackingMarker(slot)
-      i += 1
-    endwhile
-  endIf
-  JValue.release(jaDeletedTrackedNpcs)
-  ShowNotification("Update completed", true)
 endFunction

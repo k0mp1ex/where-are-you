@@ -11,22 +11,6 @@ import kxWhereAreYouRepository
 ;   JContainers doesn't offer a native API to transfer booleans, so I treat then as int values (0 = false, 1 = true)
 ;   When necessary an explicit cast to bool(ean) should be made in Papyrus/Lua code
 
-int function FindMatchingNpcs(string pattern, int maxCount) global
-  PrepareLuaContext()
-	int jLuaArgs
-  jLuaArgs = JLua.setStr("pattern", pattern, jLuaArgs)
-  jLuaArgs = JLua.setInt("max", maxCount, jLuaArgs)
-  return JLua.evalLuaObj("return kxWhereAreYou.search_by_pattern(args.pattern, args.max)", jLuaArgs)
-endFunction
-
-int function GetNpcsFromCollection(int jaCollection, bool shouldSort) global
-  PrepareLuaContext()
-	int jLuaArgs
-  jLuaArgs = JLua.setObj("collection", jaCollection, jLuaArgs)
-  jLuaArgs = JLua.setInt("should_sort", shouldSort as int, jLuaArgs)
-  return JLua.evalLuaObj("return kxWhereAreYou.get_from_collection(args.collection, args.should_sort)", jLuaArgs)
-endFunction
-
 int function GetNpcIndex(string formId) global
   PrepareLuaContext()
 	int jLuaArgs
@@ -70,13 +54,6 @@ int function GetTrackingSlotForNpc(string formId) global
   int jLuaArgs
   jLuaArgs = JLua.setStr("form_id", formId, jLuaArgs)
   return JLua.evalLuaInt("return kxWhereAreYou.get_tracking_slot(args.form_id)", jLuaArgs)
-endFunction
-
-int function UpdateModList(int jaMods) global
-  PrepareLuaContext()
-  int jLuaArgs
-  jLuaArgs = JLua.setObj("mods", jaMods, jLuaArgs)
-  return JLua.evalLuaObj("return kxWhereAreYou.update_modlist(args.mods)", jLuaArgs)
 endFunction
 
 string function HexStrToDecStr(string hexString) global

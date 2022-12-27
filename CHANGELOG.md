@@ -3,7 +3,8 @@
 ## 2.0.0
 
 - Add SKSE plugin
-- Remove ConsoleUtil as requirement
+- Remove **ConsoleUtil** as requirement
+- Remove **Spell Perk Item Distributor (SPID)** as requirement
 
 ## 1.4.0
 

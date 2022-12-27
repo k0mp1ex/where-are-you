@@ -6,10 +6,12 @@ bool function IS_ENABLED() global
   return MCM.GetModSettingBool(GetModName(), "bEnabled:System")
 endFunction
 
+; TODO: Remove variable!
 bool function KEEP_TRACKING_WHEN_DISABLED() global
   return MCM.GetModSettingBool(GetModName(), "bKeepTrackingWhenDisabled:System")
 endFunction
 
+; TODO: Remove variable!
 bool function UPDATE_ON_GAME_LOAD() global
   return MCM.GetModSettingBool(GetModName(), "bUpdateOnLoad:System")
 endFunction
