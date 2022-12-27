@@ -6,9 +6,9 @@ project(kxWhereAreYou VERSION 2.0.0 LANGUAGES CXX)
 set(LOCAL_DEPLOY_ROOT ${CMAKE_SOURCE_DIR})
 
 find_package(CommonLibSSE CONFIG REQUIRED)
-add_commonlibsse_plugin(${PROJECT_NAME} SOURCES plugin.cpp)
+add_commonlibsse_plugin(${PROJECT_NAME} SOURCES src/Main.cpp)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
-target_precompile_headers(${PROJECT_NAME} PRIVATE PCH.h)
+target_precompile_headers(${PROJECT_NAME} PRIVATE src/PCH.h)
 
 if(EXISTS "${DEPLOY_ROOT}")
     set(MOD_FOLDER "${DEPLOY_ROOT}/${PROJECT_NAME}")
