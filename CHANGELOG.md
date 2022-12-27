@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0
+
+- TBD
+
 ## 1.4.0
 
 - Added another type of commands visualization: list. You can switch back to wheel via MCM (wheel is still the default option).

@@ -9,5 +9,5 @@ string function GetModDisplayName() global
 endFunction
 
 int function GetModVersion() global
-  return 10400
+  return 20000
 endFunction

@@ -4,7 +4,7 @@
         {
             "type": "pyro",
             "projectFile": "kxWhereAreYou.ppj",
-            "gamePath": "D:\\Modding\\Skyrim\\Wabbajack\\Modlists\\ADT\\Game Root\\",
+            "gamePath": "C:\\Development\\Skyrim Versions\\1.6.640 - Steam\\",
             "problemMatcher": [
                 "$PapyrusCompiler"
             ],

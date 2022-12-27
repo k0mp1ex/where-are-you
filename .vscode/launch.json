@@ -3,6 +3,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "C++ Debugger",
+            "type": "cppvsdbg",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        {
             "name": "Skyrim SE",
             "type": "papyrus",
             "request": "attach",
