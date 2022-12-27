@@ -569,50 +569,6 @@
           "groupControl": 1
         },
         {
-          "id": "bKeepTrackingWhenDisabled:System",
-          "type": "toggle",
-          "text": "Keep tracking in the background",
-          "help": "Keep adding NPCs to the list when the mod is disabled.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          },
-          "groupCondition": { "NOT": 1 },
-          "groupBehavior": "disable"
-        },
-        {
-          "type": "empty"
-        },
-        {
-          "type": "header",
-          "text": "Maintenance"
-        },
-        {
-          "id": "bUpdateOnLoad:System",
-          "type": "toggle",
-          "text": "Update on game load",
-          "help": "Apply updates on game load.\nIt will update NPC references with load order changes, remove and untrack NPCs from deleted mods.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          },
-          "groupControl": 2
-        },
-        {
-          "type": "text",
-          "text": "Update data",
-          "help": "Update NPC references with load order changes, remove and untrack NPCs from deleted mods.\nRecommended to run every time you change your load order or delete a mod.",
-          "valueOptions": {
-            "value": "Click to update"
-          },
-          "action": {
-            "type": "CallFunction",
-            "form": "kxWhereAreYou.esp|801",
-            "scriptName": "kxWhereAreYouMcm",
-            "function": "UpdateData"
-          },
-          "groupCondition": { "NOT": 2 },
-          "groupBehavior": "disable"
-        },
-        {
           "type": "header",
           "text": "Debug",
           "position": 1
@@ -624,20 +580,6 @@
           "help": "Enable/disable debug mode.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Export data",
-          "help": "Export all stored data",
-          "valueOptions": {
-            "value": "Click to export"
-          },
-          "action": {
-            "type": "CallFunction",
-            "form": "kxWhereAreYou.esp|801",
-            "scriptName": "kxWhereAreYouMcm",
-            "function": "ExportData"
           }
         }
       ]

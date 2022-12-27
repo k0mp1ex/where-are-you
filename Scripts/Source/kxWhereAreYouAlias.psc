@@ -7,11 +7,9 @@ import kxWhereAreYouProperties
 import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
-Quest currentQuest
 int modVersionInstalled
 
 event OnInit()
-  currentQuest = GetOwningQuest()
   modVersionInstalled = GetModVersion()
   InitializeDB()
   RegisterForAllKeys()
@@ -84,7 +82,7 @@ endFunction
 
 function TrackNpc(Actor npc, int slot)
   if ACTIVATE_QUEST_ON_TRACKING()
-    currentQuest.SetActive(true)
+    GetOwningQuest().SetActive(true)
   endIf
   if slot != -1
     RemoveTrackingMarker(slot)
@@ -214,6 +212,7 @@ function MoveToTarget(Actor akOrigin, Actor akTarget)
 endFunction
 
 int function GetNextAvailableQuestAliasIndex()
+  Quest currentQuest = GetOwningQuest()
   int i = 1; skip the player quest alias
   int aliasesCount = currentQuest.GetNumAliases()
   while i < aliasesCount
@@ -227,6 +226,7 @@ int function GetNextAvailableQuestAliasIndex()
 endFunction
 
 bool function AddTrackingMarker(Actor npc)
+  Quest currentQuest = GetOwningQuest()
   int slot = GetNextAvailableQuestAliasIndex()
   if slot == -1
     ShowMessage("Cannot add more tracking markers.")
@@ -240,6 +240,7 @@ bool function AddTrackingMarker(Actor npc)
 endFunction
 
 function RemoveTrackingMarker(int slot)
+  Quest currentQuest = GetOwningQuest()
   ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
   Actor npc = currentAlias.GetActorReference() as Actor
   if npc
@@ -251,7 +252,7 @@ endFunction
 
 function RemoveAllTrackingMarkers()
   int i = 1; skip the player quest alias
-  while i < currentQuest.GetNumAliases()
+  while i < GetOwningQuest().GetNumAliases()
     RemoveTrackingMarker(i)
     i += 1
   endWhile

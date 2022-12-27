@@ -25,17 +25,6 @@ function InitializeDB() global
   JDB.setObj(GetDbKey(), db)
 endFunction
 
-function ResetDB() global
-  JDB.solveObjSetter(GetPropertyPath(".npcs"), 0)
-  JDB.solveObjSetter(GetPropertyPath(".settings"), 0)
-  JDB.solveObjSetter(GetPropertyPath(), 0)
-endFunction
-
-function DumpDbToFile() global
-  string filename = GetDumpDbFileName()
-  JValue.writeToFile(JDB.solveObj(GetPropertyPath()), filename)
-endFunction
-
 string function GetPropertyPath(string propertyPath = "") global
   return "." + GetDbKey() + propertyPath
 endFunction
