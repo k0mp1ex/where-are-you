@@ -41,6 +41,15 @@
           }
         },
         {
+          "id": "bUseRegex:Search",
+          "type": "toggle",
+          "text": "Use regular expressions",
+          "help": "Use regular expressions (aka regex) to filter the results. When disabled the search is done by substring comparison.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
           "type": "empty"
         },
         {

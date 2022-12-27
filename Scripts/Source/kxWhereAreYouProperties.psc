@@ -135,6 +135,10 @@ string  function ENTRY_FORMAT() global
   return MCM.GetModSettingString(GetModName(), "sEntryFormat:Search")
 endFunction
 
+bool function USE_REGEX() global
+  return MCM.GetModSettingBool(GetModName(), "bUseRegex:Search")
+endFunction
+
 
 bool function CONSOLE_AUTO_PRID() global
   return MCM.GetModSettingBool(GetModName(), "bAutoPickByRefId:Console")
