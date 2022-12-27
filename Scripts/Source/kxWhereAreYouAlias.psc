@@ -146,31 +146,20 @@ function MakeNpcDoFavor(Actor npc)
 endFunction
 
 Actor function FindNpcByNamePattern(string pattern)
-  int jmFoundNpcs = kxWhereAreYouLua.FindMatchingNpcs(pattern, MAX_RESULT_COUNT())
-  JValue.retain(jmFoundNpcs, GetDbKey())
-  
+  Actor[] actors = kxWhereAreYouNative.SearchNpcByNamePattern(pattern); TODO: Add MAX_RESULT_COUNT()
+
   Actor npc
-  if JArray.Count(jmFoundNpcs) == 0
+
+  if actors.Length == 0
     ShowMessage("No matches found")
-  elseIf JArray.Count(jmFoundNpcs) == 1
-    int jmNpc = JArray.GetObj(jmFoundNpcs, 0)
-    npc = GetActorFromReferenceId(JMap.GetStr(jmNpc, "ref_id") as int) as Actor
+  elseIf actors.Length == 1
+    npc = actors[0]
   else
-    npc = ChooseNpcFromList(jmFoundNpcs)
+    ; TODO: Add SORT_RESULTS()
+    npc = CreateNpcListUI(actors)
   endIf
-  JValue.release(jmFoundNpcs)
+
   return npc
-endFunction
-
-Actor function ChooseNpcFromList(int jmFoundNpcs)
-  int jaAllNpcs = kxWhereAreYouLua.GetNpcsFromCollection(jmFoundNpcs, SORT_RESULTS())
-  JValue.retain(jaAllNpcs)
-
-  int jmNpc = CreateNpcListUI(jaAllNpcs)
-  if jmNpc
-    return GetActorFromReferenceId(JMap.GetStr(jmNpc, "ref_id") as int) as Actor
-  endIf
-  JValue.release(jaAllNpcs)
 endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)

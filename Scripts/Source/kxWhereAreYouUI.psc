@@ -237,23 +237,22 @@ function ShowNpcInfoUI(string statsText) global
   ShowMessage(statsText)
 endFunction
 
-int function CreateNpcListUI(int jaAllNpcs) global
+Actor function CreateNpcListUI(Actor[] actors) global
   UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
   int i = 0
-  while i < JArray.Count(jaAllNpcs)
-    int jmNpc = JArray.GetObj(jaAllNpcs, i)
-    string npcName = JMap.GetStr(jmNpc, "name")
-    string entry = kxWhereAreYouLua.GetFormattedEntryForNpc(JMap.GetStr(jmNpc, "ref_id"), ENTRY_FORMAT())
-    listMenu.AddEntryItem(entry)
-    LogNpcSlot(npcName + " added to search list", i, JArray.Count(jaAllNpcs))
+  while i < actors.Length
+    Actor currentActor = actors[i]
+    string npcName = currentActor.GetDisplayName()
+    ;string entry = kxWhereAreYouLua.GetFormattedEntryForNpc(JMap.GetStr(jmNpc, "ref_id"), ENTRY_FORMAT())
+    ;listMenu.AddEntryItem(entry)
+    listMenu.AddEntryItem(npcName)
+    LogNpcSlot(npcName + " added to search list", i, actors.Length)
     i += 1
   endWhile
   listMenu.OpenMenu()
   int id = listMenu.GetResultInt()
-  if id == -1
-    return 0
-  else
-    return JArray.GetObj(jaAllNpcs, id)
+  if id != -1
+    return actors[id]
   endIf
 endFunction
 

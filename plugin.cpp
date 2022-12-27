@@ -3,6 +3,26 @@
 namespace logger = SKSE::log;
 
 namespace PapyrusFunctions {
+    std::vector<const RE::Actor*> SearchNpcByNamePattern(RE::StaticFunctionTag*, std::string pattern) {
+        logger::info("Looking for /{}/", pattern);
+
+        std::vector<const RE::Actor*> npcs;
+        std::regex pattern_regex(pattern, std::regex_constants::icase);
+
+        const auto& [forms, lock] = RE::TESForm::GetAllForms();
+        for (auto& [id, form] : *forms) {
+            auto* actor = form->As<RE::Actor>();
+            if (actor) {
+                auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
+                if (actorBase && actorBase->IsUnique() && std::regex_match(actor->GetName(), pattern_regex)) {
+                    npcs.push_back(actor);
+                }
+            }
+        }
+
+        return npcs;
+    }
+
     void PrintConsole(RE::StaticFunctionTag*, std::string text) {
         RE::ConsoleLog::GetSingleton()->Print(text.c_str());
         logger::info("{}", text);
@@ -55,6 +75,7 @@ void SetupLog() {
 bool RegisterPapyrusFunctions(RE::BSScript::IVirtualMachine* vm) {
     vm->RegisterFunction("PrintConsole", "kxWhereAreYouNative", PapyrusFunctions::PrintConsole);
     vm->RegisterFunction("SetSelectedReference", "kxWhereAreYouNative", PapyrusFunctions::SetSelectedReference);
+    vm->RegisterFunction("SearchNpcByNamePattern", "kxWhereAreYouNative", PapyrusFunctions::SearchNpcByNamePattern);
     return true;
 }
 
