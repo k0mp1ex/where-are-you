@@ -11,7 +11,6 @@ int modVersionInstalled
 
 event OnInit()
   modVersionInstalled = GetModVersion()
-  InitializeDB()
   RegisterForAllKeys()
 endEvent
 
@@ -72,7 +71,7 @@ endFunction
 function TrackNpcAtCrosshair()
   Actor npc = GetActorAtCrosshair()
   if npc
-    if HasNpc(npc)
+    if IsValidNpc(npc)
       TrackNpc(npc, GetNpcTrackingMarkerSlot(npc))
     else
       ShowMessage(npc.GetDisplayName() + " cannot be tracked.")
@@ -105,7 +104,7 @@ endFunction
 function ExecuteCommandForNpcAtCrosshair()
   Actor npc = GetActorAtCrosshair()
   if npc
-    if HasNpc(npc)
+    if IsValidNpc(npc)
       ChooseCommandToApplyToNPC(npc)
     else
       ShowMessage("Cannot execute commands for " + npc.GetDisplayName())
@@ -121,7 +120,7 @@ function MakeNpcAtCrosshairDoFavor()
       return
     endIf
   
-    if HasNpc(npc)
+    if IsValidNpc(npc)
       MakeNpcDoFavor(npc)
     else
       ShowMessage("Cannot make " + npc.GetDisplayName() + " do a favor.")
@@ -255,4 +254,8 @@ function RemoveAllTrackingMarkers()
     RemoveTrackingMarker(i)
     i += 1
   endWhile
+endFunction
+
+bool function IsValidNpc(Actor npc)
+  return npc.IsEnabled() && npc.GetActorBase().IsUnique()
 endFunction
