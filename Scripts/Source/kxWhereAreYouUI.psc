@@ -217,8 +217,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  ; TODO: implement HexStrToDecStr!
-  ;wheelMenu.SetPropertyIndexInt("optionIconColor", i, HexStrToDecStr(DEFAULT_COLOR()) as int)
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouNative.HexStrToDec(DEFAULT_COLOR()))
 endFunction
 
 string function CreateNpcNameUI(string msg = "") global

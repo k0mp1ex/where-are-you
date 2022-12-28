@@ -119,6 +119,13 @@ namespace {
             }
         }
     }
+
+    unsigned int HexStrToDec(RE::StaticFunctionTag*, std::string hexString) {
+        std::istringstream converter(hexString);
+        unsigned int value;
+        converter >> std::hex >> value;
+        return value;
+    }
 }
 
 namespace Papyrus {
@@ -129,6 +136,7 @@ namespace Papyrus {
         vm->RegisterFunction("SetSelectedReference", PapyrusClass, SetSelectedReference);
         vm->RegisterFunction("SearchNPCsByName", PapyrusClass, SearchNPCsByName);
         vm->RegisterFunction("GetStatsTextForNpc", PapyrusClass, GetStatsTextForNpc);
+        vm->RegisterFunction("HexStrToDec", PapyrusClass, HexStrToDec);
         return true;
     }
 
