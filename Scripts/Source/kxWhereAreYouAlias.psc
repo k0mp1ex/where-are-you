@@ -134,7 +134,7 @@ function MakeNpcDoFavor(Actor npc)
 endFunction
 
 Actor function FindNpcByNamePattern(string pattern)
-  Actor[] actors = kxWhereAreYouNative.SearchNPCsByName(pattern, USE_REGEX(), SORT_RESULTS(), MAX_RESULT_COUNT());
+  Actor[] actors = kxWhereAreYouNative.SearchActorsByName(pattern, USE_REGEX(), SORT_RESULTS(), MAX_RESULT_COUNT());
 
   Actor npc
 
@@ -170,7 +170,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
-      string statsText = kxWhereAreYouNative.GetStatsTextForNpc(npc)
+      string statsText = kxWhereAreYouNative.GetSummaryDataForActor(npc)
       ShowNpcInfoUI(statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)
@@ -200,7 +200,7 @@ endFunction
 
 function SelectNpcOnConsole(Actor npc)
   if CONSOLE_AUTO_PRID()
-    kxWhereAreYouNative.SetSelectedReference(npc)
+    kxWhereAreYouNative.SelectReferenceInConsole(npc)
   endIf
 endFunction
 
@@ -210,7 +210,7 @@ endFunction
 
 bool function AddTrackingMarker(Actor npc)
   Quest currentQuest = GetOwningQuest()
-  int slot = kxWhereAreYouNative.GetNextAvailableTrackingSlotInQuest(GetOwningQuest())
+  int slot = kxWhereAreYouNative.GetNextAvailableAliasInQuest(GetOwningQuest())
   if slot == -1
     ShowMessage("Cannot add more tracking markers.")
   else
@@ -241,9 +241,9 @@ bool function IsValidNpc(Actor npc)
 endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc)
-  return kxWhereAreYouNative.GetTrackingSlotForNpcInQuest(npc, GetOwningQuest())
+  return kxWhereAreYouNative.GetAliasIndexOfActorInQuest(npc, GetOwningQuest())
 endFunction
 
 bool function IsTrackingNpc(Actor npc)
-  return kxWhereAreYouNative.GetTrackingSlotForNpcInQuest(npc, GetOwningQuest()) != -1
+  return kxWhereAreYouNative.GetAliasIndexOfActorInQuest(npc, GetOwningQuest()) != -1
 endFunction

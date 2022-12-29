@@ -2,7 +2,7 @@
 #include "Utils.h"
 
 namespace {
-    std::vector<RE::Actor*> SearchNPCsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
+    std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
                                              bool sortResults, int maxResultCount) {
         logger::info("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults,
                      maxResultCount);
@@ -47,7 +47,7 @@ namespace {
         return actors;
     }
 
-    std::string GetStatsTextForNpc(RE::StaticFunctionTag*, RE::Actor* actor, const std::string pattern) {
+    std::string GetSummaryDataForActor(RE::StaticFunctionTag*, RE::Actor* actor, const std::string pattern) {
         auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
 
         auto name = actor->GetDisplayFullName();
@@ -89,12 +89,12 @@ namespace {
         return stats;
     }
 
-    void PrintConsole(RE::StaticFunctionTag*, std::string text) {
+    void PrintToConsole(RE::StaticFunctionTag*, std::string text) {
         RE::ConsoleLog::GetSingleton()->Print(text.c_str());
         logger::info("{}", text);
     }
 
-    void SetSelectedReference(RE::StaticFunctionTag*, RE::TESObjectREFR* a_reference) {
+    void SelectReferenceInConsole(RE::StaticFunctionTag*, RE::TESObjectREFR* a_reference) {
         using Message = RE::UI_MESSAGE_TYPE;
 
         if (a_reference) {
@@ -120,14 +120,14 @@ namespace {
         }
     }
 
-    unsigned int HexStrToDec(RE::StaticFunctionTag*, std::string hexString) {
+    unsigned int HexadecimalStringToInteger(RE::StaticFunctionTag*, std::string hexString) {
         std::istringstream converter(hexString);
         unsigned int value;
         converter >> std::hex >> value;
         return value;
     }
 
-    std::int32_t GetTrackingSlotForNpcInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+    std::int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
         for (uint32_t i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
@@ -144,7 +144,7 @@ namespace {
         return -1;
     }
 
-    std::int32_t GetNextAvailableTrackingSlotInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
+    std::int32_t GetNextAvailableAliasInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
         for (uint32_t i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
@@ -163,13 +163,13 @@ namespace Papyrus {
     constexpr std::string_view PapyrusClass = "kxWhereAreYouNative";
 
     bool RegisterPapyrusFunctions(RE::BSScript::IVirtualMachine* vm) {
-        vm->RegisterFunction("PrintConsole", PapyrusClass, PrintConsole);
-        vm->RegisterFunction("SetSelectedReference", PapyrusClass, SetSelectedReference);
-        vm->RegisterFunction("SearchNPCsByName", PapyrusClass, SearchNPCsByName);
-        vm->RegisterFunction("GetStatsTextForNpc", PapyrusClass, GetStatsTextForNpc);
-        vm->RegisterFunction("GetTrackingSlotForNpcInQuest", PapyrusClass, GetTrackingSlotForNpcInQuest);
-        vm->RegisterFunction("GetNextAvailableTrackingSlotInQuest", PapyrusClass, GetNextAvailableTrackingSlotInQuest);
-        vm->RegisterFunction("HexStrToDec", PapyrusClass, HexStrToDec);
+        vm->RegisterFunction("PrintToConsole", PapyrusClass, PrintToConsole);
+        vm->RegisterFunction("SelectReferenceInConsole", PapyrusClass, SelectReferenceInConsole);
+        vm->RegisterFunction("SearchActorsByName", PapyrusClass, SearchActorsByName);
+        vm->RegisterFunction("GetSummaryDataForActor", PapyrusClass, GetSummaryDataForActor);
+        vm->RegisterFunction("GetAliasIndexOfActorInQuest", PapyrusClass, GetAliasIndexOfActorInQuest);
+        vm->RegisterFunction("GetNextAvailableAliasInQuest", PapyrusClass, GetNextAvailableAliasInQuest);
+        vm->RegisterFunction("HexadecimalStringToInteger", PapyrusClass, HexadecimalStringToInteger);
         return true;
     }
 

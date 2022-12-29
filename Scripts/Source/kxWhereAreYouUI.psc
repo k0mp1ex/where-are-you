@@ -217,7 +217,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouNative.HexStrToDec(DEFAULT_COLOR()))
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouNative.HexadecimalStringToInteger(DEFAULT_COLOR()))
 endFunction
 
 string function CreateNpcNameUI(string msg = "") global
@@ -242,7 +242,7 @@ Actor function CreateNpcListUI(Actor[] actors) global
   int i = 0
   while i < actors.Length
     Actor currentActor = actors[i]
-    string entry = kxWhereAreYouNative.GetStatsTextForNpc(currentActor, ENTRY_FORMAT())
+    string entry = kxWhereAreYouNative.GetSummaryDataForActor(currentActor, ENTRY_FORMAT())
     listMenu.AddEntryItem(entry)
     LogNpcSlot(currentActor.GetDisplayName() + " added to search list", i, actors.Length)
     i += 1
