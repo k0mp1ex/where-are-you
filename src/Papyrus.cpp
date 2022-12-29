@@ -126,6 +126,37 @@ namespace {
         converter >> std::hex >> value;
         return value;
     }
+
+    std::int32_t GetTrackingSlotForNpcInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+            if (auto alias = quest->aliases[i]; alias) {
+                if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
+                    if (auto actorReference = reference->GetActorReference(); actorReference) {
+                        logger::info("Comparing {} == {}", actor->GetDisplayFullName(), actorReference->GetDisplayFullName());
+                        if (actor == actorReference) {
+                            logger::info("They are equal! Returning aliasID {} with aliasName: {}", i, alias->aliasName);
+                            return i;
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+    std::int32_t GetNextAvailableTrackingSlotInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
+        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+            if (auto alias = quest->aliases[i]; alias) {
+                if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
+                    if (auto actorReference = reference->GetActorReference(); !actorReference) {
+                        logger::info("Slot available: {} with aliasName: {}", i, alias->aliasName);
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
 }
 
 namespace Papyrus {
@@ -136,6 +167,8 @@ namespace Papyrus {
         vm->RegisterFunction("SetSelectedReference", PapyrusClass, SetSelectedReference);
         vm->RegisterFunction("SearchNPCsByName", PapyrusClass, SearchNPCsByName);
         vm->RegisterFunction("GetStatsTextForNpc", PapyrusClass, GetStatsTextForNpc);
+        vm->RegisterFunction("GetTrackingSlotForNpcInQuest", PapyrusClass, GetTrackingSlotForNpcInQuest);
+        vm->RegisterFunction("GetNextAvailableTrackingSlotInQuest", PapyrusClass, GetNextAvailableTrackingSlotInQuest);
         vm->RegisterFunction("HexStrToDec", PapyrusClass, HexStrToDec);
         return true;
     }

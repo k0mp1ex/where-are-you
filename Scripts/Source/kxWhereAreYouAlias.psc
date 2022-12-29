@@ -208,23 +208,9 @@ function MoveToTarget(Actor akOrigin, Actor akTarget)
   akOrigin.MoveTo(akTarget, TELEPORT_RANGE())
 endFunction
 
-int function GetNextAvailableQuestAliasIndex()
-  Quest currentQuest = GetOwningQuest()
-  int i = 1; skip the player quest alias
-  int aliasesCount = currentQuest.GetNumAliases()
-  while i < aliasesCount
-    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
-    if !nthAlias.GetActorReference()
-      return i;
-    endIf
-    i += 1
-  endWhile
-  return -1
-endFunction
-
 bool function AddTrackingMarker(Actor npc)
   Quest currentQuest = GetOwningQuest()
-  int slot = GetNextAvailableQuestAliasIndex()
+  int slot = kxWhereAreYouNative.GetNextAvailableTrackingSlotInQuest(GetOwningQuest())
   if slot == -1
     ShowMessage("Cannot add more tracking markers.")
   else
@@ -255,18 +241,9 @@ bool function IsValidNpc(Actor npc)
 endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc)
-  Quest currentQuest = GetOwningQuest()
-  int i = 1; --skip Player alias
-  while i < currentQuest.GetNumAliases()
-    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
-    if nthAlias.GetActorReference() == npc
-      return i;
-    endIf
-    i += 1
-  endWhile
-  return -1
+  return kxWhereAreYouNative.GetTrackingSlotForNpcInQuest(npc, GetOwningQuest())
 endFunction
 
 bool function IsTrackingNpc(Actor npc)
-  return GetNpcTrackingMarkerSlot(npc) != -1
+  return kxWhereAreYouNative.GetTrackingSlotForNpcInQuest(npc, GetOwningQuest()) != -1
 endFunction
