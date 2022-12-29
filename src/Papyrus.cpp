@@ -51,8 +51,8 @@ namespace {
         auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
 
         auto name = actor->GetDisplayFullName();
-        auto refId = std::format("{:#x}", actor->GetFormID());
-        auto baseId = std::format("{:#x}", actorBase->GetFormID());
+        auto refId = std::format("0x{:08X}", actor->GetFormID());
+        auto baseId = std::format("0x{:08X}", actorBase->GetFormID());
         auto mod = std::string(actor->GetFile()->GetFilename());
         auto race = actorBase->GetRace()->GetName();
         auto gender = actorBase->IsFemale() ? "Female" : "Male";
