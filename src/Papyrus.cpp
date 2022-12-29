@@ -56,7 +56,7 @@ namespace {
         auto mod = std::string(actorBase->GetFile(0)->GetFilename());
         auto race = actorBase->GetRace()->GetName();
         auto gender = actorBase->IsFemale() ? "Female" : "Male";
-        auto location = actor->GetCurrentLocation()->GetName();
+        auto location = actor->GetCurrentLocation() ? actor->GetCurrentLocation()->GetName() : "Tamriel";
 
         std::string stats;
         if (pattern.empty()) {
