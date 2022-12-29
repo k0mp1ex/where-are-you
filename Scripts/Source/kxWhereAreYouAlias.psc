@@ -4,7 +4,6 @@ import kxUtils
 import kxWhereAreYouCommon
 import kxWhereAreYouLogging
 import kxWhereAreYouProperties
-import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
 int modVersionInstalled
@@ -156,7 +155,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
   SelectNpcOnConsole(npc)
 
   Actor player = Game.GetPlayer()
-  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsClonedNpc(npc))
+  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsDynamicObjectReference(npc))
   if command
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
@@ -230,7 +229,6 @@ bool function AddTrackingMarker(Actor npc)
     ShowMessage("Cannot add more tracking markers.")
   else
     ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
-    UpdateNpcTracking(npc, slot)
     currentAlias.ForceRefTo(npc)
     currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = true, abForce = true)
   endIf
@@ -240,10 +238,6 @@ endFunction
 function RemoveTrackingMarker(int slot)
   Quest currentQuest = GetOwningQuest()
   ReferenceAlias currentAlias = currentQuest.GetNthAlias(slot) as ReferenceAlias
-  Actor npc = currentAlias.GetActorReference() as Actor
-  if npc
-    UpdateNpcTracking(npc, -1)
-  endIf
   currentAlias.Clear()
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
 endFunction
@@ -258,4 +252,21 @@ endFunction
 
 bool function IsValidNpc(Actor npc)
   return npc.IsEnabled() && npc.GetActorBase().IsUnique()
+endFunction
+
+int function GetNpcTrackingMarkerSlot(Actor npc)
+  Quest currentQuest = GetOwningQuest()
+  int i = 1; --skip Player alias
+  while i < currentQuest.GetNumAliases()
+    ReferenceAlias nthAlias = currentQuest.GetNthAlias(i) as ReferenceAlias
+    if nthAlias.GetActorReference() == npc
+      return i;
+    endIf
+    i += 1
+  endWhile
+  return -1
+endFunction
+
+bool function IsTrackingNpc(Actor npc)
+  return GetNpcTrackingMarkerSlot(npc) != -1
 endFunction
