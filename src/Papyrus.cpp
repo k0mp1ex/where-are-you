@@ -53,7 +53,7 @@ namespace {
         auto name = actor->GetDisplayFullName();
         auto refId = std::format("0x{:08X}", actor->GetFormID());
         auto baseId = std::format("0x{:08X}", actorBase->GetFormID());
-        auto mod = std::string(actor->GetFile()->GetFilename());
+        auto mod = std::string(actorBase->GetFile(0)->GetFilename());
         auto race = actorBase->GetRace()->GetName();
         auto gender = actorBase->IsFemale() ? "Female" : "Male";
         auto location = actor->GetCurrentLocation()->GetName();
