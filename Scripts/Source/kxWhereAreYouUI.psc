@@ -129,14 +129,14 @@ int function GetCommandOptions(Actor npc, bool hasTrackingMarker) global
   if SHOW_INFO_COMMAND()
     JArray.AddObj(jaCommands, jmInfo)
   endIf
+  if SHOW_INVENTORY_COMMAND()
+    JArray.AddObj(jaCommands, jmInventory)
+  endIf
   if SHOW_TELEPORT_COMMAND()
     JArray.AddObj(jaCommands, jmTeleport)
   endIf
   if SHOW_VISIT_COMMAND()
     JArray.AddObj(jaCommands, jmVisit)
-  endIf
-  if SHOW_INVENTORY_COMMAND()
-    JArray.AddObj(jaCommands, jmInventory)
   endIf
   if SHOW_TRACK_COMMAND()
     JArray.AddObj(jaCommands, jmTrack)
@@ -240,6 +240,7 @@ endFunction
 
 function ShowMessage(string msg) global
   Debug.MessageBox(msg)
+  Log(msg)
 endFunction
 
 function ShowNotification(string msg, bool showModName = false) global
@@ -247,4 +248,5 @@ function ShowNotification(string msg, bool showModName = false) global
     msg = "[" + GetModName() + "] " + msg
   endIf
   Debug.Notification(msg)
+  Log(msg)
 endFunction

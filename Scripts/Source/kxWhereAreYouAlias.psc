@@ -157,8 +157,10 @@ function ChooseCommandToApplyToNPC(Actor npc)
   if command
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
+      CheckIfNpcNeedsToBeEnabled(npc)
     elseIf command == "move_to_npc"
       MoveToTarget(player, npc)
+      CheckIfNpcNeedsToBeEnabled(npc)
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
@@ -176,6 +178,13 @@ function ChooseCommandToApplyToNPC(Actor npc)
       WaitForMenus()
       ChooseCommandToApplyToNPC(npc)
     endIf
+  endIf
+endFunction
+
+function CheckIfNpcNeedsToBeEnabled(Actor npc)
+  if npc.IsDisabled() && FORCE_ENABLE_ON_TELEPORT()
+    npc.Enable()
+    ShowNotification(npc.GetDisplayName() + " enabled after teleporting.")
   endIf
 endFunction
 

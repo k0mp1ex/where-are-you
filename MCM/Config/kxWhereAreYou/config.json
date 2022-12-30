@@ -86,17 +86,10 @@
           }
         },
         {
-          "type": "empty"
-        },
-        {
-          "type": "header",
-          "text": "Console"
-        },
-        {
-          "id": "bAutoPickByRefId:Console",
+          "id": "bForceEnable:Teleport",
           "type": "toggle",
-          "text": "Select NPC found on console",
-          "help": "Set the NPC found as the object reference on console window.",
+          "text": "Always enable NPC on teleport",
+          "help": "Force NPC to be enabled when teleporting. Use carefully because NPCs hidden/disabled are not supposed to be interacted with.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -145,6 +138,22 @@
           "type": "toggle",
           "text": "Only followers",
           "help": "Only followers can do favors",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "type": "empty"
+        },
+        {
+          "type": "header",
+          "text": "Console"
+        },
+        {
+          "id": "bAutoPickByRefId:Console",
+          "type": "toggle",
+          "text": "Select NPC found on console",
+          "help": "Set the NPC found as the object reference on console window.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
