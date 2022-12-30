@@ -12,8 +12,8 @@ string function CreateSearchBoxUI() global
   return UIExtensions.GetMenuResultString(menu)
 endFunction
 
-string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker, bool isClone) global
-  int jaCommands = GetCommandOptions(npc, hasTrackingMarker, isClone)
+string function CreateNpcCommandUI(Actor npc, bool hasTrackingMarker) global
+  int jaCommands = GetCommandOptions(npc, hasTrackingMarker)
   string command
 
   if JArray.Count(jaCommands) > 0
@@ -80,7 +80,7 @@ string function CreateCommandListUI(Actor npc, int jaCommands) global
   return command
 endFunction
 
-int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) global
+int function GetCommandOptions(Actor npc, bool hasTrackingMarker) global
   int jmStats = JMap.object()
   JMap.SetStr(jmStats, "command",         "show_npc_stats")
   JMap.SetStr(jmStats, "description",     "Stats")
@@ -106,20 +106,10 @@ int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) 
   JMap.SetStr(jmDoFavor, "description",   "Do Favor")
   JMap.SetStr(jmDoFavor, "icon",          DO_FAVOR_ICON_NAME())
 
-  int jmDelete = JMap.object()
-  JMap.SetStr(jmDelete, "command",        "delete_npc")
-  JMap.SetStr(jmDelete, "description",    "Delete")
-  JMap.SetStr(jmDelete, "icon",           DELETE_ICON_NAME())
-
   int jmInventory = JMap.object()
   JMap.SetStr(jmInventory, "command",     "open_npc_inventory")
   JMap.SetStr(jmInventory, "description", "Inventory")
   JMap.SetStr(jmInventory, "icon",        INVENTORY_ICON_NAME())
-
-  int jmClone = JMap.object()
-  JMap.SetStr(jmClone, "command",         "clone_npc")
-  JMap.SetStr(jmClone, "description",     "Clone")
-  JMap.SetStr(jmClone, "icon",            CLONE_ICON_NAME())
 
   int jmTrack = JMap.object()
   JMap.SetStr(jmTrack, "command",         "toggle_track_npc")
@@ -145,14 +135,8 @@ int function GetCommandOptions(Actor npc, bool hasTrackingMarker, bool isClone) 
   if SHOW_VISIT_COMMAND()
     JArray.AddObj(jaCommands, jmVisit)
   endIf
-  if SHOW_DELETE_COMMAND() && (!CAN_ONLY_DELETE_CLONES() || isClone)
-    JArray.AddObj(jaCommands, jmDelete)
-  endIf
   if SHOW_INVENTORY_COMMAND()
     JArray.AddObj(jaCommands, jmInventory)
-  endIf
-  if SHOW_CLONE_COMMAND()
-    JArray.AddObj(jaCommands, jmClone)
   endIf
   if SHOW_TRACK_COMMAND()
     JArray.AddObj(jaCommands, jmTrack)

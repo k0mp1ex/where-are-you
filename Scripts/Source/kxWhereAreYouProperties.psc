@@ -34,16 +34,8 @@ bool function SHOW_VISIT_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowVisit:Commands")
 endFunction
 
-bool function SHOW_DELETE_COMMAND() global
-  return MCM.GetModSettingBool(GetModName(), "bShowDelete:Commands")
-endFunction
-
 bool function SHOW_INVENTORY_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowInventory:Commands")
-endFunction
-
-bool function SHOW_CLONE_COMMAND() global
-  return MCM.GetModSettingBool(GetModName(), "bShowClone:Commands")
 endFunction
 
 bool function SHOW_TRACK_COMMAND() global
@@ -168,11 +160,6 @@ bool function IS_DEBUG_ENABLED() global
 endFunction
 
 
-bool function CAN_ONLY_DELETE_CLONES() global
-  return MCM.GetModSettingBool(GetModName(), "bOnlyClones:Delete")
-endFunction
-
-
 bool function ONLY_FOLLOWERS_DO_FAVOR() global
   return MCM.GetModSettingBool(GetModName(), "bOnlyFollowers:DoFavor")
 endFunction
@@ -199,16 +186,8 @@ string function VISIT_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sVisitIcon:Icons")
 endFunction
 
-string function DELETE_ICON_NAME() global
-  return MCM.GetModSettingString(GetModName(), "sDeleteIcon:Icons")
-endFunction
-
 string function INVENTORY_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sInventoryIcon:Icons")
-endFunction
-
-string function CLONE_ICON_NAME() global
-  return MCM.GetModSettingString(GetModName(), "sCloneIcon:Icons")
 endFunction
 
 string function TRACK_ICON_NAME() global

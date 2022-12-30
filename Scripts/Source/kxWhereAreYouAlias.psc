@@ -150,23 +150,15 @@ Actor function FindNpcByNamePattern(string pattern)
 endFunction
 
 function ChooseCommandToApplyToNPC(Actor npc)
-  Actor clone
-
   SelectNpcOnConsole(npc)
 
   Actor player = Game.GetPlayer()
-  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc), IsDynamicObjectReference(npc))
+  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc))
   if command
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
     elseIf command == "move_to_npc"
       MoveToTarget(player, npc)
-    elseIf command == "clone_npc"
-      string name = CreateNpcNameUI("Choose the name of " + npc.GetDisplayName() + "'s clone")
-      if name
-        clone = player.PlaceAtMe(npc.GetActorBase()) as Actor
-        clone.SetDisplayName(name)
-      endIf
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
@@ -174,26 +166,15 @@ function ChooseCommandToApplyToNPC(Actor npc)
       ShowNpcInfoUI(statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)
-    elseIf command == "delete_npc"
-      int slot = GetNpcTrackingMarkerSlot(npc)
-      if slot != -1
-        RemoveTrackingMarker(slot)
-      endIf
-      npc.Disable()
-      npc.Delete()
     elseIf command == "toggle_track_npc"
       TrackNpc(npc, GetNpcTrackingMarkerSlot(npc))
     elseIf command == "do_favor"
       MakeNpcDoFavor(npc)
     endIf
 
-    if KEEP_MENU_OPENED() && command != "delete_npc"
+    if KEEP_MENU_OPENED()
       WaitForMenus()
-      if clone
-        ChooseCommandToApplyToNPC(clone)
-      else
-        ChooseCommandToApplyToNPC(npc)
-      endIf
+      ChooseCommandToApplyToNPC(npc)
     endIf
   endIf
 endFunction
@@ -237,7 +218,7 @@ function RemoveAllTrackingMarkers()
 endFunction
 
 bool function IsValidNpc(Actor npc)
-  return npc.IsEnabled() && npc.GetActorBase().IsUnique()
+  return npc && npc.GetActorBase().IsUnique()
 endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc)

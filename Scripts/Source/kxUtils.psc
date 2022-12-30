@@ -15,10 +15,6 @@ Actor function GetActorAtCrosshair() global
   return Game.GetCurrentCrosshairRef() as Actor
 endFunction
 
-bool function IsDynamicObjectReference(ObjectReference reference) global
-  return Math.LogicalAnd(Math.RightShift(reference.GetFormID(), 24), 0xFF) == 0xFF
-endFunction
-
 string function GetModNameFromForm(Form object) global
   int pluginIndex = Math.LogicalAnd(Math.RightShift(object.GetFormID(), 24), 0xFF)
   if pluginIndex == 0xFF
