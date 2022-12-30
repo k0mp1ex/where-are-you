@@ -1,4 +1,4 @@
-scriptName kxWhereAreYouNative hidden
+Scriptname kxWhereAreYouNative hidden
 
 function PrintToConsole(string msg) global native
 function SelectReferenceInConsole(ObjectReference ref) global native

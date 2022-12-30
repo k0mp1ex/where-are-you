@@ -94,7 +94,7 @@ function SearchNpc()
   string pattern = CreateSearchBoxUI()
   if pattern != ""
     Actor npc = FindNpcByNamePattern(pattern)
-    if npc
+    if IsValidNpc(npc)
       ChooseCommandToApplyToNPC(npc)
     endIf
   endIf
