@@ -218,14 +218,6 @@ function RemoveTrackingMarker(int slot)
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
 endFunction
 
-function RemoveAllTrackingMarkers()
-  int i = 1; skip the player quest alias
-  while i < GetOwningQuest().GetNumAliases()
-    RemoveTrackingMarker(i)
-    i += 1
-  endWhile
-endFunction
-
 bool function IsValidNpc(Actor npc)
   return npc && npc.GetActorBase().IsUnique()
 endFunction

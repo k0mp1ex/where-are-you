@@ -15,21 +15,6 @@ Actor function GetActorAtCrosshair() global
   return Game.GetCurrentCrosshairRef() as Actor
 endFunction
 
-string function GetModNameFromForm(Form object) global
-  int pluginIndex = Math.LogicalAnd(Math.RightShift(object.GetFormID(), 24), 0xFF)
-  if pluginIndex == 0xFF
-    ObjectReference ref = object as ObjectReference
-    if ref
-      return GetModNameFromForm(ref.GetBaseObject())
-    endIf
-  elseIf pluginIndex == 0xFE
-    int lightIndex = Math.LogicalAnd(Math.RightShift(object.GetFormID(), 12), 0xFFF)
-    return Game.GetLightModName(lightIndex)
-  else
-    return Game.GetModName(pluginIndex)
-  endif
-endFunction
-
 bool function IsInMenus() global
   return Utility.IsInMenuMode() || \
          UI.IsMenuOpen("Crafting Menu") || \
@@ -61,16 +46,4 @@ bool function IsKeyCombinationPressed(int keyCode, int mappedKeyCode, bool hasCt
          (IsCtrlKeyPressed() == hasCtrlKeyCode) && \
          (IsShiftKeyPressed() == hasShiftKeyCode) && \
          (IsAltKeyPressed() == hasAltKeyCode)
-endFunction
-
-string function Coalesce(string string1, string string2) global
-  if string1 != ""
-    return string1
-  else
-    return string2
-  endIf
-endFunction
-
-Actor function GetActorFromReferenceId(int refId) global
-  return Game.GetFormEx(refId) as Actor
 endFunction
