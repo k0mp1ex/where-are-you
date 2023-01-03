@@ -3,6 +3,7 @@
     "name": "kx-where-are-you",
     "version-string": "2.0.0",
     "dependencies": [
-        "commonlibsse-ng"
+        "commonlibsse-ng",
+        "simpleini"
     ]
 }
