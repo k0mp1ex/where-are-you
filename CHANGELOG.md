@@ -7,6 +7,7 @@
 - Remove **Spell Perk Item Distributor (SPID)** as requirement
 - Remove clone NPC option
 - Remove delete NPC option
+- Search using regular expressions
 - Add option to force disabled NPCs to be enabled when teleporting
 
 ## 1.4.0
