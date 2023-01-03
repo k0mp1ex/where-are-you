@@ -1,5 +1,5 @@
 #pragma once
 
-namespace Papyrus {
+namespace kxWhereAreYou::Papyrus {
     void Setup();
 }

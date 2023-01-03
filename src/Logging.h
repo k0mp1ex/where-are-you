@@ -1,5 +1,5 @@
 #pragma once
 
-namespace Logging {
+namespace kxWhereAreYou::Logging {
     void Setup();
 }

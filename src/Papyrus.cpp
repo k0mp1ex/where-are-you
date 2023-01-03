@@ -1,6 +1,8 @@
 #include "Papyrus.h"
 #include "Utils.h"
 
+using namespace kxWhereAreYou;
+
 namespace {
     std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
                                              bool sortResults, int maxResultCount) {
@@ -159,7 +161,7 @@ namespace {
     }
 }
 
-namespace Papyrus {
+namespace kxWhereAreYou::Papyrus {
     constexpr std::string_view PapyrusClass = "kxWhereAreYouNative";
 
     bool RegisterPapyrusFunctions(RE::BSScript::IVirtualMachine* vm) {

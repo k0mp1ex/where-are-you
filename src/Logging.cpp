@@ -1,7 +1,7 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include "Logging.h"
 
-namespace Logging {
+namespace kxWhereAreYou::Logging {
     void Setup() {
         auto logsFolder = SKSE::log::log_directory();
         if (!logsFolder) {

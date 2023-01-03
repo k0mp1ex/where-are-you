@@ -1,6 +1,8 @@
 #include "Logging.h"
 #include "Papyrus.h"
 
+using namespace kxWhereAreYou;
+
 SKSEPluginLoad(const SKSE::LoadInterface* skse) {
     SKSE::Init(skse);
     Logging::Setup();
