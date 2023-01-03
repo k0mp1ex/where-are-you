@@ -3,7 +3,7 @@
 
 using namespace kxWhereAreYou;
 
-SKSEPluginLoad(const SKSE::LoadInterface* skse) {
+SKSEPluginLoad([[maybe_unused]] const SKSE::LoadInterface* skse) {
     SKSE::Init(skse);
     Logging::Setup();
     Papyrus::Setup();

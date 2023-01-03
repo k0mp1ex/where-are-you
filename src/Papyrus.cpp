@@ -1,11 +1,12 @@
 #include "Papyrus.h"
+
 #include "Utils.h"
 
 using namespace kxWhereAreYou;
 
 namespace {
     std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
-                                             bool sortResults, int maxResultCount) {
+                                               bool sortResults, int maxResultCount) {
         logger::info("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults,
                      maxResultCount);
 
@@ -70,13 +71,7 @@ namespace {
                 "Race: {}\n"
                 "Gender: {}\n"
                 "Location: {}",
-                name,
-                refId,
-                baseId,
-                mod,
-                race,
-                gender,
-                location);
+                name, refId, baseId, mod, race, gender, location);
         } else {
             stats = pattern;
             stats = std::regex_replace(stats, std::regex("\\[name\\]"), name);
@@ -129,14 +124,16 @@ namespace {
         return value;
     }
 
-    std::int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
-        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+    int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        for (auto i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
-                if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
+                if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); actorReference) {
-                        logger::info("Comparing {} == {}", actor->GetDisplayFullName(), actorReference->GetDisplayFullName());
+                        logger::info("Comparing {} == {}", actor->GetDisplayFullName(),
+                                     actorReference->GetDisplayFullName());
                         if (actor == actorReference) {
-                            logger::info("They are equal! Returning aliasID {} with aliasName: {}", i, alias->aliasName);
+                            logger::info("They are equal! Returning aliasID {} with aliasName: {}", i,
+                                         alias->aliasName);
                             return i;
                         }
                     }
@@ -146,10 +143,10 @@ namespace {
         return -1;
     }
 
-    std::int32_t GetNextAvailableAliasInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
-        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+    int32_t GetNextAvailableAliasInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
+        for (auto i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
-                if (auto reference = static_cast<RE::BGSRefAlias*>(alias); reference) {
+                if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); !actorReference) {
                         logger::info("Slot available: {} with aliasName: {}", i, alias->aliasName);
                         return i;

@@ -1,6 +1,7 @@
+#include "Logging.h"
+
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
-#include "Logging.h"
 
 namespace kxWhereAreYou::Logging {
     void Setup() {
