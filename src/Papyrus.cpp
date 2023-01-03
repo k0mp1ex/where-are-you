@@ -125,7 +125,7 @@ namespace {
     }
 
     int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
-        for (auto i = 0; i < quest->aliases.size(); i++) {
+        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); actorReference) {
@@ -144,7 +144,7 @@ namespace {
     }
 
     int32_t GetNextAvailableAliasInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
-        for (auto i = 0; i < quest->aliases.size(); i++) {
+        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); !actorReference) {

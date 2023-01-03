@@ -3,6 +3,7 @@ Scriptname kxWhereAreYouUI hidden
 import kxUtils
 import kxWhereAreYouCommon
 import kxWhereAreYouLogging
+import kxWhereAreYouNative
 import kxWhereAreYouProperties
 
 string function CreateSearchBoxUI() global
@@ -201,7 +202,7 @@ function AddOptionToWheel(UIWheelMenu wheelMenu, int i, string content, string i
   wheelMenu.SetPropertyIndexString("optionLabelText", i, content)
   wheelMenu.SetPropertyIndexBool("optionEnabled", i, true)
   wheelMenu.SetPropertyIndexString("optionIcon", i, iconName)
-  wheelMenu.SetPropertyIndexInt("optionIconColor", i, kxWhereAreYouNative.HexadecimalStringToInteger(DEFAULT_COLOR()))
+  wheelMenu.SetPropertyIndexInt("optionIconColor", i, HexadecimalStringToInteger(DEFAULT_COLOR()))
 endFunction
 
 function ShowNpcStatsUI(Actor npc) global
@@ -218,7 +219,7 @@ Actor function CreateNpcListUI(Actor[] actors) global
   int i = 0
   while i < actors.Length
     Actor currentActor = actors[i]
-    string entry = kxWhereAreYouNative.GetSummaryDataForActor(currentActor, ENTRY_FORMAT())
+    string entry = GetSummaryDataForActor(currentActor, ENTRY_FORMAT())
     listMenu.AddEntryItem(entry)
     i += 1
   endWhile
