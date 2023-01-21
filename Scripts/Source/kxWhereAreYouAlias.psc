@@ -163,6 +163,8 @@ function ChooseCommandToApplyToNPC(Actor npc)
     elseIf command == "show_npc_info"
       string statsText = GetSummaryDataForActor(npc, GetOwningQuest())
       ShowNpcInfoUI(statsText)
+    elseIf command == "toggle_enable_disable"
+      ToggleEnableDisable(npc)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)
     elseIf command == "toggle_track_npc"
@@ -206,4 +208,12 @@ endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc)
   return GetAliasIndexOfActorInQuest(npc, GetOwningQuest())
+endFunction
+
+function ToggleEnableDisable(Actor npc)
+  if npc.IsDisabled()
+    npc.Enable()
+  else
+    npc.Disable()
+  endIf
 endFunction

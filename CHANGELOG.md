@@ -2,16 +2,17 @@
 
 ## 2.0.0
 
-- Add SKSE plugin
-- Remove **ConsoleUtil** as requirement
-- Remove **JContainers** as requirement
-- Remove **Spell Perk Item Distributor (SPID)** as requirement
-- Remove clone NPC option
-- Remove delete NPC option
-- Search using regular expressions
-- Add option to force disabled NPCs to be enabled when teleporting
-- Default teleport range changed to 75 units
-- Teleport now always face the targeted NPC/player
+- Added SKSE plugin
+- Removed **ConsoleUtil** as requirement
+- Removed **JContainers** as requirement
+- Removed **Spell Perk Item Distributor (SPID)** as requirement
+- Removed clone NPC option
+- Removed delete NPC option
+- Added enable/disable option
+- Added search using regular expressions
+- Added option to ask to enable disabled npcs when teleporting
+- Changed default teleport range to 75 units
+- Changed teleport command to always face the targeted NPC/player
 
 ## 1.4.0
 

@@ -182,14 +182,16 @@ namespace {
             commands.emplace_back(Command{"show_npc_stats", "Stats", Settings::Icons::sStatsIcon});
         if (Settings::Commands::bShowInfo)
             commands.emplace_back(Command{"show_npc_info", "Info", Settings::Icons::sInfoIcon});
+        if (Settings::Commands::bShowEnableDisable)
+            commands.emplace_back(Command{"toggle_enable_disable", actor->IsDisabled() ? "Enable" : "Disable", Settings::Icons::sEnableDisableIcon});
+        if (Settings::Commands::bShowInventory)
+            commands.emplace_back(Command{"open_npc_inventory", "Inventory", Settings::Icons::sInventoryIcon});
         if (Settings::Commands::bShowTeleport)
             commands.emplace_back(Command{"teleport_to_player", "Teleport", Settings::Icons::sTeleportIcon});
         if (Settings::Commands::bShowVisit)
             commands.emplace_back(Command{"move_to_npc", "Visit", Settings::Icons::sVisitIcon});
         if (Settings::Commands::bShowDoFavor && (!Settings::DoFavor::bOnlyFollowers || actor->IsPlayerTeammate()))
             commands.emplace_back(Command{"do_favor", "Do Favor", Settings::Icons::sDoFavorIcon});
-        if (Settings::Commands::bShowInventory)
-            commands.emplace_back(Command{"open_npc_inventory", "Inventory", Settings::Icons::sInventoryIcon});
         if (Settings::Commands::bShowTrack)
             commands.emplace_back(Command{"toggle_track_npc", isTracking ? "Untrack" : "Track", Settings::Icons::sTrackIcon});
 
@@ -209,6 +211,8 @@ namespace {
             slots = {0, 1, 2, 4, 5, 6};
         else if (commands.size() == 7)
             slots = {0, 1, 2, 4, 5, 6, 7};
+        else if (commands.size() == 8)
+            slots = {0, 1, 2, 3, 4, 5, 6, 7};
 
         for (size_t i {}; i < slots.size(); i++)
             commands[i].slot = slots[i];

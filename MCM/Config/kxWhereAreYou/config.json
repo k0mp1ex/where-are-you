@@ -342,9 +342,6 @@
           }
         },
         {
-          "type": "empty"
-        },
-        {
           "type": "header",
           "text": "Icons"
         },
@@ -362,6 +359,15 @@
           "type": "input",
           "text": "Info",
           "help": "Info icon.\nOnly available for wheel as visualization type.",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
+          "id": "sEnableDisableIcon:Icons",
+          "type": "input",
+          "text": "Enable/Disable",
+          "help": "Enable/disable icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -426,9 +432,6 @@
           }
         },
         {
-          "type": "empty"
-        },
-        {
           "type": "header",
           "text": "Commands"
         },
@@ -446,6 +449,15 @@
           "type": "toggle",
           "text": "Show Info",
           "help": "Show Info option on commands.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
+          "id": "bShowEnableDisable:Commands",
+          "type": "toggle",
+          "text": "Show Enable/Disable",
+          "help": "Show Enable/Disable option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }

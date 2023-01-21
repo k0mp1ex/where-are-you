@@ -17,10 +17,9 @@ function TeleportAndEnableIfNeeded(Actor npc, string direction) global native
 
 ; Called from SKSE plugin
 function MoveToTarget(Actor npc, string command, bool forceEnableNpc) global
-  Debug.MessageBox("Papyrus called from SKSE!")
-
   Actor akOrigin
   Actor akTarget
+
   if command == "teleport_to_player"
     akOrigin = npc
     akTarget = Game.GetPlayer()
@@ -29,11 +28,12 @@ function MoveToTarget(Actor npc, string command, bool forceEnableNpc) global
     akTarget = npc
   endIf
 
-  ; Running MoveTo() twice on purpose. When teleporting the time passes and NPC can move from the original position, so the second teleport solves that
-  akOrigin.MoveTo(akTarget)
   if forceEnableNpc
     npc.Enable()
   endIf
+
+  ; Running MoveTo() twice on purpose. When teleporting the time passes and NPC can move from the original position, so the second teleport solves that
+  akOrigin.MoveTo(akTarget, kxWhereAreYouProperties.TELEPORT_RANGE() * Math.Sin(akTarget.GetAngleZ()), kxWhereAreYouProperties.TELEPORT_RANGE() * Math.Cos(akTarget.GetAngleZ()), akTarget.GetHeight())
   akOrigin.MoveTo(akTarget, kxWhereAreYouProperties.TELEPORT_RANGE() * Math.Sin(akTarget.GetAngleZ()), kxWhereAreYouProperties.TELEPORT_RANGE() * Math.Cos(akTarget.GetAngleZ()), akTarget.GetHeight())
   ; Match the rotation to always face the target
   akOrigin.SetAngle(0.0, 0.0, akOrigin.GetAngleZ() + 180)

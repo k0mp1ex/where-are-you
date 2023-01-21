@@ -14,6 +14,7 @@ namespace kxWhereAreYou {
             static inline bool bKeepOpened = false;
             static inline bool bShowStats = true;
             static inline bool bShowInfo = true;
+            static inline bool bShowEnableDisable = true;
             static inline bool bShowTeleport = true;
             static inline bool bShowVisit = true;
             static inline bool bShowInventory = true;
@@ -67,6 +68,7 @@ namespace kxWhereAreYou {
         struct Icons {
             static inline std::string sStatsIcon = "default_book_read";
             static inline std::string sInfoIcon = "cat_favorites";
+            static inline std::string sEnableDisableIcon = "mag_powers";
             static inline std::string sTeleportIcon = "book_map";
             static inline std::string sVisitIcon = "armor_feet";
             static inline std::string sInventoryIcon = "inv_all";
