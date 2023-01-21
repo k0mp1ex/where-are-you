@@ -141,10 +141,6 @@ float function TELEPORT_RANGE() global
   return MCM.GetModSettingFloat(GetModName(), "fRange:Teleport")
 endFunction
 
-bool function FORCE_ENABLE_ON_TELEPORT() global
-  return MCM.GetModSettingBool(GetModName(), "bForceEnable:Teleport")
-endFunction
-
 
 bool function ACTIVATE_QUEST_ON_TRACKING() global
   return MCM.GetModSettingBool(GetModName(), "bAlwaysActivateQuest:Track")

@@ -35,8 +35,7 @@ namespace kxWhereAreYou {
             static inline bool bRemoveTrackingOnDeath = true;
         };
         struct Teleport {
-            static inline float fRange = 100.0;
-            static inline bool bForceEnable = false;
+            static inline float fRange = 75.0;
         };
         struct DoFavor {
             static inline bool bOnlyFollowers = true;

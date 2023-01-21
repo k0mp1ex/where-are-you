@@ -55,7 +55,6 @@ namespace kxWhereAreYou {
         logger::info("[Settings] Track::bRemoveTrackingOnDeath = {}", Track::bRemoveTrackingOnDeath);
         // Teleport
         logger::info("[Settings] Teleport::fRange = {}", Teleport::fRange);
-        logger::info("[Settings] Teleport::bForceEnable = {}", Teleport::bForceEnable);
         // DoFavor
         logger::info("[Settings] DoFavor::bOnlyFollowers = {}", DoFavor::bOnlyFollowers);
         // Debug
@@ -123,7 +122,6 @@ namespace kxWhereAreYou {
         ReadBoolSetting(mcm, "Track", "bRemoveTrackingOnDeath", Track::bRemoveTrackingOnDeath);
         // Teleport
         ReadFloatSetting(mcm, "Teleport", "fRange", Teleport::fRange);
-        ReadBoolSetting(mcm, "Teleport", "bForceEnable", Teleport::bForceEnable);
         // DoFavor
         ReadBoolSetting(mcm, "DoFavor", "bOnlyFollowers", DoFavor::bOnlyFollowers);
         // Debug

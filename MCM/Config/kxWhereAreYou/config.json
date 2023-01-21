@@ -86,15 +86,6 @@
           }
         },
         {
-          "id": "bForceEnable:Teleport",
-          "type": "toggle",
-          "text": "Always enable NPC on teleport",
-          "help": "Force NPC to be enabled when teleporting. Use carefully because NPCs hidden/disabled are not supposed to be interacted with.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          }
-        },
-        {
           "type": "header",
           "text": "Track/Untrack",
           "position": 1
