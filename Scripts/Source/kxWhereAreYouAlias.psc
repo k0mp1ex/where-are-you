@@ -154,7 +154,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
   SelectNpcOnConsole(npc)
 
   Actor player = Game.GetPlayer()
-  string command = CreateNpcCommandUI(npc, IsTrackingNpc(npc))
+  string command = CreateNpcCommandUI(npc, GetOwningQuest())
   if command
     if command == "teleport_to_player"
       MoveToTarget(npc, player)
@@ -225,8 +225,4 @@ endFunction
 
 int function GetNpcTrackingMarkerSlot(Actor npc)
   return GetAliasIndexOfActorInQuest(npc, GetOwningQuest())
-endFunction
-
-bool function IsTrackingNpc(Actor npc)
-  return GetAliasIndexOfActorInQuest(npc, GetOwningQuest()) != -1
 endFunction

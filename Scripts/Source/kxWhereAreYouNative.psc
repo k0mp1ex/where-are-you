@@ -7,3 +7,8 @@ string function GetSummaryDataForActor(Actor actor, string format="") global nat
 int function HexadecimalStringToInteger(string hexString) global native
 int function GetAliasIndexOfActorInQuest(Actor npc, Quest currentQuest) global native
 int function GetNextAvailableAliasInQuest(Quest currentQuest) global native
+int[] function GetCommandsSlots(Actor npc, Quest currentQuest)  global native
+string[] function GetCommandsNames(Actor npc, Quest currentQuest) global native
+string[] function GetCommandsDescriptions(Actor npc, Quest currentQuest)  global native
+string[] function GetCommandsIcons(Actor npc, Quest currentQuest)  global native
+function UpdateMcmSettings() global native

@@ -56,7 +56,6 @@ No incompatibilities found yet.
 
 - [SKSE64](http://skse.silverlock.org/)
 - [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
-- [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 - [MCM Helper](https://www.nexusmods.com/skyrimspecialedition/mods/53000)
 
 ## Supported versions
@@ -140,7 +139,6 @@ No incompatibilities found yet.
 - Bethesda for Skyrim /(S|A|L)E|VR/
 - [SKSE](http://skse.silverlock.org/) team for creating the great platform that a lot of our mods depends on
 - [expired6978](https://www.nexusmods.com/skyrimspecialedition/users/2950481) for [UIExtensions](https://www.nexusmods.com/skyrimspecialedition/mods/17561)
-- [silvericed](https://www.nexusmods.com/skyrim/users/5355170) and [ryobg](https://www.nexusmods.com/skyrimspecialedition/users/35506715) for [JContainers](https://www.nexusmods.com/skyrimspecialedition/mods/16495)
 - [powerofthree](https://www.nexusmods.com/skyrimspecialedition/users/2148728) for [Spell Perk Item Distributor (SPID)](https://www.nexusmods.com/skyrimspecialedition/mods/36869) used in the first versions of the mod
 - [schlangster](https://www.nexusmods.com/skyrimspecialedition/users/28794) and team for [SkyUI](https://www.nexusmods.com/skyrimspecialedition/mods/12604)
 - [Parapets](https://www.nexusmods.com/skyrimspecialedition/users/39501725) for [MCM Helper](https://www.nexusmods.com/skyrimspecialedition/mods/53000)

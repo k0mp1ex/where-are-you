@@ -599,10 +599,6 @@
         {
           "type": "text",
           "text": "UIExtensions"
-        },
-        {
-          "type": "text",
-          "text": "JContainers"
         }
       ]
     }

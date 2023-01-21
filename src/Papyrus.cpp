@@ -1,10 +1,19 @@
 #include "Papyrus.h"
 
+#include "UI.h"
 #include "Utils.h"
+#include "Settings.h"
 
 using namespace kxWhereAreYou;
 
 namespace {
+    struct Command {
+        std::string name;
+        std::string description;
+        std::string icon;
+        int slot {};
+    };
+
     std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
                                                bool sortResults, int maxResultCount) {
         logger::info("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults,
@@ -87,34 +96,11 @@ namespace {
     }
 
     void PrintToConsole(RE::StaticFunctionTag*, std::string text) {
-        RE::ConsoleLog::GetSingleton()->Print(text.c_str());
-        logger::info("{}", text);
+        UI::Console::Print(text);
     }
 
-    void SelectReferenceInConsole(RE::StaticFunctionTag*, RE::TESObjectREFR* a_reference) {
-        using Message = RE::UI_MESSAGE_TYPE;
-
-        if (a_reference) {
-            const auto factory = RE::MessageDataFactoryManager::GetSingleton();
-            const auto intfcStr = RE::InterfaceStrings::GetSingleton();
-            const auto creator =
-                factory && intfcStr ? factory->GetCreator<RE::ConsoleData>(intfcStr->consoleData) : nullptr;
-
-            const auto consoleData = creator ? creator->Create() : nullptr;
-            const auto msgQ = RE::UIMessageQueue::GetSingleton();
-            if (consoleData && msgQ) {
-                consoleData->type = static_cast<RE::ConsoleData::DataType>(1);
-                consoleData->pickRef = a_reference->CreateRefHandle();
-                msgQ->AddMessage(intfcStr->console, Message::kUpdate, consoleData);
-            }
-        } else {
-            const auto ui = RE::UI::GetSingleton();
-            const auto console = ui ? ui->GetMenu<RE::Console>() : nullptr;
-            if (console) {
-                const RE::ObjectRefHandle null;
-                console->SetSelectedRef(null);
-            }
-        }
+    void SelectReferenceInConsole(RE::StaticFunctionTag*, RE::TESObjectREFR* reference) {
+        UI::Console::SelectReference(reference);
     }
 
     unsigned int HexadecimalStringToInteger(RE::StaticFunctionTag*, std::string hexString) {
@@ -125,9 +111,9 @@ namespace {
     }
 
     int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
-        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+        for (RE::BSTArray<RE::BGSBaseAlias*>::size_type i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
-                if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
+                if (auto reference = skyrim_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); actorReference) {
                         logger::info("Comparing {} == {}", actor->GetDisplayFullName(),
                                      actorReference->GetDisplayFullName());
@@ -144,9 +130,10 @@ namespace {
     }
 
     int32_t GetNextAvailableAliasInQuest(RE::StaticFunctionTag*, RE::TESQuest* quest) {
-        for (uint32_t i = 0; i < quest->aliases.size(); i++) {
+        //Alias at 0 is always Player
+        for (RE::BSTArray<RE::BGSBaseAlias*>::size_type i = 1; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
-                if (auto reference = dynamic_cast<RE::BGSRefAlias*>(alias); reference) {
+                if (auto reference = skyrim_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); !actorReference) {
                         logger::info("Slot available: {} with aliasName: {}", i, alias->aliasName);
                         return i;
@@ -156,6 +143,78 @@ namespace {
         }
         return -1;
     }
+
+    std::vector<Command> GetCommandsForNpc(RE::Actor* actor, RE::TESQuest* quest) {
+        bool isTracking = GetAliasIndexOfActorInQuest(nullptr, actor, quest) != -1;
+        std::vector<Command> commands;
+
+        if (Settings::Commands::bShowStats)
+            commands.emplace_back(Command{"show_npc_stats", "Stats", Settings::Icons::sStatsIcon});
+        if (Settings::Commands::bShowInfo)
+            commands.emplace_back(Command{"show_npc_info", "Info", Settings::Icons::sInfoIcon});
+        if (Settings::Commands::bShowTeleport)
+            commands.emplace_back(Command{"teleport_to_player", "Teleport", Settings::Icons::sTeleportIcon});
+        if (Settings::Commands::bShowVisit)
+            commands.emplace_back(Command{"move_to_npc", "Visit", Settings::Icons::sVisitIcon});
+        if (Settings::Commands::bShowDoFavor && (!Settings::DoFavor::bOnlyFollowers || actor->IsPlayerTeammate()))
+            commands.emplace_back(Command{"do_favor", "Do Favor", Settings::Icons::sDoFavorIcon});
+        if (Settings::Commands::bShowInventory)
+            commands.emplace_back(Command{"open_npc_inventory", "Inventory", Settings::Icons::sInventoryIcon});
+        if (Settings::Commands::bShowTrack)
+            commands.emplace_back(Command{"toggle_track_npc", isTracking ? "Untrack" : "Track", Settings::Icons::sTrackIcon});
+
+        //Trying to keep the wheel slots as symmetrical as possible
+        std::vector<int> slots;
+        if (commands.size() == 1)
+            slots = {1};
+        else if (commands.size() == 2)
+            slots = {1, 5};
+        else if (commands.size() == 3)
+            slots = {1, 2, 5};
+        else if (commands.size() == 4)
+            slots = {1, 2, 5, 6};
+        else if (commands.size() == 5)
+            slots = {0, 1, 2, 5, 6};
+        else if (commands.size() == 6)
+            slots = {0, 1, 2, 4, 5, 6};
+        else if (commands.size() == 7)
+            slots = {0, 1, 2, 4, 5, 6, 7};
+
+        for (size_t i {}; i < slots.size(); i++)
+            commands[i].slot = slots[i];
+
+        return commands;
+    }
+
+    std::vector<int> GetCommandsSlots(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        std::vector<int> output;
+        std::ranges::transform(GetCommandsForNpc(actor, quest), std::back_inserter(output), [](const Command& command) { return command.slot; });
+        return output;
+    }
+
+    std::vector<std::string> GetCommandsNames(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        std::vector<std::string> output;
+        std::ranges::transform(GetCommandsForNpc(actor, quest), std::back_inserter(output), [](const Command& command) { return command.name; });
+        return output;
+    }
+
+    std::vector<std::string> GetCommandsDescriptions(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        std::vector<std::string> output;
+        std::ranges::transform(GetCommandsForNpc(actor, quest), std::back_inserter(output), [](const Command& command) { return command.description; });
+        return output;
+    }
+
+    std::vector<std::string> GetCommandsIcons(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
+        std::vector<std::string> output;
+        std::ranges::transform(GetCommandsForNpc(actor, quest), std::back_inserter(output), [](const Command& command) { return command.icon; });
+        return output;
+    }
+
+    void UpdateMcmSettings(RE::StaticFunctionTag*) {
+        logger::info("Updating MCM .ini settings...");
+        Settings::Setup();
+    }
+
 }
 
 namespace kxWhereAreYou::Papyrus {
@@ -169,6 +228,11 @@ namespace kxWhereAreYou::Papyrus {
         vm->RegisterFunction("GetAliasIndexOfActorInQuest", PapyrusClass, GetAliasIndexOfActorInQuest);
         vm->RegisterFunction("GetNextAvailableAliasInQuest", PapyrusClass, GetNextAvailableAliasInQuest);
         vm->RegisterFunction("HexadecimalStringToInteger", PapyrusClass, HexadecimalStringToInteger);
+        vm->RegisterFunction("GetCommandsSlots", PapyrusClass, GetCommandsSlots);
+        vm->RegisterFunction("GetCommandsNames", PapyrusClass, GetCommandsNames);
+        vm->RegisterFunction("GetCommandsDescriptions", PapyrusClass, GetCommandsDescriptions);
+        vm->RegisterFunction("GetCommandsIcons", PapyrusClass, GetCommandsIcons);
+        vm->RegisterFunction("UpdateMcmSettings", PapyrusClass, UpdateMcmSettings);
         return true;
     }
 

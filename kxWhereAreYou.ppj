@@ -19,7 +19,6 @@
     <Imports>
         <Import>@ImportsFolder\SKSE 2.2.3 - Skyrim 1.6.640 - Scripts\Scripts\Source</Import>
         <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
-        <Import>@ImportsFolder\JContainers SE [1.6.640]\scripts\source</Import>
         <Import>@ImportsFolder\MCM Helper SDK\scripts\source</Import>
         <Import>@GameRoot\Data\Scripts\Source</Import>
     </Imports>
