@@ -245,6 +245,36 @@ namespace {
         Settings::Setup();
     }
 
+    //Call Papyrus function
+    void MoveToTarget(RE::Actor* npc, const std::string& commandStr, bool forceEnableNpc) {
+        const auto skyrimVM = RE::SkyrimVM::GetSingleton();
+        auto vm = skyrimVM ? skyrimVM->impl : nullptr;
+        if (vm) {
+            RE::BSTSmartPointer<RE::BSScript::IStackCallbackFunctor> callback;
+            RE::BSFixedString command { commandStr };
+            auto vmargs = RE::MakeFunctionArguments(const_cast<RE::Actor*>(npc), std::move(command), std::move(forceEnableNpc));
+            vm->DispatchStaticCall("kxWhereAreYouNative", "MoveToTarget", vmargs, callback);
+            delete vmargs;
+        }
+    }
+
+    void TeleportAndEnableIfNeeded(RE::StaticFunctionTag*, RE::Actor* npc, std::string command) {
+        if (npc->IsDisabled()) {
+            std::string pronoun = "it";
+            if (auto actorBase = npc->GetBaseObject()->As<RE::TESNPC>(); actorBase)
+                pronoun = actorBase->IsFemale() ? "her" : "him";
+            UI::Messages::Show(std::format("{} is disabled.\nDo you want to enable {} before teleporting?", npc->GetDisplayFullName(), pronoun),
+                               {"Yes, enable " + pronoun + " and teleport", "No, only teleport", "Cancel"},
+                               [=](unsigned int result) {
+                                    logger::info("question answer: {}", result);
+                                    if (result < 2)
+                                        MoveToTarget(npc, command, result == 0);
+                                });
+        } else {
+            MoveToTarget(npc, command, false);
+        }
+    }
+
 }
 
 namespace kxWhereAreYou::Papyrus {
@@ -264,6 +294,7 @@ namespace kxWhereAreYou::Papyrus {
         vm->RegisterFunction("GetCommandsIcons", PapyrusClass, GetCommandsIcons);
         vm->RegisterFunction("UpdateMcmSettings", PapyrusClass, UpdateMcmSettings);
         vm->RegisterFunction("IsValidNpc", PapyrusClass, IsValidNpc);
+        vm->RegisterFunction("TeleportAndEnableIfNeeded", PapyrusClass, TeleportAndEnableIfNeeded);
         return true;
     }
 

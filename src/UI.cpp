@@ -18,8 +18,7 @@ namespace kxWhereAreYou::UI {
             auto* uiStringHolder = RE::InterfaceStrings::GetSingleton();
             auto* factory = factoryManager->GetCreator<RE::MessageBoxData>(uiStringHolder->messageBoxData);
             auto* messagebox = factory->Create();
-            RE::BSTSmartPointer<RE::IMessageBoxCallback> messageCallback =
-                RE::make_smart<MessageBoxResultCallback>(callback);
+            RE::BSTSmartPointer<RE::IMessageBoxCallback> messageCallback = RE::make_smart<MessageBoxResultCallback>(callback);
             messagebox->callback = messageCallback;
             messagebox->bodyText = bodyText;
             for (const auto& text : buttonTextValues) messagebox->buttonText.push_back(text.c_str());

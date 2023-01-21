@@ -156,12 +156,8 @@ function ChooseCommandToApplyToNPC(Actor npc)
   Actor player = Game.GetPlayer()
   string command = CreateNpcCommandUI(npc, GetOwningQuest())
   if command
-    if command == "teleport_to_player"
-      MoveToTarget(npc, player)
-      CheckIfNpcNeedsToBeEnabled(npc)
-    elseIf command == "move_to_npc"
-      MoveToTarget(player, npc)
-      CheckIfNpcNeedsToBeEnabled(npc)
+    if command == "teleport_to_player" || command == "move_to_npc"
+      TeleportAndEnableIfNeeded(npc, command)
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
@@ -182,25 +178,10 @@ function ChooseCommandToApplyToNPC(Actor npc)
   endIf
 endFunction
 
-function CheckIfNpcNeedsToBeEnabled(Actor npc)
-  if npc.IsDisabled() && FORCE_ENABLE_ON_TELEPORT()
-    npc.Enable()
-    ShowNotification(npc.GetDisplayName() + " enabled after teleporting.")
-  endIf
-endFunction
-
 function SelectNpcOnConsole(Actor npc)
   if CONSOLE_AUTO_PRID()
     SelectReferenceInConsole(npc)
   endIf
-endFunction
-
-function MoveToTarget(Actor akOrigin, Actor akTarget)
-  ; Running MoveTo() twice on purpose. When teleporting the time passes and NPC can move from the original position, so the second teleport solves that
-  akOrigin.MoveTo(akTarget)
-  akOrigin.MoveTo(akTarget, TELEPORT_RANGE() * Math.Sin(akTarget.GetAngleZ()), TELEPORT_RANGE() * Math.Cos(akTarget.GetAngleZ()), akTarget.GetHeight())
-  ; Match the rotation to always face the target
-  akOrigin.SetAngle(0.0, 0.0, akOrigin.GetAngleZ() + 180)
 endFunction
 
 bool function AddTrackingMarker(Actor npc)
