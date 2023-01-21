@@ -10,6 +10,8 @@
 - Remove delete NPC option
 - Search using regular expressions
 - Add option to force disabled NPCs to be enabled when teleporting
+- Default teleport range changed to 75 units
+- Teleport now always face the targeted NPC/player
 
 ## 1.4.0
 

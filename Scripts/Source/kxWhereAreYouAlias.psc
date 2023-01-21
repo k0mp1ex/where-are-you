@@ -196,7 +196,11 @@ function SelectNpcOnConsole(Actor npc)
 endFunction
 
 function MoveToTarget(Actor akOrigin, Actor akTarget)
-  akOrigin.MoveTo(akTarget, TELEPORT_RANGE())
+  ; Running MoveTo() twice on purpose. When teleporting the time passes and NPC can move from the original position, so the second teleport solves that
+  akOrigin.MoveTo(akTarget)
+  akOrigin.MoveTo(akTarget, TELEPORT_RANGE() * Math.Sin(akTarget.GetAngleZ()), TELEPORT_RANGE() * Math.Cos(akTarget.GetAngleZ()), akTarget.GetHeight())
+  ; Match the rotation to always face the target
+  akOrigin.SetAngle(0.0, 0.0, akOrigin.GetAngleZ() + 180)
 endFunction
 
 bool function AddTrackingMarker(Actor npc)
