@@ -223,10 +223,6 @@ function RemoveTrackingMarker(int slot)
   currentQuest.SetObjectiveDisplayed(slot - 1, abDisplayed = false, abForce = true)
 endFunction
 
-bool function IsValidNpc(Actor npc)
-  return npc && npc.GetActorBase().IsUnique()
-endFunction
-
 int function GetNpcTrackingMarkerSlot(Actor npc)
   return GetAliasIndexOfActorInQuest(npc, GetOwningQuest())
 endFunction

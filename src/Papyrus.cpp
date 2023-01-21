@@ -14,6 +14,14 @@ namespace {
         int slot {};
     };
 
+    bool IsValidNpc(RE::StaticFunctionTag*, RE::Actor* actor) {
+        if (actor) {
+            if (auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>(); actorBase)
+                return actorBase->IsUnique();
+        }
+        return false;
+    }
+
     std::optional<std::regex> CreateRegex(const std::string& pattern) {
         try {
             std::regex result(pattern, std::regex_constants::icase);
@@ -40,11 +48,10 @@ namespace {
             for (auto& [id, form] : *forms) {
                 auto* actor = form->As<RE::Actor>();
                 if (actor) {
-                    auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
                     auto name = actor->GetDisplayFullName();
-                    if (actorBase && actorBase->IsUnique() &&
+                    if (IsValidNpc(nullptr, actor) &&
                         ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
-                         (useRegex && std::regex_match(name, regexPattern.value())))) {
+                         ( useRegex && std::regex_match(name, regexPattern.value())))) {
                         actors.push_back(actor);
                         if (actors.size() == maxResultCount) break;
                     }
@@ -76,7 +83,8 @@ namespace {
     }
 
     int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
-        for (RE::BSTArray<RE::BGSBaseAlias*>::size_type i = 0; i < quest->aliases.size(); i++) {
+        //Alias at 0 is always Player
+        for (RE::BSTArray<RE::BGSBaseAlias*>::size_type i = 1; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = skyrim_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); actorReference) {
@@ -255,6 +263,7 @@ namespace kxWhereAreYou::Papyrus {
         vm->RegisterFunction("GetCommandsDescriptions", PapyrusClass, GetCommandsDescriptions);
         vm->RegisterFunction("GetCommandsIcons", PapyrusClass, GetCommandsIcons);
         vm->RegisterFunction("UpdateMcmSettings", PapyrusClass, UpdateMcmSettings);
+        vm->RegisterFunction("IsValidNpc", PapyrusClass, IsValidNpc);
         return true;
     }
 
