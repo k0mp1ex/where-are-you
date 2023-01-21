@@ -429,7 +429,7 @@
           "id": "sEntryFormat:Search",
           "type": "input",
           "text": "List format",
-          "help": "How every line on the result search list should look like\nAvailable variables: [name], [mod], [race], [gender], [refid], [baseid] and [location]",
+          "help": "How every line on the result search list should look like\nAvailable variables: [name], [mod], [race], [gender], [refid], [baseid], [location] and [tracking]",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }

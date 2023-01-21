@@ -95,12 +95,12 @@ function ShowNpcInfoUI(string statsText) global
   ShowMessage(statsText)
 endFunction
 
-Actor function CreateNpcListUI(Actor[] actors) global
+Actor function CreateNpcListUI(Actor[] actors, Quest currentQuest) global
   UIListMenu listMenu = UIExtensions.GetMenu("UIListMenu") as UIListMenu
   int i = 0
   while i < actors.Length
     Actor currentActor = actors[i]
-    string entry = GetSummaryDataForActor(currentActor, ENTRY_FORMAT())
+    string entry = GetSummaryDataForActor(currentActor, currentQuest, ENTRY_FORMAT())
     listMenu.AddEntryItem(entry)
     i += 1
   endWhile

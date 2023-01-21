@@ -144,7 +144,7 @@ Actor function FindNpcByNamePattern(string pattern)
   elseIf actors.Length == 1
     npc = actors[0]
   else
-    npc = CreateNpcListUI(actors)
+    npc = CreateNpcListUI(actors, GetOwningQuest())
   endIf
 
   return npc
@@ -165,7 +165,7 @@ function ChooseCommandToApplyToNPC(Actor npc)
     elseIf command == "show_npc_stats"
       ShowNpcStatsUI(npc)
     elseIf command == "show_npc_info"
-      string statsText = GetSummaryDataForActor(npc)
+      string statsText = GetSummaryDataForActor(npc, GetOwningQuest())
       ShowNpcInfoUI(statsText)
     elseIf command == "open_npc_inventory"
       npc.OpenInventory(abForceOpen = true)

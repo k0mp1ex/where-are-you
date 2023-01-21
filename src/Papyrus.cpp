@@ -75,57 +75,6 @@ namespace {
         return actors;
     }
 
-    std::string GetSummaryDataForActor(RE::StaticFunctionTag*, RE::Actor* actor, const std::string pattern) {
-        auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
-
-        auto name = actor->GetDisplayFullName();
-        auto refId = std::format("0x{:08X}", actor->GetFormID());
-        auto baseId = std::format("0x{:08X}", actorBase->GetFormID());
-        auto mod = std::string(actorBase->GetFile(0)->GetFilename());
-        auto race = actorBase->GetRace()->GetName();
-        auto gender = actorBase->IsFemale() ? "Female" : "Male";
-        auto location = actor->GetCurrentLocation() ? actor->GetCurrentLocation()->GetName() : "Tamriel";
-
-        std::string stats;
-        if (pattern.empty()) {
-            stats = std::format(
-                "Name: {}\n"
-                "RefId: {}\n"
-                "BaseId: {}\n"
-                "Mod: {}\n"
-                "Race: {}\n"
-                "Gender: {}\n"
-                "Location: {}",
-                name, refId, baseId, mod, race, gender, location);
-        } else {
-            stats = pattern;
-            stats = std::regex_replace(stats, std::regex("\\[name\\]"), name);
-            stats = std::regex_replace(stats, std::regex("\\[refid\\]"), refId);
-            stats = std::regex_replace(stats, std::regex("\\[baseid\\]"), baseId);
-            stats = std::regex_replace(stats, std::regex("\\[mod\\]"), mod);
-            stats = std::regex_replace(stats, std::regex("\\[race\\]"), race);
-            stats = std::regex_replace(stats, std::regex("\\[gender\\]"), gender);
-            stats = std::regex_replace(stats, std::regex("\\[location\\]"), location);
-        }
-        logger::info("\n{}", stats);
-        return stats;
-    }
-
-    void PrintToConsole(RE::StaticFunctionTag*, std::string text) {
-        UI::Console::Print(text);
-    }
-
-    void SelectReferenceInConsole(RE::StaticFunctionTag*, RE::TESObjectREFR* reference) {
-        UI::Console::SelectReference(reference);
-    }
-
-    unsigned int HexadecimalStringToInteger(RE::StaticFunctionTag*, std::string hexString) {
-        std::istringstream converter(hexString);
-        unsigned int value;
-        converter >> std::hex >> value;
-        return value;
-    }
-
     int32_t GetAliasIndexOfActorInQuest(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest) {
         for (RE::BSTArray<RE::BGSBaseAlias*>::size_type i = 0; i < quest->aliases.size(); i++) {
             if (auto alias = quest->aliases[i]; alias) {
@@ -160,8 +109,65 @@ namespace {
         return -1;
     }
 
+    bool IsTrackingNpc(RE::Actor* actor, RE::TESQuest* quest) {
+        return GetAliasIndexOfActorInQuest(nullptr, actor, quest) != -1;
+    }
+
+    std::string GetSummaryDataForActor(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest, const std::string pattern) {
+        auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
+
+        auto name = actor->GetDisplayFullName();
+        auto refId = std::format("0x{:08X}", actor->GetFormID());
+        auto baseId = std::format("0x{:08X}", actorBase->GetFormID());
+        auto mod = std::string(actorBase->GetFile(0)->GetFilename());
+        auto race = actorBase->GetRace()->GetName();
+        auto gender = actorBase->IsFemale() ? "Female" : "Male";
+        auto location = actor->GetCurrentLocation() ? actor->GetCurrentLocation()->GetName() : "Tamriel";
+
+        std::string stats;
+        if (pattern.empty()) {
+            stats = std::format(
+                "Name: {}\n"
+                "RefId: {}\n"
+                "BaseId: {}\n"
+                "Mod: {}\n"
+                "Race: {}\n"
+                "Gender: {}\n"
+                "Location: {}\n"
+                "Tracking: {}",
+                name, refId, baseId, mod, race, gender, location, IsTrackingNpc(actor, quest) ? "Yes" : "No");
+        } else {
+            stats = pattern;
+            stats = std::regex_replace(stats, std::regex("\\[name\\]"), name);
+            stats = std::regex_replace(stats, std::regex("\\[refid\\]"), refId);
+            stats = std::regex_replace(stats, std::regex("\\[baseid\\]"), baseId);
+            stats = std::regex_replace(stats, std::regex("\\[mod\\]"), mod);
+            stats = std::regex_replace(stats, std::regex("\\[race\\]"), race);
+            stats = std::regex_replace(stats, std::regex("\\[gender\\]"), gender);
+            stats = std::regex_replace(stats, std::regex("\\[location\\]"), location);
+            stats = std::regex_replace(stats, std::regex("\\[tracking\\]"), IsTrackingNpc(actor, quest) ? "*" : "");
+        }
+        logger::info("\n{}", stats);
+        return stats;
+    }
+
+    void PrintToConsole(RE::StaticFunctionTag*, std::string text) {
+        UI::Console::Print(text);
+    }
+
+    void SelectReferenceInConsole(RE::StaticFunctionTag*, RE::TESObjectREFR* reference) {
+        UI::Console::SelectReference(reference);
+    }
+
+    unsigned int HexadecimalStringToInteger(RE::StaticFunctionTag*, std::string hexString) {
+        std::istringstream converter(hexString);
+        unsigned int value;
+        converter >> std::hex >> value;
+        return value;
+    }
+
     std::vector<Command> GetCommandsForNpc(RE::Actor* actor, RE::TESQuest* quest) {
-        bool isTracking = GetAliasIndexOfActorInQuest(nullptr, actor, quest) != -1;
+        bool isTracking = IsTrackingNpc(actor, quest);
         std::vector<Command> commands;
 
         if (Settings::Commands::bShowStats)
