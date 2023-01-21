@@ -11,7 +11,6 @@
 - Added enable/disable option
 - Added search using regular expressions
 - Added option to ask to enable disabled npcs when teleporting
-- Changed default teleport range to 75 units
 - Changed teleport command to always face the targeted NPC/player
 
 ## 1.4.0
