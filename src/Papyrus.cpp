@@ -14,24 +14,40 @@ namespace {
         int slot {};
     };
 
+    std::optional<std::regex> CreateRegex(const std::string& pattern) {
+        try {
+            std::regex result(pattern, std::regex_constants::icase);
+            return result;
+        } catch (const std::regex_error& e) {
+            logger::error("Invalid regex: {}", pattern);
+            logger::error("Error: {}", e.what());
+            return std::nullopt;
+        }
+    }
+
     std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
                                                bool sortResults, int maxResultCount) {
         logger::info("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults,
                      maxResultCount);
 
         std::vector<RE::Actor*> actors;
+        std::optional<std::regex> regexPattern;
 
-        const auto& [forms, lock] = RE::TESForm::GetAllForms();
-        for (auto& [id, form] : *forms) {
-            auto* actor = form->As<RE::Actor>();
-            if (actor) {
-                auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
-                auto name = actor->GetDisplayFullName();
-                if (actorBase && actorBase->IsUnique() &&
-                    ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
-                     (useRegex && std::regex_match(name, std::regex(pattern, std::regex_constants::icase))))) {
-                    actors.push_back(actor);
-                    if (actors.size() == maxResultCount) break;
+        if (useRegex) regexPattern = CreateRegex(pattern);
+
+        if (!useRegex || regexPattern) {
+            const auto& [forms, lock] = RE::TESForm::GetAllForms();
+            for (auto& [id, form] : *forms) {
+                auto* actor = form->As<RE::Actor>();
+                if (actor) {
+                    auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
+                    auto name = actor->GetDisplayFullName();
+                    if (actorBase && actorBase->IsUnique() &&
+                        ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
+                         (useRegex && std::regex_match(name, regexPattern.value())))) {
+                        actors.push_back(actor);
+                        if (actors.size() == maxResultCount) break;
+                    }
                 }
             }
         }
