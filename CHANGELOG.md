@@ -4,6 +4,7 @@
 
 - Add SKSE plugin
 - Remove **ConsoleUtil** as requirement
+- Remove **JContainers** as requirement
 - Remove **Spell Perk Item Distributor (SPID)** as requirement
 - Remove clone NPC option
 - Remove delete NPC option
