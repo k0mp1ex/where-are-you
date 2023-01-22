@@ -1,7 +1,7 @@
 function(deploy_plugin BASE_DEPLOY_FOLDER)
     set(DEPLOY_FOLDER ${BASE_DEPLOY_FOLDER}/SKSE/Plugins)
     message(STATUS "Plugin output directory: ${DEPLOY_FOLDER}")
-    if (CMAKE_BUILD_TYPE STREQUAL "debug")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
         add_custom_command(
                 TARGET "${PROJECT_NAME}"
                 POST_BUILD
