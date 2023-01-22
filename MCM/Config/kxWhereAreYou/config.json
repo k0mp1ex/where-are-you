@@ -342,6 +342,9 @@
           }
         },
         {
+          "type": "empty"
+        },
+        {
           "type": "header",
           "text": "Icons"
         },
@@ -430,6 +433,9 @@
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
+        },
+        {
+          "type": "empty"
         },
         {
           "type": "header",
