@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.0.0
+
+- Added SKSE plugin
+- Removed **ConsoleUtil** as requirement
+- Removed **JContainers** as requirement
+- Removed **Spell Perk Item Distributor (SPID)** as requirement
+- Removed clone NPC option
+- Removed delete NPC option
+- Added enable/disable option
+- Added search using regular expressions
+- Added option to ask to enable disabled npcs when teleporting
+- Changed teleport command to always face the targeted NPC/player
+
 ## 1.4.0
 
 - Added another type of commands visualization: list. You can switch back to wheel via MCM (wheel is still the default option).

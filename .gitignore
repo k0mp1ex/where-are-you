@@ -1,4 +1,11 @@
+.idea
+.vs
+.vscode/settings.json
+build
+cmake-build*
 dist/
 *.pex
 *.bsa
+*.dll
+*.pdb
 TODO.md

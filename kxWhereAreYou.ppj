@@ -11,17 +11,15 @@
     Final="true">
     <Variables>
         <Variable Name="ModName"       Value="kxWhereAreYou" />
-        <Variable Name="ModVersion"    Value="1.4.0" />
+        <Variable Name="ModVersion"    Value="2.0.0" />
         <Variable Name="Output"        Value="dist" />
-        <Variable Name="GameRoot"      Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\Game Root" />
-        <Variable Name="ImportsFolder" Value="D:\Modding\Skyrim\Wabbajack\Modlists\ADT\mods" />
+        <Variable Name="GameRoot"      Value="C:\Development\Skyrim Versions\1.6.640 - Steam"/>
+        <Variable Name="ImportsFolder" Value="C:\Development\MO2\Instances\Multiple - Steam\mods"/>
     </Variables>
     <Imports>
-        <Import>@ImportsFolder\SKSE\Scripts\Source</Import>
+        <Import>@ImportsFolder\SKSE 2.2.3 - Skyrim 1.6.640 - Scripts\Scripts\Source</Import>
         <Import>@ImportsFolder\UIExtensions\scripts\source</Import>
-        <Import>@ImportsFolder\JContainers SE\scripts\source</Import>
-        <Import>@ImportsFolder\MCM Helper SDK\source\scripts</Import>
-        <Import>@ImportsFolder\ConsoleUtilSSE\scripts\source</Import>
+        <Import>@ImportsFolder\MCM Helper SDK\scripts\source</Import>
         <Import>@GameRoot\Data\Scripts\Source</Import>
     </Imports>
     <Folders>
@@ -40,8 +38,8 @@
     <ZipFiles Output="@Output">
         <ZipFile Name="@ModName-v@ModVersion" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
-            <Include>SKSE/Plugins/JCData/Lua/@ModName/init.lua</Include>
-            <Include>*_DISTR.ini</Include>
+            <Include>SKSE/Plugins/@ModName.dll</Include>
+            <!-- <Include>SKSE/Plugins/@ModName.pdb</Include> -->
             <Include>MCM/Config/@ModName/settings.ini</Include>
             <Include>MCM/Config/@ModName/config.json</Include>
             <Include NoRecurse="true">*.bsa</Include>

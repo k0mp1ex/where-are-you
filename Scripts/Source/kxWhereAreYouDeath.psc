@@ -1,12 +1,13 @@
 Scriptname kxWhereAreYouDeath extends ReferenceAlias
 
+import kxWhereAreYouNative
 import kxWhereAreYouProperties
-import kxWhereAreYouRepository
 import kxWhereAreYouUI
 
 event onDeath(Actor akKiller)
   Actor npc = self.GetActorRef()
-  kxWhereAreYouAlias playerAlias = GetOwningQuest().GetNthAlias(0) as kxWhereAreYouAlias
+  Quest currentQuest = GetOwningQuest()
+  kxWhereAreYouAlias playerAlias = currentQuest.GetNthAlias(0) as kxWhereAreYouAlias
 
   if NOTIFY_ON_DEATH()
     if akKiller
@@ -20,6 +21,6 @@ event onDeath(Actor akKiller)
     endIf
   endIf
   if REMOVE_TRACKING_ON_DEATH()
-    playerAlias.RemoveTrackingMarker(GetNpcTrackingMarkerSlot(npc))
+    playerAlias.RemoveTrackingMarker(GetAliasIndexOfActorInQuest(npc, currentQuest))
   endIf
 endEvent

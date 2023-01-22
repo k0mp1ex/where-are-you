@@ -6,14 +6,6 @@ bool function IS_ENABLED() global
   return MCM.GetModSettingBool(GetModName(), "bEnabled:System")
 endFunction
 
-bool function KEEP_TRACKING_WHEN_DISABLED() global
-  return MCM.GetModSettingBool(GetModName(), "bKeepTrackingWhenDisabled:System")
-endFunction
-
-bool function UPDATE_ON_GAME_LOAD() global
-  return MCM.GetModSettingBool(GetModName(), "bUpdateOnLoad:System")
-endFunction
-
 string function COMMANDS_VISUALIZATION_TYPE() global
   if MCM.GetModSettingInt(GetModName(), "uVisualizationType:Commands") == 0
     return "wheel"
@@ -34,6 +26,10 @@ bool function SHOW_INFO_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowInfo:Commands")
 endFunction
 
+bool function SHOW_ENABLE_DISABLE_COMMAND() global
+  return MCM.GetModSettingBool(GetModName(), "bShowEnableDisable:Commands")
+endFunction
+
 bool function SHOW_TELEPORT_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowTeleport:Commands")
 endFunction
@@ -42,16 +38,8 @@ bool function SHOW_VISIT_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowVisit:Commands")
 endFunction
 
-bool function SHOW_DELETE_COMMAND() global
-  return MCM.GetModSettingBool(GetModName(), "bShowDelete:Commands")
-endFunction
-
 bool function SHOW_INVENTORY_COMMAND() global
   return MCM.GetModSettingBool(GetModName(), "bShowInventory:Commands")
-endFunction
-
-bool function SHOW_CLONE_COMMAND() global
-  return MCM.GetModSettingBool(GetModName(), "bShowClone:Commands")
 endFunction
 
 bool function SHOW_TRACK_COMMAND() global
@@ -143,6 +131,10 @@ string  function ENTRY_FORMAT() global
   return MCM.GetModSettingString(GetModName(), "sEntryFormat:Search")
 endFunction
 
+bool function USE_REGEX() global
+  return MCM.GetModSettingBool(GetModName(), "bUseRegex:Search")
+endFunction
+
 
 bool function CONSOLE_AUTO_PRID() global
   return MCM.GetModSettingBool(GetModName(), "bAutoPickByRefId:Console")
@@ -172,11 +164,6 @@ bool function IS_DEBUG_ENABLED() global
 endFunction
 
 
-bool function CAN_ONLY_DELETE_CLONES() global
-  return MCM.GetModSettingBool(GetModName(), "bOnlyClones:Delete")
-endFunction
-
-
 bool function ONLY_FOLLOWERS_DO_FAVOR() global
   return MCM.GetModSettingBool(GetModName(), "bOnlyFollowers:DoFavor")
 endFunction
@@ -195,6 +182,10 @@ string function INFO_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sInfoIcon:Icons")
 endFunction
 
+string function ENABLE_DISABLE_ICON_NAME() global
+  return MCM.GetModSettingString(GetModName(), "sEnableDisableIcon:Icons")
+endFunction
+
 string function TELEPORT_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sTeleportIcon:Icons")
 endFunction
@@ -203,16 +194,8 @@ string function VISIT_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sVisitIcon:Icons")
 endFunction
 
-string function DELETE_ICON_NAME() global
-  return MCM.GetModSettingString(GetModName(), "sDeleteIcon:Icons")
-endFunction
-
 string function INVENTORY_ICON_NAME() global
   return MCM.GetModSettingString(GetModName(), "sInventoryIcon:Icons")
-endFunction
-
-string function CLONE_ICON_NAME() global
-  return MCM.GetModSettingString(GetModName(), "sCloneIcon:Icons")
 endFunction
 
 string function TRACK_ICON_NAME() global

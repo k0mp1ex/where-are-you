@@ -41,6 +41,15 @@
           }
         },
         {
+          "id": "bUseRegex:Search",
+          "type": "toggle",
+          "text": "Use regular expressions",
+          "help": "Use regular expressions (aka regex) to filter the results. When disabled the search is done by substring comparison.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
           "type": "empty"
         },
         {
@@ -74,22 +83,6 @@
             "step": 10,
             "formatString": "{0} units",
             "sourceType": "ModSettingFloat"
-          }
-        },
-        {
-          "type": "empty"
-        },
-        {
-          "type": "header",
-          "text": "Console"
-        },
-        {
-          "id": "bAutoPickByRefId:Console",
-          "type": "toggle",
-          "text": "Select NPC found on console",
-          "help": "Set the NPC found as the object reference on console window.\nRequires ConsoleUtilSSE when enabled.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
           }
         },
         {
@@ -129,13 +122,13 @@
         },
         {
           "type": "header",
-          "text": "Delete"
+          "text": "Do favor"
         },
         {
-          "id": "bOnlyClones:Delete",
+          "id": "bOnlyFollowers:DoFavor",
           "type": "toggle",
-          "text": "Only clones",
-          "help": "Only show delete option to cloned NPCs",
+          "text": "Only followers",
+          "help": "Only followers can do favors",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -145,13 +138,13 @@
         },
         {
           "type": "header",
-          "text": "Do favor"
+          "text": "Console"
         },
         {
-          "id": "bOnlyFollowers:DoFavor",
+          "id": "bAutoPickByRefId:Console",
           "type": "toggle",
-          "text": "Only followers",
-          "help": "Only followers can do favors",
+          "text": "Select NPC found on console",
+          "help": "Set the NPC found as the object reference on console window.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -374,6 +367,15 @@
           }
         },
         {
+          "id": "sEnableDisableIcon:Icons",
+          "type": "input",
+          "text": "Enable/Disable",
+          "help": "Enable/disable icon.\nOnly available for wheel as visualization type.",
+          "valueOptions": {
+            "sourceType": "ModSettingString"
+          }
+        },
+        {
           "id": "sTeleportIcon:Icons",
           "type": "input",
           "text": "Teleport",
@@ -392,28 +394,10 @@
           }
         },
         {
-          "id": "sDeleteIcon:Icons",
-          "type": "input",
-          "text": "Delete",
-          "help": "Delete icon.\nOnly available for wheel as visualization type.",
-          "valueOptions": {
-            "sourceType": "ModSettingString"
-          }
-        },
-        {
           "id": "sInventoryIcon:Icons",
           "type": "input",
           "text": "Inventory",
           "help": "Inventory icon.\nOnly available for wheel as visualization type.",
-          "valueOptions": {
-            "sourceType": "ModSettingString"
-          }
-        },
-        {
-          "id": "sCloneIcon:Icons",
-          "type": "input",
-          "text": "Clone",
-          "help": "Clone icon.\nOnly available for wheel as visualization type.",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -445,7 +429,7 @@
           "id": "sEntryFormat:Search",
           "type": "input",
           "text": "List format",
-          "help": "How every line on the result search list should look like\nAvailable variables: [name], [mod], [race], [gender], [refid], [baseid], [clone] and [tracking]",
+          "help": "How every line on the result search list should look like\nAvailable variables: [name], [mod], [race], [gender], [refid], [baseid], [location] and [tracking]",
           "valueOptions": {
             "sourceType": "ModSettingString"
           }
@@ -476,6 +460,15 @@
           }
         },
         {
+          "id": "bShowEnableDisable:Commands",
+          "type": "toggle",
+          "text": "Show Enable/Disable",
+          "help": "Show Enable/Disable option on commands.",
+          "valueOptions": {
+            "sourceType": "ModSettingBool"
+          }
+        },
+        {
           "id": "bShowTeleport:Commands",
           "type": "toggle",
           "text": "Show Teleport",
@@ -494,28 +487,10 @@
           }
         },
         {
-          "id": "bShowDelete:Commands",
-          "type": "toggle",
-          "text": "Show Delete",
-          "help": "Show Delete option on commands.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          }
-        },
-        {
           "id": "bShowInventory:Commands",
           "type": "toggle",
           "text": "Show Inventory",
           "help": "Show Inventory option on commands.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          }
-        },
-        {
-          "id": "bShowClone:Commands",
-          "type": "toggle",
-          "text": "Show Clone",
-          "help": "Show Clone option on commands.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
           }
@@ -569,50 +544,6 @@
           "groupControl": 1
         },
         {
-          "id": "bKeepTrackingWhenDisabled:System",
-          "type": "toggle",
-          "text": "Keep tracking in the background",
-          "help": "Keep adding NPCs to the list when the mod is disabled.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          },
-          "groupCondition": { "NOT": 1 },
-          "groupBehavior": "disable"
-        },
-        {
-          "type": "empty"
-        },
-        {
-          "type": "header",
-          "text": "Maintenance"
-        },
-        {
-          "id": "bUpdateOnLoad:System",
-          "type": "toggle",
-          "text": "Update on game load",
-          "help": "Apply updates on game load.\nIt will update NPC references with load order changes, remove and untrack NPCs from deleted mods.",
-          "valueOptions": {
-            "sourceType": "ModSettingBool"
-          },
-          "groupControl": 2
-        },
-        {
-          "type": "text",
-          "text": "Update data",
-          "help": "Update NPC references with load order changes, remove and untrack NPCs from deleted mods.\nRecommended to run every time you change your load order or delete a mod.",
-          "valueOptions": {
-            "value": "Click to update"
-          },
-          "action": {
-            "type": "CallFunction",
-            "form": "kxWhereAreYou.esp|801",
-            "scriptName": "kxWhereAreYouMcm",
-            "function": "UpdateData"
-          },
-          "groupCondition": { "NOT": 2 },
-          "groupBehavior": "disable"
-        },
-        {
           "type": "header",
           "text": "Debug",
           "position": 1
@@ -621,23 +552,9 @@
           "id": "bEnabled:Debug",
           "type": "toggle",
           "text": "Debug mode",
-          "help": "Enable/disable debug mode.\nRequires ConsoleUtilSSE when enabled.",
+          "help": "Enable/disable debug mode.",
           "valueOptions": {
             "sourceType": "ModSettingBool"
-          }
-        },
-        {
-          "type": "text",
-          "text": "Export data",
-          "help": "Export all stored data",
-          "valueOptions": {
-            "value": "Click to export"
-          },
-          "action": {
-            "type": "CallFunction",
-            "form": "kxWhereAreYou.esp|801",
-            "scriptName": "kxWhereAreYouMcm",
-            "function": "ExportData"
           }
         }
       ]
@@ -660,7 +577,7 @@
         {
           "type": "text",
           "valueOptions": {
-            "value": "Version 1.4.0"
+            "value": "Version 2.0.0"
           }
         },
         {
@@ -691,14 +608,6 @@
         {
           "type": "text",
           "text": "UIExtensions"
-        },
-        {
-          "type": "text",
-          "text": "JContainers"
-        },
-        {
-          "type": "text",
-          "text": "*ConsoleUtilSSE"
         }
       ]
     }
