@@ -39,7 +39,7 @@
         <ZipFile Name="@ModName-v@ModVersion" RootDir="." Compression="deflate">
             <Include>@ModName.esp</Include>
             <Include>SKSE/Plugins/@ModName.dll</Include>
-            <Include>SKSE/Plugins/@ModName.pdb</Include>
+            <!-- <Include>SKSE/Plugins/@ModName.pdb</Include> -->
             <Include>MCM/Config/@ModName/settings.ini</Include>
             <Include>MCM/Config/@ModName/config.json</Include>
             <Include NoRecurse="true">*.bsa</Include>
