@@ -45,6 +45,8 @@ namespace {
 
         if (!useRegex || regexPattern) {
             const auto& [forms, lock] = RE::TESForm::GetAllForms();
+            const RE::BSReadLockGuard locker{ lock };
+
             for (auto& [id, form] : *forms) {
                 auto* actor = form->As<RE::Actor>();
                 if (actor) {
@@ -57,27 +59,27 @@ namespace {
                     }
                 }
             }
-        }
 
-        logger::info("[Before Sorting]");
-        std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
-            logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-        });
+            logger::info("[Before Sorting]");
+            std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
+                logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
+            });
 
-        if (sortResults) {
-            std::sort(actors.begin(), actors.end(), [](RE::Actor* left, RE::Actor* right) {
-                auto leftStr = std::string(left->GetDisplayFullName());
-                auto rightStr = std::string(right->GetDisplayFullName());
-                Utils::String::ConvertToLowerCase(leftStr);
-                Utils::String::ConvertToLowerCase(rightStr);
-                return leftStr < rightStr;
+            if (sortResults) {
+                std::sort(actors.begin(), actors.end(), [](RE::Actor* left, RE::Actor* right) {
+                    auto leftStr = std::string(left->GetDisplayFullName());
+                    auto rightStr = std::string(right->GetDisplayFullName());
+                    Utils::String::ConvertToLowerCase(leftStr);
+                    Utils::String::ConvertToLowerCase(rightStr);
+                    return leftStr < rightStr;
+                });
+            }
+
+            logger::info("[After Sorting]");
+            std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
+                logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
             });
         }
-
-        logger::info("[After Sorting]");
-        std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
-            logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-        });
 
         return actors;
     }
