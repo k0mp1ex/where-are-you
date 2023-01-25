@@ -60,13 +60,15 @@ namespace {
                 }
             }
 
-            logger::info("[Before Sorting]");
-            std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
+            auto printActor = [](RE::Actor* actor) {
                 logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-            });
+            };
+
+            logger::info("[Before Sorting]");
+            std::ranges::for_each(actors, printActor);
 
             if (sortResults) {
-                std::sort(actors.begin(), actors.end(), [](RE::Actor* left, RE::Actor* right) {
+                std::ranges::sort(actors, [](RE::Actor* left, RE::Actor* right) {
                     auto leftStr = std::string(left->GetDisplayFullName());
                     auto rightStr = std::string(right->GetDisplayFullName());
                     Utils::String::ConvertToLowerCase(leftStr);
@@ -76,9 +78,7 @@ namespace {
             }
 
             logger::info("[After Sorting]");
-            std::for_each(actors.begin(), actors.end(), [](RE::Actor* actor) {
-                logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-            });
+            std::ranges::for_each(actors, printActor);
         }
 
         return actors;
