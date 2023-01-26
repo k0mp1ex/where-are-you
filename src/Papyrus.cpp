@@ -2,6 +2,7 @@
 
 #include "UI.h"
 #include "Utils.h"
+#include "Logging.h"
 #include "Settings.h"
 
 using namespace kxWhereAreYou;
@@ -35,8 +36,7 @@ namespace {
 
     std::vector<RE::Actor*> SearchActorsByName(RE::StaticFunctionTag*, std::string pattern, bool useRegex,
                                                bool sortResults, int maxResultCount) {
-        logger::info("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults,
-                     maxResultCount);
+        logger::debug("> Pattern: {}, useRegex: {}, sortResults: {}, maxResultCount: {}", pattern, useRegex, sortResults, maxResultCount);
 
         std::vector<RE::Actor*> actors;
         std::optional<std::regex> regexPattern;
@@ -60,13 +60,6 @@ namespace {
                 }
             }
 
-            auto printActor = [](RE::Actor* actor) {
-                logger::info("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-            };
-
-            logger::info("[Before Sorting]");
-            std::ranges::for_each(actors, printActor);
-
             if (sortResults) {
                 std::ranges::sort(actors, [](RE::Actor* left, RE::Actor* right) {
                     auto leftStr = std::string(left->GetDisplayFullName());
@@ -76,10 +69,12 @@ namespace {
                     return leftStr < rightStr;
                 });
             }
-
-            logger::info("[After Sorting]");
-            std::ranges::for_each(actors, printActor);
         }
+
+        logger::debug("[Results]");
+        std::ranges::for_each(actors, [](RE::Actor* actor) {
+            logger::debug("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
+        });
 
         return actors;
     }
@@ -90,10 +85,10 @@ namespace {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = skyrim_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); actorReference) {
-                        logger::info("Comparing {} == {}", actor->GetDisplayFullName(),
+                        logger::debug("Comparing {} == {}", actor->GetDisplayFullName(),
                                      actorReference->GetDisplayFullName());
                         if (actor == actorReference) {
-                            logger::info("They are equal! Returning aliasID {} with aliasName: {}", i,
+                            logger::debug("They are equal! Returning aliasID {} with aliasName: {}", i,
                                          alias->aliasName);
                             return i;
                         }
@@ -110,7 +105,7 @@ namespace {
             if (auto alias = quest->aliases[i]; alias) {
                 if (auto reference = skyrim_cast<RE::BGSRefAlias*>(alias); reference) {
                     if (auto actorReference = reference->GetActorReference(); !actorReference) {
-                        logger::info("Slot available: {} with aliasName: {}", i, alias->aliasName);
+                        logger::debug("Slot available: {} with aliasName: {}", i, alias->aliasName);
                         return i;
                     }
                 }
@@ -157,7 +152,7 @@ namespace {
             stats = std::regex_replace(stats, std::regex("\\[location\\]"), location);
             stats = std::regex_replace(stats, std::regex("\\[tracking\\]"), IsTrackingNpc(actor, quest) ? "*" : "");
         }
-        logger::info("\n{}", stats);
+        logger::debug("\n{}", stats);
         return stats;
     }
 
@@ -248,7 +243,8 @@ namespace {
 
     void UpdateMcmSettings(RE::StaticFunctionTag*) {
         logger::info("Updating MCM .ini settings...");
-        Settings::Setup();
+        Settings::Update();
+        Logging::Update();
     }
 
     //Call Papyrus function
@@ -272,7 +268,7 @@ namespace {
             UI::Messages::Show(std::format("{} is disabled.\nDo you want to enable {} before teleporting?", npc->GetDisplayFullName(), pronoun),
                                {"Yes, enable " + pronoun + " and teleport", "No, only teleport", "Cancel"},
                                [=](unsigned int result) {
-                                    logger::info("question answer: {}", result);
+                                    logger::debug("question answer: {}", result);
                                     if (result < 2)
                                         MoveToTarget(npc, command, result == 0);
                                 });

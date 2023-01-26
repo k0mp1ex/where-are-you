@@ -29,7 +29,7 @@ namespace kxWhereAreYou::UI {
     namespace Console {
         void Print(std::string text) {
             RE::ConsoleLog::GetSingleton()->Print(text.c_str());
-            logger::info("{}", text);
+            logger::debug("{}", text);
         }
 
         void SelectReference(RE::TESObjectREFR* reference) {
