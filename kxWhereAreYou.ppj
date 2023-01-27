@@ -11,7 +11,7 @@
     Final="true">
     <Variables>
         <Variable Name="ModName"       Value="kxWhereAreYou" />
-        <Variable Name="ModVersion"    Value="2.0.0" />
+        <Variable Name="ModVersion"    Value="2.0.1" />
         <Variable Name="Output"        Value="dist" />
         <Variable Name="GameRoot"      Value="C:\Development\Skyrim Versions\1.6.640 - Steam"/>
         <Variable Name="ImportsFolder" Value="C:\Development\MO2\Instances\Multiple - Steam\mods"/>
