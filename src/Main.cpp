@@ -8,7 +8,8 @@ SKSEPluginLoad([[maybe_unused]] const SKSE::LoadInterface* skse) {
     SKSE::Init(skse);
     Logging::Setup();
     Papyrus::Setup();
-    Settings::Setup();
+    Settings::Update();
+    Logging::Update();
     logger::info("{} initialized!", SKSE::PluginDeclaration::GetSingleton()->GetName());
     return true;
 }

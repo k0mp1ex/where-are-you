@@ -8,6 +8,6 @@ namespace kxWhereAreYou::Utils::String {
     }
 
     void ConvertToLowerCase(std::string& text) {
-        std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) { return (char)std::tolower(c); });
+        std::transform(text.begin(), text.end(), text.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
     }
 }

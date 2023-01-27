@@ -1,4 +1,5 @@
 #include "Logging.h"
+#include "Settings.h"
 
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
@@ -19,7 +20,13 @@ namespace kxWhereAreYou::Logging {
             loggerPtr = std::make_shared<spdlog::logger>("log", std::move(fileLoggerPtr));
         }
         spdlog::set_default_logger(std::move(loggerPtr));
-        spdlog::set_level(spdlog::level::trace);
-        spdlog::flush_on(spdlog::level::trace);
+        spdlog::set_level(spdlog::level::info);
+        spdlog::flush_on(spdlog::level::info);
+    }
+
+    void Update() {
+        auto logLevel = Settings::Debug::bEnabled ? spdlog::level::trace : spdlog::level::info;
+        spdlog::set_level(logLevel);
+        spdlog::flush_on(logLevel);
     }
 }

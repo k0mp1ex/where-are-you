@@ -3,7 +3,7 @@
 namespace kxWhereAreYou {
 
     struct Settings {
-        static void Setup();
+        static void Update();
         static void Print();
 
         struct System {

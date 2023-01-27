@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.0.1
+
+- Remove some logs if debug mode is not enabled
+- Attempt to fix invalid access with locks and nullptr checks
+
 ## 2.0.0
 
 - Added SKSE plugin

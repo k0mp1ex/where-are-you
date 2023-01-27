@@ -2,4 +2,5 @@
 
 namespace kxWhereAreYou::Logging {
     void Setup();
+    void Update();
 }

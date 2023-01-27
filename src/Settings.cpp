@@ -31,64 +31,64 @@ namespace kxWhereAreYou {
 
     void Settings::Print() {
         // System
-        logger::info("[Settings] System::bEnabled = {}", System::bEnabled);
+        logger::debug("[Settings] System::bEnabled = {}", System::bEnabled);
         // Commands
-        logger::info("[Settings] Commands::uVisualizationType = {}", Commands::uVisualizationType);
-        logger::info("[Settings] Commands::bKeepOpened = {}", Commands::bKeepOpened);
-        logger::info("[Settings] Commands::bShowStats = {}", Commands::bShowStats);
-        logger::info("[Settings] Commands::bShowInfo = {}", Commands::bShowInfo);
-        logger::info("[Settings] Commands::bShowTeleport = {}", Commands::bShowTeleport);
-        logger::info("[Settings] Commands::bShowVisit = {}", Commands::bShowVisit);
-        logger::info("[Settings] Commands::bShowInventory = {}", Commands::bShowInventory);
-        logger::info("[Settings] Commands::bShowTrack = {}", Commands::bShowTrack);
-        logger::info("[Settings] Commands::bShowDoFavor = {}", Commands::bShowDoFavor);
+        logger::debug("[Settings] Commands::uVisualizationType = {}", Commands::uVisualizationType);
+        logger::debug("[Settings] Commands::bKeepOpened = {}", Commands::bKeepOpened);
+        logger::debug("[Settings] Commands::bShowStats = {}", Commands::bShowStats);
+        logger::debug("[Settings] Commands::bShowInfo = {}", Commands::bShowInfo);
+        logger::debug("[Settings] Commands::bShowTeleport = {}", Commands::bShowTeleport);
+        logger::debug("[Settings] Commands::bShowVisit = {}", Commands::bShowVisit);
+        logger::debug("[Settings] Commands::bShowInventory = {}", Commands::bShowInventory);
+        logger::debug("[Settings] Commands::bShowTrack = {}", Commands::bShowTrack);
+        logger::debug("[Settings] Commands::bShowDoFavor = {}", Commands::bShowDoFavor);
         // Console
-        logger::info("[Settings] Console::bAutoPickByRefId = {}", Console::bAutoPickByRefId);
+        logger::debug("[Settings] Console::bAutoPickByRefId = {}", Console::bAutoPickByRefId);
         // Search
-        logger::info("[Settings] Search::uMaxResultCount = {}", Search::uMaxResultCount);
-        logger::info("[Settings] Search::bSortResults = {}", Search::bSortResults);
-        logger::info("[Settings] Search::sEntryFormat = {}", Search::sEntryFormat);
-        logger::info("[Settings] Search::bUseRegex = {}", Search::bUseRegex);
+        logger::debug("[Settings] Search::uMaxResultCount = {}", Search::uMaxResultCount);
+        logger::debug("[Settings] Search::bSortResults = {}", Search::bSortResults);
+        logger::debug("[Settings] Search::sEntryFormat = {}", Search::sEntryFormat);
+        logger::debug("[Settings] Search::bUseRegex = {}", Search::bUseRegex);
         // Track
-        logger::info("[Settings] Track::bAlwaysActivateQuest = {}", Track::bAlwaysActivateQuest);
-        logger::info("[Settings] Track::bNotifyOnDeath = {}", Track::bNotifyOnDeath);
-        logger::info("[Settings] Track::bRemoveTrackingOnDeath = {}", Track::bRemoveTrackingOnDeath);
+        logger::debug("[Settings] Track::bAlwaysActivateQuest = {}", Track::bAlwaysActivateQuest);
+        logger::debug("[Settings] Track::bNotifyOnDeath = {}", Track::bNotifyOnDeath);
+        logger::debug("[Settings] Track::bRemoveTrackingOnDeath = {}", Track::bRemoveTrackingOnDeath);
         // Teleport
-        logger::info("[Settings] Teleport::fRange = {}", Teleport::fRange);
+        logger::debug("[Settings] Teleport::fRange = {}", Teleport::fRange);
         // DoFavor
-        logger::info("[Settings] DoFavor::bOnlyFollowers = {}", DoFavor::bOnlyFollowers);
+        logger::debug("[Settings] DoFavor::bOnlyFollowers = {}", DoFavor::bOnlyFollowers);
         // Debug
-        logger::info("[Settings] Debug::bEnabled = {}", Debug::bEnabled);
+        logger::debug("[Settings] Debug::bEnabled = {}", Debug::bEnabled);
         // Hotkeys
-        logger::info("[Settings] Hotkeys::uTrackKey = {}", Hotkeys::uTrackKey);
-        logger::info("[Settings] Hotkeys::bTrackCtrlKey = {}", Hotkeys::bTrackCtrlKey);
-        logger::info("[Settings] Hotkeys::bTrackShiftKey = {}", Hotkeys::bTrackShiftKey);
-        logger::info("[Settings] Hotkeys::bTrackAltKey = {}", Hotkeys::bTrackAltKey);
-        logger::info("[Settings] Hotkeys::uSearchKey = {}", Hotkeys::uSearchKey);
-        logger::info("[Settings] Hotkeys::bSearchCtrlKey = {}", Hotkeys::bSearchCtrlKey);
-        logger::info("[Settings] Hotkeys::bSearchShiftKey = {}", Hotkeys::bSearchShiftKey);
-        logger::info("[Settings] Hotkeys::bSearchAltKey = {}", Hotkeys::bSearchAltKey);
-        logger::info("[Settings] Hotkeys::uCommandsKey = {}", Hotkeys::uCommandsKey);
-        logger::info("[Settings] Hotkeys::bCommandsCtrlKey = {}", Hotkeys::bCommandsCtrlKey);
-        logger::info("[Settings] Hotkeys::bCommandsShiftKey = {}", Hotkeys::bCommandsShiftKey);
-        logger::info("[Settings] Hotkeys::bCommandsAltKey = {}", Hotkeys::bCommandsAltKey);
-        logger::info("[Settings] Hotkeys::uDoFavorKey = {}", Hotkeys::uDoFavorKey);
-        logger::info("[Settings] Hotkeys::bDoFavorCtrlKey = {}", Hotkeys::bDoFavorCtrlKey);
-        logger::info("[Settings] Hotkeys::bDoFavorShiftKey = {}", Hotkeys::bDoFavorShiftKey);
-        logger::info("[Settings] Hotkeys::bDoFavorAltKey = {}", Hotkeys::bDoFavorAltKey);
+        logger::debug("[Settings] Hotkeys::uTrackKey = {}", Hotkeys::uTrackKey);
+        logger::debug("[Settings] Hotkeys::bTrackCtrlKey = {}", Hotkeys::bTrackCtrlKey);
+        logger::debug("[Settings] Hotkeys::bTrackShiftKey = {}", Hotkeys::bTrackShiftKey);
+        logger::debug("[Settings] Hotkeys::bTrackAltKey = {}", Hotkeys::bTrackAltKey);
+        logger::debug("[Settings] Hotkeys::uSearchKey = {}", Hotkeys::uSearchKey);
+        logger::debug("[Settings] Hotkeys::bSearchCtrlKey = {}", Hotkeys::bSearchCtrlKey);
+        logger::debug("[Settings] Hotkeys::bSearchShiftKey = {}", Hotkeys::bSearchShiftKey);
+        logger::debug("[Settings] Hotkeys::bSearchAltKey = {}", Hotkeys::bSearchAltKey);
+        logger::debug("[Settings] Hotkeys::uCommandsKey = {}", Hotkeys::uCommandsKey);
+        logger::debug("[Settings] Hotkeys::bCommandsCtrlKey = {}", Hotkeys::bCommandsCtrlKey);
+        logger::debug("[Settings] Hotkeys::bCommandsShiftKey = {}", Hotkeys::bCommandsShiftKey);
+        logger::debug("[Settings] Hotkeys::bCommandsAltKey = {}", Hotkeys::bCommandsAltKey);
+        logger::debug("[Settings] Hotkeys::uDoFavorKey = {}", Hotkeys::uDoFavorKey);
+        logger::debug("[Settings] Hotkeys::bDoFavorCtrlKey = {}", Hotkeys::bDoFavorCtrlKey);
+        logger::debug("[Settings] Hotkeys::bDoFavorShiftKey = {}", Hotkeys::bDoFavorShiftKey);
+        logger::debug("[Settings] Hotkeys::bDoFavorAltKey = {}", Hotkeys::bDoFavorAltKey);
         // Colors
-        logger::info("[Settings] Colors::sDefaultColor = {}", Colors::sDefaultColor);
+        logger::debug("[Settings] Colors::sDefaultColor = {}", Colors::sDefaultColor);
         // Icons
-        logger::info("[Settings] Icons::sStatsIcon = {}", Icons::sStatsIcon);
-        logger::info("[Settings] Icons::sInfoIcon = {}", Icons::sInfoIcon);
-        logger::info("[Settings] Icons::sTeleportIcon = {}", Icons::sTeleportIcon);
-        logger::info("[Settings] Icons::sVisitIcon = {}", Icons::sVisitIcon);
-        logger::info("[Settings] Icons::sInventoryIcon = {}", Icons::sInventoryIcon);
-        logger::info("[Settings] Icons::sTrackIcon = {}", Icons::sTrackIcon);
-        logger::info("[Settings] Icons::sDoFavorIcon = {}", Icons::sDoFavorIcon);
+        logger::debug("[Settings] Icons::sStatsIcon = {}", Icons::sStatsIcon);
+        logger::debug("[Settings] Icons::sInfoIcon = {}", Icons::sInfoIcon);
+        logger::debug("[Settings] Icons::sTeleportIcon = {}", Icons::sTeleportIcon);
+        logger::debug("[Settings] Icons::sVisitIcon = {}", Icons::sVisitIcon);
+        logger::debug("[Settings] Icons::sInventoryIcon = {}", Icons::sInventoryIcon);
+        logger::debug("[Settings] Icons::sTrackIcon = {}", Icons::sTrackIcon);
+        logger::debug("[Settings] Icons::sDoFavorIcon = {}", Icons::sDoFavorIcon);
     }
 
-    void Settings::Setup() {
+    void Settings::Update() {
         constexpr auto path = L"Data/MCM/Settings/kxWhereAreYou.ini";
 
         logger::info("Reading MCM .ini...");
