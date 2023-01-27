@@ -51,7 +51,7 @@ namespace {
                 auto* actor = form->As<RE::Actor>();
                 if (actor) {
                     auto name = actor->GetDisplayFullName();
-                    if (IsValidNpc(nullptr, actor) &&
+                    if (name && IsValidNpc(nullptr, actor) &&
                         ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
                          ( useRegex && std::regex_match(name, regexPattern.value())))) {
                         actors.push_back(actor);
@@ -69,12 +69,12 @@ namespace {
                     return leftStr < rightStr;
                 });
             }
-        }
 
-        logger::debug("[Results]");
-        std::ranges::for_each(actors, [](RE::Actor* actor) {
-            logger::debug("Name: {}, DisplayFullName: {}", actor->GetName(), actor->GetDisplayFullName());
-        });
+            logger::debug("[Results]");
+            std::ranges::for_each(actors, [](RE::Actor* actor) {
+                logger::debug("Actor: {}", actor->GetDisplayFullName());
+            });
+        }
 
         return actors;
     }
