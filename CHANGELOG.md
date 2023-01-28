@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2
+
+- Additional nullptr checks for actorBase
+
 ## 2.0.1
 
 - Remove some logs if debug mode is not enabled
