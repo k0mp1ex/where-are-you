@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 message("Using toolchain file ${CMAKE_TOOLCHAIN_FILE}.")
 
-project(kxWhereAreYou VERSION 2.0.1 LANGUAGES CXX)
+project(kxWhereAreYou VERSION 2.0.2 LANGUAGES CXX)
 
 include(cmake/functions.cmake)
 include(cmake/headerlist.cmake)
