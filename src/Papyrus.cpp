@@ -17,8 +17,11 @@ namespace {
 
     bool IsValidNpc(RE::StaticFunctionTag*, RE::Actor* actor) {
         if (actor) {
-            if (auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>(); actorBase)
-                return actorBase->IsUnique();
+            if (auto* base = actor->GetBaseObject()) {
+                if (auto* actorBase = base->As<RE::TESNPC>()) {
+                    return actorBase->IsUnique();
+                }
+            }
         }
         return false;
     }
@@ -48,14 +51,15 @@ namespace {
             const RE::BSReadLockGuard locker{ lock };
 
             for (auto& [id, form] : *forms) {
-                auto* actor = form->As<RE::Actor>();
-                if (actor) {
-                    auto name = actor->GetDisplayFullName();
-                    if (name && IsValidNpc(nullptr, actor) &&
-                        ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
-                         ( useRegex && std::regex_match(name, regexPattern.value())))) {
-                        actors.push_back(actor);
-                        if (actors.size() == maxResultCount) break;
+                if (form) {
+                    if (auto* actor = form->As<RE::Actor>()) {
+                        auto name = actor->GetDisplayFullName();
+                        if (name && IsValidNpc(nullptr, actor) &&
+                            ((!useRegex && Utils::String::IsSubstring(name, pattern)) ||
+                             (useRegex && std::regex_match(name, regexPattern.value())))) {
+                            actors.push_back(actor);
+                            if (actors.size() == maxResultCount) break;
+                        }
                     }
                 }
             }
@@ -119,14 +123,17 @@ namespace {
     }
 
     std::string GetSummaryDataForActor(RE::StaticFunctionTag*, RE::Actor* actor, RE::TESQuest* quest, const std::string pattern) {
-        auto* actorBase = actor->GetBaseObject()->As<RE::TESNPC>();
+        RE::TESNPC* actorBase = nullptr;
+        if (auto* base = actor->GetBaseObject()) {
+            actorBase = base->As<RE::TESNPC>();
+        }
 
         auto name = actor->GetDisplayFullName();
         auto refId = std::format("0x{:08X}", actor->GetFormID());
-        auto baseId = std::format("0x{:08X}", actorBase->GetFormID());
-        auto mod = std::string(actorBase->GetFile(0)->GetFilename());
-        auto race = actorBase->GetRace()->GetName();
-        auto gender = actorBase->IsFemale() ? "Female" : "Male";
+        auto baseId = actorBase ? std::format("0x{:08X}", actorBase->GetFormID()) : "?";
+        auto mod = actorBase ? std::string(actorBase->GetFile(0)->GetFilename()) : "?";
+        auto race = actorBase ? actorBase->GetRace()->GetName() : "?";
+        auto gender = actorBase ? (actorBase->IsFemale() ? "Female" : "Male") : "?";
         auto location = actor->GetCurrentLocation() ? actor->GetCurrentLocation()->GetName() : "Tamriel";
 
         std::string stats;
@@ -263,8 +270,10 @@ namespace {
     void TeleportAndEnableIfNeeded(RE::StaticFunctionTag*, RE::Actor* npc, std::string command) {
         if (npc->IsDisabled()) {
             std::string pronoun = "it";
-            if (auto actorBase = npc->GetBaseObject()->As<RE::TESNPC>(); actorBase)
-                pronoun = actorBase->IsFemale() ? "her" : "him";
+            if (auto* base = npc->GetBaseObject()) {
+                if (auto* actorBase = base->As<RE::TESNPC>())
+                    pronoun = actorBase->IsFemale() ? "her" : "him";
+            }
             UI::Messages::Show(std::format("{} is disabled.\nDo you want to enable {} before teleporting?", npc->GetDisplayFullName(), pronoun),
                                {"Yes, enable " + pronoun + " and teleport", "No, only teleport", "Cancel"},
                                [=](unsigned int result) {
